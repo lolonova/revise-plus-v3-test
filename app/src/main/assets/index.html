@@ -93,6 +93,21 @@ input[type=text], textarea { width: 100%; background: var(--bg2); color: var(--t
 .tip { background: rgba(255,210,63,0.14); border-left: 4px solid var(--gold); padding: 10px 12px; border-radius: 10px; font-size: 0.88rem; line-height: 1.4; }
 .daily { background: rgba(143,111,255,0.14); border-left: 4px solid var(--violet); padding: 10px 12px; border-radius: 10px; font-size: 0.88rem; line-height: 1.4; }
 
+/* ===== Hero "Mon espace" (maquette V6) ===== */
+.hero.espace { padding: 16px; }
+.hero.espace .avatar { font-size: 2.8rem; background: rgba(255,255,255,0.22); border-radius: 18px; width: 72px; height: 72px; display: flex; align-items: center; justify-content: center; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+.hero-bar { background: rgba(255,255,255,0.25); border-radius: 999px; height: 12px; overflow: hidden; margin: 8px 0 4px; }
+.hero-bar > div { height: 100%; background: linear-gradient(90deg, var(--gold), #ff9f43); border-radius: 999px; transition: width .3s; }
+.big-cta { display: block; width: 100%; background: linear-gradient(90deg, #ff9f43, #ff6f9c); color: #fff; border: 0; border-radius: 14px; padding: 14px; font-size: 1rem; font-weight: 800; cursor: pointer; margin: 4px 0 8px; box-shadow: 0 4px 12px rgba(255,140,60,0.4); }
+.fn-grid .item.fn { padding: 16px 8px; }
+.fn-grid .item.fn .ic { font-size: 1.9rem; }
+.lastchaps { list-style: none; padding-left: 0; }
+.lastchaps li { padding: 8px 0; border-bottom: 1px dashed rgba(128,128,128,0.3); }
+.st { display: inline-block; font-size: 0.72rem; padding: 2px 9px; border-radius: 999px; background: rgba(128,128,128,0.25); font-weight: 700; margin-left: 6px; vertical-align: middle; }
+.st.ok { background: rgba(76,175,80,0.3); color: #b9f6ca; }
+body.theme-emma .st.ok { color: #2e7d32; }
+.st.mid { background: rgba(255,210,63,0.25); }
+
 /* ===== Menu latéral (drawer) ===== */
 .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 19; }
 .overlay.open { opacity: 1; pointer-events: auto; }

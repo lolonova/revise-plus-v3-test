@@ -1,4 +1,4 @@
-/* Révise+ V5 — Logique applicative (design "dashboard" inspiré des maquettes)
+/* Révise+ V6 — Logique applicative (design "dashboard" inspiré des maquettes)
    Progression par profil dans localStorage (reviseplus_<profil>). */
 
 var App = (function () {
@@ -121,6 +121,39 @@ var App = (function () {
     localStorage.removeItem('reviseplus_currentProfile');
     viewWelcome();
   }
+  function myMatieres() {
+    var ids = [];
+    try { ids = JSON.parse(localStorage.getItem('reviseplus_matieres_' + state.profile)) || []; } catch (e) { ids = []; }
+    if (!ids.length) ids = REVISE_DATA.matieres.map(function (m) { return m.id; });
+    return REVISE_DATA.matieres.filter(function (m) { return ids.indexOf(m.id) !== -1; });
+  }
+  function statutFor(p) {
+    if (p.niveau >= 15 || p.xp >= 1500) return { nom: 'Expert', ic: '⭐' };
+    if (p.niveau >= 8) return { nom: 'Champion', ic: '🏅' };
+    if (p.niveau >= 4) return { nom: 'Apprenti', ic: '💪' };
+    return { nom: 'Débutant', ic: '🐣' };
+  }
+  function onboardingMats() {
+    var ids = [];
+    try { ids = JSON.parse(localStorage.getItem('reviseplus_matieres_' + state.profile)) || []; } catch (e) { ids = []; }
+    if (!ids.length) ids = REVISE_DATA.matieres.map(function (m) { return m.id; });
+    return ids;
+  }
+  function toggleMatiere(id) {
+    var ids = onboardingMats();
+    var i = ids.indexOf(id);
+    if (i === -1) ids.push(id); else ids.splice(i, 1);
+    localStorage.setItem('reviseplus_matieres_' + state.profile, JSON.stringify(ids));
+    var el = document.getElementById('mats-' + id);
+    if (el) el.classList.toggle('sel', i === -1);
+    var n = ids.length;
+    var btn = document.getElementById('obGo');
+    if (btn) { btn.textContent = n ? 'C\'est parti ! (' + n + ' matière' + (n > 1 ? 's' : '') + ') 🚀' : 'Choisis au moins une matière !'; btn.disabled = !n; }
+  }
+  function finishOnboarding() {
+    if (!onboardingMats().length) return;
+    viewAccueil();
+  }
 
   // ================= ACCUEIL =================
   function viewAccueil() {
@@ -128,40 +161,43 @@ var App = (function () {
     if (!state.profile) { viewWelcome(); return; }
     var p = load();
     var pct = overallPct(p);
+    var st = statutFor(p);
     var html = '';
-    // Hero profil
-    html += '<div class="hero"><div class="mascot">' + MASCOT[state.profile] + '</div>'
-      + '<div class="who"><div class="name">' + state.profile + '</div>'
-      + '<div class="cls">Classe de ' + state.niveau + ' · Niveau ' + p.niveau + '</div></div>'
+    // ===== Mon espace (façon maquette) =====
+    html += '<div class="hero espace">'
+      + '<div class="avatar">' + MASCOT[state.profile] + '</div>'
+      + '<div class="who"><div class="name">Mon espace — ' + state.profile + ' ' + st.ic + '</div>'
+      + '<div class="cls">Classe de ' + state.niveau + ' · ' + st.nom + ' · +' + p.xp + ' XP</div>'
+      + '<div class="hero-bar"><div style="width:' + pct + '%"></div></div>'
+      + '<div class="cls">' + pct + ' % de progression</div></div>'
       + '<div class="ring" style="--p:' + pct + '%"><span>' + pct + '%</span></div></div>';
-    // Mon espace
-    html += '<div class="section-title">Mon espace</div>';
-    html += '<div class="card"><div class="grid3">'
-      + '<div class="stat"><span class="n">' + p.xp + '</span>XP</div>'
-      + '<div class="stat"><span class="n">' + (p.bestStreak || 0) + '</span>série record</div>'
-      + '<div class="stat"><span class="n">' + p.badges.length + '</span>badges</div>'
-      + '</div>';
+    html += '<button class="big-cta" onclick="goTab(\'cours\')">Reprendre mes révisions ➜</button>';
+    // Derniers chapitres
+    html += '<div class="card"><h3><span class="em">🕐</span>Mes derniers chapitres</h3>';
     if (p.derniers && p.derniers.length) {
-      html += '<h3><span class="em">🕐</span>Derniers chapitres étudiés</h3><ul>';
+      html += '<ul class="lastchaps">';
       p.derniers.forEach(function (id) {
         var c = chapById(id);
-        if (c) html += '<li><b>' + c.titre + '</b> (' + c.niveau + ') — maîtrise ' + (p.maitrise[id] || 0) + ' %</li>';
+        if (!c) return;
+        var m = p.maitrise[id] || 0;
+        var s = m >= 80 ? '<span class="st ok">✔️ Révision terminée</span>' : (m > 0 ? '<span class="st mid">⏳ En cours</span>' : '<span class="st">📖 À étudier</span>');
+        html += '<li><b>' + c.titre + '</b> ' + s + '</li>';
       });
       html += '</ul>';
     } else {
       html += '<p style="font-size:0.85rem;opacity:0.75">Commence un chapitre pour remplir ton espace !</p>';
     }
     html += '</div>';
-    // Univers
-    html += '<div class="section-title">' + (state.profile === 'Emma' ? 'Mon univers kawaii' : 'Ma galaxie de révision') + '</div>';
-    html += '<div class="card"><div class="grid2">';
-    REVISE_DATA.matieres.forEach(function (m) {
-      var chs = chaptersFor(m.id, state.niveau);
-      html += '<div class="item" onclick="goTab(\'cours\');selectSubject(\'' + m.id + '\')">'
-        + '<span class="ic">' + m.icon + '</span><span class="nm">' + m.nom.split('-')[0] + '</span>'
-        + '<div class="sub">' + chs.length + ' chapitre' + (chs.length > 1 ? 's' : '') + '</div></div>';
-    });
-    html += '</div></div>';
+    // ===== Toutes mes fonctions =====
+    html += '<div class="section-title">Toutes mes fonctions</div>';
+    html += '<div class="grid2 fn-grid">'
+      + '<div class="item fn" onclick="goTab(\'cours\')"><span class="ic">📖</span><span class="nm">Apprendre</span><div class="sub">Mes révisions</div></div>'
+      + '<div class="item fn" onclick="goTab(\'jeux\')"><span class="ic">🎮</span><span class="nm">Jouer</span><div class="sub">Quiz & défis</div></div>'
+      + '<div class="item fn" onclick="goTab(\'plus\');viewProgres()"><span class="ic">📊</span><span class="nm">Progresser</span><div class="sub">Mes progrès</div></div>'
+      + '<div class="item fn" onclick="goTab(\'jeux\')"><span class="ic">🏆</span><span class="nm">Réussir</span><div class="sub">Défi du jour</div></div>'
+      + '<div class="item fn" onclick="goTab(\'tuteur\')"><span class="ic">🤖</span><span class="nm">Mon tuteur</span><div class="sub">Poser une question</div></div>'
+      + '<div class="item fn" onclick="goTab(\'plus\');viewScan()"><span class="ic">📷</span><span class="nm">Scanner</span><div class="sub">Créer une fiche</div></div>'
+      + '</div>';
     // Défi + astuce
     html += '<div class="section-title">Chaque jour compte</div>';
     html += '<div class="card">'
@@ -190,6 +226,43 @@ var App = (function () {
     updateChip();
   }
 
+  // ================= ONBOARDING =================
+  function viewNiveau() {
+    setTab('accueil');
+    var html = '<div class="card"><h3><span class="em">' + MASCOT[state.profile] + '</span>Salut ' + state.profile + ' !</h3>'
+      + '<p>En quelle classe es-tu cette année ?</p>'
+      + '<div class="grid3">';
+    REVISE_DATA.niveaux.forEach(function (n) {
+      html += '<div class="item' + (state.niveau === n ? ' sel' : '') + '" onclick="obLevel(\'' + n + '\')"><span class="ic">🎓</span><span class="nm" style="font-size:1.1rem">' + n + '</span></div>';
+    });
+    html += '</div></div>';
+    render(html);
+    updateChip();
+  }
+  function obLevel(n) {
+    state.niveau = n;
+    localStorage.setItem('reviseplus_niveau_' + state.profile, n);
+    viewMatiereChoice();
+  }
+  function viewMatiereChoice() {
+    var ids = onboardingMats();
+    var n = ids.length;
+    var html = '<div class="card"><h3><span class="em">📚</span>Classe de ' + state.niveau + ' — tes matières</h3>'
+      + '<p style="font-size:0.88rem">Coche les matières que tu veux réviser avec ' + MASCOT[state.profile] + '</p>'
+      + '<div class="grid2">';
+    REVISE_DATA.matieres.forEach(function (m) {
+      var sel = ids.indexOf(m.id) !== -1;
+      html += '<div class="item' + (sel ? ' sel' : '') + '" id="mats-' + m.id + '" onclick="toggleMatiere(\'' + m.id + '\')">'
+        + '<span class="ic">' + m.icon + '</span><span class="nm">' + m.nom + '</span>'
+        + '<div class="sub">' + (sel ? '✔️ Choisie' : 'Toucher pour choisir') + '</div></div>';
+    });
+    html += '</div>'
+      + '<button class="btn gold" style="width:100%;margin-top:12px" id="obGo" onclick="finishOnboarding()">C\'est parti ! (' + n + ' matière' + (n > 1 ? 's' : '') + ') 🚀</button>'
+      + '</div>';
+    render(html);
+    updateChip();
+  }
+
   // ================= RÉVISIONS =================
   function viewCours() {
     setTab('cours');
@@ -203,7 +276,7 @@ var App = (function () {
     });
     html += '</div></div>';
     html += '<div class="card"><h3><span class="em">📚</span>Mes matières — classe de ' + state.niveau + '</h3><div class="grid2">';
-    REVISE_DATA.matieres.forEach(function (m) {
+    myMatieres().forEach(function (m) {
       var chs = chaptersFor(m.id, state.niveau);
       var done = chs.filter(function (c) { return (p.maitrise[c.id] || 0) >= 50; }).length;
       html += '<div class="item" onclick="selectSubject(\'' + m.id + '\')">'
@@ -359,8 +432,11 @@ var App = (function () {
     var p = load();
     var today = new Date().toISOString().slice(0, 10);
     if (p.dailyDate === today) return '<div class="daily">✅ Défi du jour réussi ! Reviens demain pour un nouveau. +30 XP déjà gagnés.</div>';
+    var mats = myMatieres().map(function (m) { return m.id; });
+    var pool = REVISE_DATA.chapitres.filter(function (c) { return mats.indexOf(c.mat) !== -1; });
+    if (!pool.length) pool = REVISE_DATA.chapitres;
     var seed = new Date().getDate() * 7 + new Date().getMonth() * 3;
-    var c = REVISE_DATA.chapitres[seed % REVISE_DATA.chapitres.length];
+    var c = pool[seed % pool.length];
     return '<div class="daily">🎯 Réussir un quiz du chapitre <b>' + c.titre + '</b> (' + c.niveau + '). Bonus : +30 XP !</div>'
       + '<button class="btn small" onclick="doDaily(\'' + c.id + '\')">Relever le défi</button>';
   }
@@ -522,8 +598,27 @@ var App = (function () {
       + '<div class="stat"><span class="n">' + p.badges.length + '</span>badges</div>'
       + '</div></div>';
     html += '<div class="card"><h3><span class="em">🎯</span>Défi du jour</h3>' + dailyChallenge() + '</div>';
+    // Choix direct d'un chapitre à jouer
+    html += '<div class="card"><h3><span class="em">🎯</span>Jouer avec un chapitre</h3>'
+      + '<p style="font-size:0.85rem;opacity:0.8">Tes matières — classe de ' + state.niveau + ' :</p>';
+    myMatieres().forEach(function (m) {
+      var chs = chaptersFor(m.id, state.niveau);
+      if (!chs.length) return;
+      html += '<p style="margin:10px 0 4px;font-weight:800">' + m.icon + ' ' + m.nom + '</p>';
+      chs.forEach(function (c) {
+        html += '<button class="choice" onclick="quizFromList(\'' + c.id + '\')">' + c.titre + '</button>';
+      });
+    });
+    html += '</div>';
     render(html);
     updateChip();
+  }
+  function quizFromList(chapId) {
+    state.chap = chapId;
+    var c = chapById(chapId);
+    quiz = { c: c, mode: 1, qs: poolFor(c, 1), i: 0, score: 0, streak: 0 };
+    pushRecent(chapId);
+    showQuestion();
   }
 
   // ================= TUTEUR =================
@@ -567,8 +662,9 @@ var App = (function () {
     document.body.className = name === 'Emma' ? 'theme-emma' : 'theme-gabriel';
     document.querySelector('.logo').textContent = name === 'Emma' ? '🐱' : '🚀';
     localStorage.setItem('reviseplus_currentProfile', name);
-    localStorage.setItem('reviseplus_niveau_' + name, state.niveau);
-    viewAccueil();
+    state.niveau = localStorage.getItem('reviseplus_niveau_' + name) || '5e';
+    state.mat = null; state.chap = null;
+    viewNiveau();
   }
   function setLevel(n) {
     state.niveau = n;
@@ -598,7 +694,10 @@ var App = (function () {
     var cur = localStorage.getItem('reviseplus_currentProfile');
     if (cur === 'Gabriel' || cur === 'Emma') {
       state.niveau = localStorage.getItem('reviseplus_niveau_' + cur) || '5e';
-      chooseProfile(cur);
+      state.profile = cur;
+      document.body.className = cur === 'Emma' ? 'theme-emma' : 'theme-gabriel';
+      document.querySelector('.logo').textContent = cur === 'Emma' ? '🐱' : '🚀';
+      viewAccueil();
     } else {
       viewWelcome();
     }
@@ -613,12 +712,15 @@ var App = (function () {
     scanAnswer: scanAnswer, showFull: function () { document.getElementById('fullCard').classList.remove('hidden'); },
     doDaily: doDaily, showQuestion: showQuestion, quizMode: quizMode,
     viewProgres: viewProgres, viewScan: viewScan, viewPlus: viewPlus, init: init,
-    switchProfile: switchProfile, closeDrawer: closeDrawer
+    switchProfile: switchProfile, closeDrawer: closeDrawer,
+    obLevel: obLevel, toggleMatiere: toggleMatiere, finishOnboarding: finishOnboarding,
+    quizFromList: quizFromList
   };
   ['chooseProfile','setLevel','selectSubject','openChapter','startQuiz','answer','goTab',
    'backToSubjects','backToChapters','askTutor','saveGateway','resetProgress','readAloud',
    'showFull','pickImages','onFiles','makeFromScan','scanAnswer','doDaily','showQuestion',
-   'quizMode','viewProgres','viewScan','viewPlus','switchProfile'].forEach(function (f) { window[f] = pub[f]; });
+   'quizMode','viewProgres','viewScan','viewPlus','switchProfile','obLevel','toggleMatiere',
+   'finishOnboarding','quizFromList'].forEach(function (f) { window[f] = pub[f]; });
   return pub;
 })();
 

@@ -1,5 +1,5 @@
-/* Révise+ V5 — Base de contenu pédagogique (collège : 5e, 4e, 3e)
-   63 chapitres complets : 7 matières × 3 niveaux × 3 chapitres. Tous rédigés et vérifiés. */
+/* Révise+ V6 — Base de contenu pédagogique (collège : 5e, 4e, 3e)
+   114 chapitres complets : 8 matières × 3 niveaux × 4-5 chapitres. Tous rédigés et vérifiés. */
 
 var REVISE_DATA = {
   niveaux: ['5e', '4e', '3e'],
@@ -10,7 +10,8 @@ var REVISE_DATA = {
     { id: 'geo', nom: 'Histoire-Géo', icon: '🌍' },
     { id: 'svt', nom: 'SVT', icon: '🧬' },
     { id: 'physique', nom: 'Physique-Chimie', icon: '⚗️' },
-    { id: 'anglais', nom: 'Anglais', icon: '🇬🇧' }
+    { id: 'anglais', nom: 'Anglais', icon: '🇬🇧' },
+    { id: 'italien', nom: 'Italien', icon: '🇮🇹' }
   ],
   chapitres: [
     // ================= MATHS =================
@@ -1152,6 +1153,893 @@ var REVISE_DATA = {
         { q: 'La balance mesure directement la masse.', v: false, exp: 'Elle mesure le poids (une force) et convertit en masse.' },
         { q: 'Sur Jupiter, on pèse plus lourd que sur Terre.', v: true, exp: 'g ≈ 25 N/kg : poids bien plus grand.' },
         { q: 'Un mouvement peut être décrit différemment selon l\'observateur.', v: true, exp: 'Tout est relatif au référentiel.' }
+      ]
+    },
+{
+      id: 'm5-proportionnalite', mat: 'maths', niveau: '5e',
+      titre: 'Proportionnalité',
+      express: '<li>Deux grandeurs sont proportionnelles si on passe de l\'une à l\'autre en multipliant toujours par le même nombre.</li><li>Tableau de proportionnalité : les colonnes sont multiples entre elles.</li><li>Coefficient = « pour 1 » : prix pour 1 kg, etc.</li><li>Quatrième proportionnelle : produit en croix.</li><li>Échelle = distance sur plan ÷ distance réelle.</li>',
+      complet: '<h3>1. Reconnaître</h3><p>3 baguettes coûtent 3,30 €, 6 baguettes 6,60 € : on multiplie par 2 les deux grandeurs. C\'est proportionnel (le prix dépend du nombre).</p><h3>2. Produit en croix</h3><p>4 cahiers coûtent 10 €. Combien pour 6 ? On multiplie en diagonale : 6 × 10 ÷ 4 = 15 €.</p><h3>3. Coefficient « pour 1 »</h3><p>10 ÷ 4 = 2,50 € par cahier. Connaître le prix unitaire permet tout calcul rapide.</p><h3>4. Pourcentages</h3><p>Prendre 25 % de 80 € = 80 × 25/100 = 20 €. Une réduction de 30 % sur 50 € : 50 × 0,70 = 35 €.</p><h3>5. Échelles</h3><p>Carte au 1/25 000 : 1 cm sur la carte = 25 000 cm = 250 m en réel. 4,8 cm sur la carte → 4,8 × 250 = 1 200 m.</p><h3>6. Pièges</h3><p>L\'âge et la taille ne sont pas proportionnels ! Tester avec deux colonnes avant d\'affirmer.</p>',
+      quiz: [
+        { q: '4 kg de pommes = 10 €. Prix de 6 kg ?', choix: ['15 €', '16 €', '12 €'], bon: 0, exp: '6 × 10 ÷ 4 = 15 € (produit en croix).' },
+        { q: '25 % de 80 € =', choix: ['20 €', '25 €', '8 €'], bon: 0, exp: '80 × 25/100 = 20.' },
+        { q: 'Échelle 1/1000 : 3 cm sur le plan =', choix: ['30 m', '3 m', '300 m'], bon: 0, exp: '3 × 1000 cm = 3000 cm = 30 m.' },
+        { q: 'Prix unitaire si 5 stylos = 7,50 € :', choix: ['1,50 €', '1,25 €', '2 €'], bon: 0, exp: '7,50 ÷ 5 = 1,50 € le stylo.' },
+        { q: 'Une réduction de 20 % sur 60 € donne :', choix: ['48 €', '40 €', '12 €'], bon: 0, exp: '60 × 0,80 = 48 € (on paie 80 %).' }
+      ],
+      vf: [
+        { q: 'L\'âge et la taille d\'un enfant sont proportionnels.', v: false, exp: 'On grandit par paliers : pas de coefficient constant.' },
+        { q: 'Le produit en croix donne la quatrième proportionnelle.', v: true, exp: 'a/b = c/d donc d = b×c/a.' },
+        { q: 'Sur un tableau proportionnel, on peut additionner deux colonnes.', v: true, exp: 'Propriété des tables de proportionnalité (linéarité additive).' }
+      ]
+    },
+    {
+      id: 'm5-aires', mat: 'maths', niveau: '5e',
+      titre: 'Périmètres et aires',
+      express: '<li>Périmètre = tour de la figure (une longueur, en m, cm…).</li><li>Aire = surface couverte (m², cm²…).</li><li>Rectangle : P = 2(L + l) ; A = L × l.</li><li>Triangle : A = (base × hauteur) ÷ 2.</li><li>Disque : P = 2πr ; A = πr².</li>',
+      complet: '<h3>1. Formules de base</h3><p>Carré : P = 4c, A = c². Rectangle : P = 2(L+l), A = L×l. Triangle rectangle : aire = produit des deux côtés de l\'angle droit ÷ 2.</p><h3>2. Triangle quelconque</h3><p>A = (b × h) ÷ 2, où h est la hauteur relative à la base b. La hauteur est perpendiculaire à la base.</p><h3>3. Le disque</h3><p>Périmètre (circonférence) = 2 × π × r ; aire = π × r². Avec π ≈ 3,14 : si r = 5 cm, A ≈ 78,5 cm².</p><h3>4. Unités</h3><p>1 m² = 100 dm² ; 1 cm² = 100 mm². Pour convertir, on multiplie par 100 à chaque rang descendant.</p><h3>5. Figures composées</h3><p>Découper en figures simples et additionner les aires. Un L = grand rectangle moins petit rectangle.</p><h3>6. Périmètre ≠ aire</h3><p>Deux figures de même aire peuvent avoir des périmètres différents. Toujours vérifier l\'unité demandée.</p>',
+      quiz: [
+        { q: 'Aire d\'un rectangle 8 cm × 3 cm :', choix: ['24 cm²', '22 cm', '11 cm²'], bon: 0, exp: '8 × 3 = 24 cm².' },
+        { q: 'Aire d\'un triangle base 6, hauteur 4 :', choix: ['12', '24', '10'], bon: 0, exp: '(6 × 4) ÷ 2 = 12.' },
+        { q: 'Aire d\'un disque de rayon 5 (π≈3,14) :', choix: ['78,5', '31,4', '15,7'], bon: 0, exp: 'π × 5² = 3,14 × 25 = 78,5.' },
+        { q: 'Périmètre d\'un carré de côté 7 cm :', choix: ['28 cm', '49 cm', '14 cm'], bon: 0, exp: '4 × 7 = 28 cm.' },
+        { q: '1 m² = ?', choix: ['100 dm²', '10 dm²', '1000 dm²'], bon: 0, exp: 'Chaque rang vaut 100.' }
+      ],
+      vf: [
+        { q: 'Le périmètre se mesure en cm².', v: false, exp: 'Le périmètre est une longueur (cm, m) ; l\'aire seule est en cm².' },
+        { q: 'Deux figures de même aire peuvent avoir des périmètres différents.', v: true, exp: 'Aire et périmètre sont indépendants.' },
+        { q: 'L\'aire d\'un triangle se calcule avec la hauteur relative à la base.', v: true, exp: 'A = base × hauteur ÷ 2.' }
+      ]
+    },
+    {
+      id: 'm4-stats', mat: 'maths', niveau: '4e',
+      titre: 'Statistiques',
+      express: '<li>Moyenne = somme des valeurs ÷ effectif total.</li><li>Moyenne pondérée : on multiplie chaque valeur par son effectif.</li><li>Étendue = valeur max − valeur min.</li><li>La médiane partage la série ordonnée en deux moitiés.</li><li>Un diagramme adapté : bâtons (série), circulaire (fractions), histogramme (classes).</li>',
+      complet: '<h3>1. Moyenne simple</h3><p>Notes 12, 15, 9 : moyenne = (12+15+9)/3 = 36/3 = 12.</p><h3>2. Moyenne pondérée</h3><p>12 (coef 1), 15 (coef 2), 9 (coef 1) : (12×1 + 15×2 + 9×1)/(1+2+1) = 51/4 = 12,75.</p><h3>3. Médiane</h3><p>On ordonne les valeurs ; la médiane est la valeur du milieu (ou la moyenne des deux centrales si l\'effectif est pair). Série : 2, 3, 5, 8, 9 → médiane 5.</p><h3>4. Étendue</h3><p>Max − min. Elle mesure la dispersion : 9 − 2 = 7.</p><h3>5. Lire un tableau</h3><p>Effectifs par valeur : moyenne = Σ(valeur × effectif) ÷ effectif total.</p><h3>6. Interpréter</h3><p>Une moyenne peut cacher des écarts : 10 et 10, ou 0 et 20 : même moyenne ! L\'étendue et la médiane complètent l\'analyse.</p>',
+      quiz: [
+        { q: 'Moyenne de 12, 15, 9 :', choix: ['12', '13', '11'], bon: 0, exp: '(12+15+9)/3 = 12.' },
+        { q: 'Étendue de la série 2, 3, 5, 8, 9 :', choix: ['7', '9', '11'], bon: 0, exp: '9 − 2 = 7.' },
+        { q: 'Médiane de 2, 3, 5, 8, 9 :', choix: ['5', '9', '2'], bon: 0, exp: '3 valeurs avant, 3 après : c\'est 5.' },
+        { q: 'Moyenne pondérée de 12(×1), 15(×2), 9(×1) :', choix: ['12,75', '12', '13,5'], bon: 0, exp: '(12+30+9)/4 = 51/4 = 12,75.' },
+        { q: 'La médiane d\'une série ordonnée paire (ex. 4 valeurs) :', choix: ['moyenne des deux valeurs centrales', 'la première valeur', 'la plus grande'], bon: 0, exp: 'Ex. 2, 4, 8, 10 → (4+8)/2 = 6.' }
+      ],
+      vf: [
+        { q: 'La moyenne est toujours une valeur de la série.', v: false, exp: 'Ex. 10 et 20 : moyenne 15, absente de la série.' },
+        { q: 'L\'étendue mesure la dispersion.', v: true, exp: 'Grande étendue = valeurs très dispersées.' },
+        { q: 'Une même moyenne peut cacher des situations très différentes.', v: true, exp: '0 et 20 ont la même moyenne que 10 et 10 !' }
+      ]
+    },
+    {
+      id: 'm4-volumes', mat: 'maths', niveau: '4e',
+      titre: 'Volumes et prismes',
+      express: '<li>Volume = capacité en m³, dm³ (= litre), cm³ (= mL).</li><li>Prisme : V = aire de la base × hauteur.</li><li>Cylindre : V = πr² × h.</li><li>1 L = 1 dm³ = 1000 cm³.</li><li>Convertir : chaque rang de volume vaut 1000.</li>',
+      complet: '<h3>1. Le prisme droit</h3><p>Un pavé droit est un prisme. V = aire base × hauteur. Pour un pavé : L × l × h. Ex. 5 × 3 × 2 = 30 cm³.</p><h3>2. Prisme triangulaire</h3><p>Base un triangle : V = (b × h ÷ 2) × hauteur du prisme. On calcule d\'abord l\'aire de la base, puis on multiplie par la hauteur.</p><h3>3. Cylindre de révolution</h3><p>V = π × r² × h. Rayon 3 cm, hauteur 10 cm : π × 9 × 10 ≈ 282,6 cm³.</p><h3>4. Unités</h3><p>1 m³ = 1000 dm³ ; 1 dm³ = 1000 cm³ ; 1 dm³ = 1 L ; 1 cm³ = 1 mL. Une brique de lait d\'1 L = 1000 cm³.</p><h3>5. Conversion</h3><p>2,5 m³ = 2500 dm³ = 2500 L. Chaque saut de rang : ×1000 ou ÷1000.</p><h3>6. Pièges</h3><p>Le rayon et le diamètre : la formule demande le rayon ! Si d = 6, r = 3. Aussi : ne pas confondre aire latérale et volume.</p>',
+      quiz: [
+        { q: 'Volume d\'un pavé 5×3×2 :', choix: ['30 cm³', '10 cm³', '25 cm³'], bon: 0, exp: '5 × 3 × 2 = 30.' },
+        { q: 'V = πr²h avec r=3, h=10 (π≈3,14) :', choix: ['≈ 282,6', '≈ 94,2', '≈ 942'], bon: 0, exp: '3,14 × 9 × 10 = 282,6.' },
+        { q: '1 dm³ = ?', choix: ['1 L', '1 mL', '100 L'], bon: 0, exp: '1 dm³ = 1 litre exactement.' },
+        { q: 'Volume d\'un prisme : aire de la base ×', choix: ['hauteur', 'périmètre', 'rayon'], bon: 0, exp: 'V = A(base) × h.' },
+        { q: '2,5 m³ = ?', choix: ['2500 L', '250 L', '25 L'], bon: 0, exp: '1 m³ = 1000 dm³ = 1000 L.' }
+      ],
+      vf: [
+        { q: 'Le volume d\'un cylindre se calcule avec le rayon, pas le diamètre.', v: true, exp: 'πr²h : si on a le diamètre, diviser par 2 d\'abord.' },
+        { q: '1 cm³ = 1 mL.', v: true, exp: 'Et 1000 cm³ = 1 L.' },
+        { q: 'Le volume d\'un prisme dépend du périmètre de sa base.', v: false, exp: 'Il dépend de l\'AIRE de la base.' }
+      ]
+    },
+    {
+      id: 'm3-trigo', mat: 'maths', niveau: '3e',
+      titre: 'Trigonométrie (cos, sin, tan)',
+      express: '<li>Dans un triangle rectangle : cos = adjacent/hypoténuse ; sin = opposé/hypoténuse ; tan = opposé/adjacent.</li><li>Moyen mnémotechnique : SOH-CAH-TOA.</li><li>sin²x + cos²x = 1.</li><li>tan x = sin x / cos x.</li><li>Sert à calculer côtés et angles dans un triangle rectangle.</li>',
+      complet: '<h3>1. Les trois rapports</h3><p>Pour l\'angle Â : SOH (sin = opposé/hypoténuse), CAH (cos = adjacent/hypoténuse), TOA (tan = opposé/adjacent).</p><h3>2. Calculer un côté</h3><p>Hypoténuse 10, angle 30° : côté opposé = 10 × sin 30° = 10 × 0,5 = 5. Adjacent = 10 × cos 30° ≈ 8,66.</p><h3>3. Calculer un angle</h3><p>Opposé 4, hypoténuse 8 : sin x = 0,5 → x = sin⁻¹(0,5) = 30°.</p><h3>4. Relation fondamentale</h3><p>sin²x + cos²x = 1. Vérification : sin²30° + cos²30° = 0,25 + 0,75 = 1.</p><h3>5. Quelle formule choisir ?</h3><p>Identifier les données : côté adjacent + hypoténuse → cos ; opposé + hypoténuse → sin ; opposé + adjacent → tan.</p><h3>6. Applications</h3><p>Hauteur d\'un arbre, pente d\'un toit, navigation : la trigonométrie est partout dès qu\'il y a un angle droit.</p>',
+      quiz: [
+        { q: 'sin x = opposé /', choix: ['hypoténuse', 'adjacent', 'opposé'], bon: 0, exp: 'SOH : Sinus = Opposé/Hypoténuse.' },
+        { q: 'tan x = opposé /', choix: ['adjacent', 'hypoténuse', 'carré'], bon: 0, exp: 'TOA : Tangente = Opposé/Adjacent.' },
+        { q: 'Hypoténuse 10, angle 30°. Opposé =', choix: ['5', '8,66', '3'], bon: 0, exp: '10 × sin 30° = 10 × 0,5 = 5.' },
+        { q: 'sin²x + cos²x =', choix: ['1', '0', 'x'], bon: 0, exp: 'Relation fondamentale de la trigonométrie.' },
+        { q: 'Opposé 3, adjacent 4. tan x =', choix: ['0,75', '1,33', '0,6'], bon: 0, exp: '3/4 = 0,75.' }
+      ],
+      vf: [
+        { q: 'cos, sin et tan ne se définissent que dans un triangle rectangle.', v: true, exp: 'Il faut l\'hypoténuse, donc un angle droit.' },
+        { q: 'tan x = cos x / sin x.', v: false, exp: 'C\'est l\'inverse : tan = sin/cos.' },
+        { q: 'cos 60° = 0,5.', v: true, exp: 'Et sin 60° ≈ 0,866.' }
+      ]
+    },
+    {
+      id: 'm3-probas', mat: 'maths', niveau: '3e',
+      titre: 'Probabilités',
+      express: '<li>Probabilité = nombre de cas favorables ÷ nombre de cas possibles (équiprobables).</li><li>Toujours entre 0 (impossible) et 1 (certain).</li><p> </p><li>P(A) + P(pas A) = 1 (événement contraire).</li><li>Exemple dé : P(sortir 3) = 1/6.</li><li>Arbres de probabilité pour les expériences en plusieurs étapes.</li>',
+      complet: '<h3>1. Calculer une probabilité</h3><p>Un dé à 6 faces : P(4) = 1/6 ≈ 0,167. P(nombre pair) = 3/6 = 1/2 (les faces 2, 4, 6).</p><h3>2. Événement contraire</h3><p>P(pas de 6) = 1 − 1/6 = 5/6. Astuce : souvent plus simple à calculer.</p><h3>3. Avec des objets</h3><p>Urne : 3 boules rouges, 2 vertes, 5 bleues (10 au total). P(rouge) = 3/10 ; P(pas bleue) = 1 − 5/10 = 1/2.</p><h3>4. Fréquence et simulation</h3><p>En répétant beaucoup de fois, la fréquence observée se rapproche de la probabilité théorique (loi des grands nombres).</p><h3>5. Arbres</h3><p>Deux tirages successifs avec remise : les branches se multiplient. P(rouge puis rouge) = 3/10 × 3/10 = 9/100.</p><h3>6. Rédaction</h3><p>Toujours écrire : cas possibles, cas favorables, puis la division. Une probabilité peut s\'écrire en fraction, décimal ou pourcentage.</p>',
+      quiz: [
+        { q: 'P(tirer un 6) avec un dé :', choix: ['1/6', '1/2', '6/6'], bon: 0, exp: 'Un cas favorable sur 6 possibles.' },
+        { q: 'P(rouge) avec 3 rouges sur 10 boules :', choix: ['0,3', '0,1', '3'], bon: 0, exp: '3/10 = 0,3.' },
+        { q: 'Une probabilité est toujours entre :', choix: ['0 et 1', '0 et 100', '−1 et 1'], bon: 0, exp: '0 = impossible, 1 = certain.' },
+        { q: 'P(pas de 6) au dé :', choix: ['5/6', '1/6', '1'], bon: 0, exp: 'Contraire : 1 − 1/6.' },
+        { q: 'P(pair) au dé :', choix: ['1/2', '1/6', '1/3'], bon: 0, exp: '2, 4, 6 : trois cas sur six.' }
+      ],
+      vf: [
+        { q: 'Une probabilité peut valoir 1,5.', v: false, exp: 'Elle est comprise entre 0 et 1.' },
+        { q: 'La fréquence observée se rapproche de la probabilité quand on répète beaucoup.', v: true, exp: 'C\'est la loi des grands nombres.' },
+        { q: 'P(A) + P(contraire de A) = 1.', v: true, exp: 'Exemple : P(6) + P(pas 6) = 1.' }
+      ]
+    },
+    {
+      id: 'fr5-classes', mat: 'francais', niveau: '5e',
+      titre: 'Les classes de mots',
+      express: '<li>Nom (chien), verbe (courir), adjectif (grand), déterminant (le, une).</li><li>Pronom (il, qui), préposition (à, de, dans), conjonction (et, mais, que).</li><li>Adverbe (vite, très) : invariable, modifie un verbe ou un adjectif.</li><li>Mots variables : nom, adjectif, verbe, déterminant, pronom.</li><li>Mots invariables : adverbe, préposition, conjonction, interjection.</li>',
+      complet: '<h3>1. Reconnaître par le contexte</h3><p>« Le grand chien aboie fort » : Le = déterminant, grand = adjectif, chien = nom, aboie = verbe, fort = adverbe.</p><h3>2. Le nom</h3><p>Commun (ville) ou propre (Paris, majuscule). Il peut être précisé par un adjectif qualificatif ou un complément du nom (la ville de Paris).</p><h3>3. Le verbe</h3><p>Il se conjugue : il indique l\'action ou l\'état. Pour le trouver : changer le temps (« demain », « hier ») et voir ce qui change.</p><h3>4. L\'adverbe</h3><p>Invariable : il précise le verbe (il court vite), un adjectif (très grand) ou un autre adverbe (bien trop tard).</p><h3>5. Tests</h3><p>Remplacer par « un/une » → nom. Par « le/la » → adjectif possible. Ajouter « ne… pas » → verbe.</p><h3>6. Pourquoi ?</h3><p>Classer les mots aide à faire les accords corrects : variable ou invariable, telle est la question !</p>',
+      quiz: [
+        { q: 'Dans « il court vite », « vite » est :', choix: ['un adverbe', 'un verbe', 'un adjectif'], bon: 0, exp: 'Il modifie le verbe, invariable.' },
+        { q: '« Paris » est un nom :', choix: ['propre', 'commun', 'adverbe'], bon: 0, exp: 'Majuscule, désigne un être unique.' },
+        { q: 'Mot invariable :', choix: ['préposition', 'verbe', 'nom'], bon: 0, exp: '« dans », « à » ne changent jamais.' },
+        { q: '« le », « une », « mes » sont :', choix: ['des déterminants', 'des pronoms', 'des adverbes'], bon: 0, exp: 'Ils introduisent le nom.' },
+        { q: 'Pour repérer le verbe, on peut :', choix: ['changer le temps de la phrase', 'compter les mots', 'regarder la majuscule'], bon: 0, exp: 'Le mot qui change avec hier/demain est le verbe.' }
+      ],
+      vf: [
+        { q: 'L\'adverbe s\'accorde avec le sujet.', v: false, exp: 'Il est invariable.' },
+        { q: '« et », « mais », « ou » sont des conjonctions.', v: true, exp: 'De coordination (relient des mots).' },
+        { q: 'L\'adjectif qualificatif s\'accorde en genre et en nombre avec le nom.', v: true, exp: 'Des fleurs magnifiques : accord au féminin pluriel.' }
+      ]
+    },
+    {
+      id: 'fr5-conjugaison', mat: 'francais', niveau: '5e',
+      titre: 'Passé composé et imparfait',
+      express: '<li>Imparfait : description, habitude (c\'était, il faisait).</li><li>Passé composé : action ponctuelle, achevée (il a mangé).</li><li>PC = auxiliaire (avoir/être) au présent + participe passé.</li><li>Avec être, la participe s\'accorde (elle est venue).</li><li>Récit type : imparfait pour le décor, PC pour les actions.</li>',
+      complet: '<h3>1. Formation de l\'imparfait</h3><p>Radical de la 1re personne du présent + terminaisons -ais, -ais, -ait, -ions, -iez, -aient. Il pleuvait, nous faisions.</p><h3>2. Formation du passé composé</h3><p>Présent de avoir/être + participe passé : parler → parlé ; venir → venu ; faire → fait ; prendre → pris.</p><h3>3. Choisir le temps</h3><p>« Tous les dimanches, nous allions au marché » (habitude → imparfait). « Hier, nous sommes allés au marché » (précis → PC).</p><h3>4. Accord du participe</h3><p>Avec être : accord avec le sujet (elle est tombée). Avec avoir : pas d\'accord, sauf si le COD est placé avant (les fleurs que j\'ai cueillies).</p><h3>5. Les auxiliaires</h3><p>Les verbes de mouvement et pronominaux prennent être : aller, venir, partir, naître, se lever.</p><h3>6. Dans un récit</h3><p>« Le soleil se couchait (décor), quand soudain la porte s\'ouvrit / s\'est ouverte (action). » Le contraste crée le rythme.</p>',
+      quiz: [
+        { q: '« Tous les matins, il ___ son café » (habitude) :', choix: ['buvait', 'a bu', 'boira'], bon: 0, exp: 'Habitude répétée = imparfait.' },
+        { q: 'Participe passé de « prendre » :', choix: ['pris', 'prendu', 'prené'], bon: 0, exp: 'prendre → pris.' },
+        { q: '« Elle est ___ » (venir) :', choix: ['venue', 'venu', 'venus'], bon: 0, exp: 'Avec être : accord au féminin.' },
+        { q: 'Le passé composé de « finir » :', choix: ['a fini', 'finissait', 'finera'], bon: 0, exp: 'avoir au présent + participe.' },
+        { q: 'Verbe qui se conjugue avec « être » :', choix: ['aller', 'manger', 'dire'], bon: 0, exp: 'Les verbes de mouvement prennent être.' }
+      ],
+      vf: [
+        { q: 'L\'imparfait exprime une action ponctuelle et datée.', v: false, exp: 'C\'est le passé composé ; l\'imparfait décrit ou répète.' },
+        { q: 'Avec avoir, le participe passé ne s\'accorde généralement pas.', v: true, exp: 'Sauf si le COD précède le verbe.' },
+        { q: '« Hier, j\'ai fait mes devoirs » est au passé composé.', v: true, exp: 'Action achevée, moment précis.' }
+      ]
+    },
+    {
+      id: 'fr4-discours', mat: 'francais', niveau: '4e',
+      titre: 'Du discours direct au discours indirect',
+      express: '<li>Direct : « Je pars », dit-il (guillemets, verbe de parole).</li><li>Indirect : il dit qu\'il part (subordonnée introduite par que).</li><li>Changements : je → il, présent → imparfait, hier → la veille.</li><li>Interrogation indirecte : il demande si / où / quand…</li><li>Point d\'interclamation → période (ton neutre).</li>',
+      complet: '<h3>1. La transformation</h3><p>Direct : « Je viendrai demain », annonce Marie. Indirect : Marie annonce qu\'elle viendra le lendemain.</p><h3>2. Changements de temps</h3><p>Présent → imparfait ; futur → conditionnel ; passé composé → plus-que-parfait. « Je suis arrivé » → il dit qu\'il était arrivé.</p><h3>3. Changements de personnes</h3><p>je → il/elle, tu → il/elle, mon → son. Logique : on rapporte du point de vue du rapporteur.</p><h3>4. Repères temporels</h3><p>aujourd\'hui → ce jour-là ; demain → le lendemain ; hier → la veille ; ici → là.</p><h3>5. Questions</h3><p>« Où vas-tu ? » → Il demande où je vais. « Viens-tu ? » → Il demande si je viens (si pour les questions fermées).</p><h3>6. Pourquoi ?</h3><p>Raconter les paroles sans multiplier les dialogues : c\'est essentiel dans les résumés et comptes rendus.</p>',
+      quiz: [
+        { q: '« Je pars » → indirect :', choix: ['il dit qu\'il part', 'il dit « je pars »', 'il partait'], bon: 0, exp: 'que + phrase transformée.' },
+        { q: '« demain » au discours indirect devient :', choix: ['le lendemain', 'hier', 'aujourd\'hui'], bon: 0, exp: 'Les repères changent de point de vue.' },
+        { q: '« Viens-tu ? » → indirect :', choix: ['il demande si je viens', 'il demande que viens', 'viens ?'], bon: 0, exp: 'Question fermée → si.' },
+        { q: 'Futur au discours indirect devient :', choix: ['conditionnel', 'imparfait', 'présent'], bon: 0, exp: '« Je viendrai » → il viendrait (dans la subordonnée).' },
+        { q: 'Le discours direct utilise :', choix: ['des guillemets', 'la conjonction que', 'le subjonctif'], bon: 0, exp: 'Paroles rapportées telles quelles.' }
+      ],
+      vf: [
+        { q: 'Au discours indirect, « aujourd\'hui » devient « ce jour-là ».', v: true, exp: 'Le repère temporel est décalé.' },
+        { q: 'Le discours indirect conserve les guillemets.', v: false, exp: 'Ils disparaissent, remplacés par une subordonnée.' },
+        { q: '« ici » devient « là » au discours indirect.', v: true, exp: 'Changement de repère spatial.' }
+      ]
+    },
+    {
+      id: 'fr4-lexique', mat: 'francais', niveau: '4e',
+      titre: 'Sens des mots : synonymes, contraires',
+      express: '<li>Synonymes : sens proche (content/joyeux).</li><li>Antonymes : sens contraire (haut/bas).</li><li>Homoncymes/homophones : seau/saut, ver/vert/vers.</li><li>Polysémie : un mot, plusieurs sens (la « souris » de l\'ordinateur).</li><li>Sens propre (le chat dort) / sens figuré (il pleut des cordes).</li>',
+      complet: '<h3>1. Enrichir son vocabulaire</h3><p>Pour chaque mot appris : chercher un synonyme, un contraire, et l\'employer dans une phrase. Le mot n\'est retenu qu\'utilisé.</p><h3>2. Pièges des homophones</h3><p>ver/vert/vers/verre : « le verre vert penche vers la table ». a/à, son/sont, et/est : s\'entraîner par des dictées ciblées.</p><h3>3. Polysémie</h3><p>« Tête » : tête humaine, tête de clou, tête de liste. Le contexte décide du sens.</p><h3>4. Sens propre et figuré</h3><p>« Il a cassé sa figure » (propre) ; « il a cassé l\'ambiance » (figuré). Les expressions imagées enrichissent l\'écriture.</p><h3>5. Registres</h3><p>Copain (familier), ami (courant), confrère (soutenu) : adapter son vocabulaire au destinataire.</p><h3>6. Dictionnaire</h3><p>Savoir lire une entrée : nature, définitions numérotées (poly-sémie !), exemples, synonymes.</p>',
+      quiz: [
+        { q: 'Contraire de « courageux » :', choix: ['peureux', 'brave', 'hardi'], bon: 0, exp: 'Antonyme : peureux/lâche.' },
+        { q: '« Il pleut des cordes » est une expression :', choix: ['au sens figuré', 'au sens propre', 'incorrecte'], bon: 0, exp: 'Image, pas réalité.' },
+        { q: '« La souris de l\'ordinateur » illustre :', choix: ['la polysémie', 'l\'homonymie', 'l\'antonymie'], bon: 0, exp: 'Un mot, plusieurs sens selon le contexte.' },
+        { q: 'Homophone de « verre » :', choix: ['vers/ver/vert', 'vair/seuil', 'vais'], bon: 0, exp: 'Même son, sens et orthographes différents.' },
+        { q: 'Registre familier de « automobile » :', choix: ['caisse/bagnole', 'véhicule', 'limousine'], bon: 0, exp: '« Bagnole » est familier ; « véhicule » est courant.' }
+      ],
+      vf: [
+        { q: 'Deux synonymes ont exactement le même sens dans tous les contextes.', v: false, exp: 'Nuances proches mais rarement identiques.' },
+        { q: 'Le contexte aide à choisir le bon sens d\'un mot polysémique.', v: true, exp: 'C\'est la phrase qui tranche.' },
+        { q: '« Et » et « est » sont des homophones.', v: true, exp: 'Même prononciation, rôles différents.' }
+      ]
+    },
+    {
+      id: 'fr3-orthographe', mat: 'francais', niveau: '3e',
+      titre: 'Orthographe : les pièges du brevet',
+      express: '<li>Leur(s) : possessif s\'accorde ; « à leur place » sans s si complément.</li><li>a/à : remplacer par « avait » pour tester.</li><li>son/sont : « sont » = étaient.</li><li>Participes passés : avec être → accord sujet ; avec avoir → pas d\'accord (sauf COD avant).</li><li>Doublement des consonnes : mémoire, hors programme : apprendre par listes.</li>',
+      complet: '<h3>1. Homophones fréquents</h3><p>leur livre (possessif singulier) / leurs livres (pluriel) / chez eux (pronom, invariable). a (verbe avoir : « il a » → il avait) / à (préposition).</p><h3>2. Accords dans le GN</h3><p>Déterminant + adjectif + nom s\'accordent : « des chemins dangereux », « une dame âgée ». Attention aux noms en -al (journal → journaux) et -eau (bijou → bijoux).</p><h3>3. Participe passé</h3><p>« Les fleurs qu\'il a cueillies » : COD (que = fleurs) devant → accord. « Il a cueilli des fleurs » : pas d\'accord.</p><h3>4. Verbes en -cer/-ger</h3><p>commencer → commençons (cédille devant a/o) ; manger → mangeons (e après g).</p><h3>5. Méthode de relecture</h3><p>Relire en trois passes : 1) les verbes (sujets et terminaisons), 2) les GN (accords), 3) les homophones.</p><h3>6. Entraînement</h3><p>Une dictée courte par semaine, ciblée sur ses erreurs personnelles : la meilleure méthode pour progresser durablement.</p>',
+      quiz: [
+        { q: '« Ils ___ contents » :', choix: ['sont', 'son', 'sons'], bon: 0, exp: 'Test : « ils étaient contents » → sont.' },
+        { q: '« Il ___ raison » :', choix: ['a', 'à', 'as'], bon: 0, exp: 'Test : « il avait raison » → a.' },
+        { q: '« Les fleurs qu\'elle a ___ » :', choix: ['cueillies', 'cueilli', 'cueillit'], bon: 0, exp: 'COD « que » (= fleurs) placé avant : accord.' },
+        { q: 'Pluriel de « journal » :', choix: ['journaux', 'journals', 'journaux/journaux'], bon: 0, exp: 'Les noms en -al font -aux.' },
+        { q: '« Nous ___ (commencer) » :', choix: ['commençons', 'commanceons', 'commencions'], bon: 0, exp: 'Ça devant a/o : cédille.' }
+      ],
+      vf: [
+        { q: '« Leurs » s\'accorde toujours au pluriel quand il est possessif suivi d\'un nom pluriel.', v: true, exp: 'leurs livres : pluriel du possessif.' },
+        { q: 'Avec avoir, le participe passé ne s\'accorde jamais.', v: false, exp: 'Si le COD est placé avant le verbe, il s\'accorde.' },
+        { q: '« On mangeons » est correct.', v: false, exp: 'On = il/elle : « on mange ».' }
+      ]
+    },
+    {
+      id: 'fr3-redaction', mat: 'francais', niveau: '3e',
+      titre: 'La rédaction au brevet',
+      express: '<li>Sujet type : récit à partir d\'une image ou suite de texte, 20-25 lignes.</li><li>Structure : situation initiale → élément perturbateur → péripéties → dénouement.</li><li>Temps : imparfait + passé simple (ou PC) — ne pas mélanger.</li><li>Paragraphes : une idée = un paragraphe.</li><li>Relecture : orthographe, accords, ponctuation (4 points sur la langue !).</li>',
+      complet: '<h3>1. Analyser le sujet</h3><p>Qui raconte ? (narrateur interne/externe) Quel temps imposer ? Quelle situation de départ ? Souligner les consignes : elles notent des points.</p><h3>2. Construire le récit</h3><p>Situation initiale (2-3 lignes) → déclencheur → actions croissantes → point culminant → chute ou dénouement. Le schéma narratif structure naturellement.</p><h3>3. Soigner la langue</h3><p>Varier les connecteurs (soudain, pendant que, enfin), éviter les répétitions, glisser une description (5 sens) et un dialogue court pour vivre la scène.</p><h3>4. Paragraphe et cohérence</h3><p>Sauter une ligne entre les paragraphes. Rester dans le temps demandé, dans le point de vue, dans le ton (sérieux ou humoristique mais cohérent).</p><h3>5. Gérer le temps</h3><p>5 min d\'analyse + plan, 30-35 min de rédaction, 10 min de relecture minutieuse (verbes, GN, homophones).</p><h3>6. Barème type</h3><p>Respect du sujet et cohérence, grammaire et orthographe, richesse de l\'expression : chaque critère compte. La relecture fait souvent gagner 2-3 points.</p>',
+      quiz: [
+        { q: 'Le schéma narratif commence par :', choix: ['la situation initiale', 'le dénouement', 'le dialogue'], bon: 0, exp: 'Avant le déclencheur des péripéties.' },
+        { q: 'Temps recommandés pour un récit au brevet :', choix: ['imparfait + passé simple', 'présent + futur', 'conditionnel'], bon: 0, exp: 'Sans mélanger avec le PC sauf choix assumé.' },
+        { q: 'La relecture permet de corriger :', choix: ['orthographe et accords', 'le sujet', 'l\'image'], bon: 0, exp: 'Jusqu\'à 4 points sur la langue !' },
+        { q: 'Une idée = ', choix: ['un paragraphe', 'une page', 'un mot'], bon: 0, exp: 'Paragraphes courts et nets.' },
+        { q: 'Temps de rédaction conseillé :', choix: ['30-35 minutes', '5 minutes', '1 heure et demie'], bon: 0, exp: 'Plus l\'analyse et la relecture.' }
+      ],
+      vf: [
+        { q: 'Il faut mêler tous les temps dans un récit.', v: false, exp: 'Cohérence : imparfait + passé simple/PC.' },
+        { q: 'Un court dialogue peut enrichir le récit.', v: true, exp: 'Il fait vivre la scène, s\'il est bien amené.' },
+        { q: 'Respecter les consignes du sujet fait gagner des points.', v: true, exp: 'Le correcteur vérifie d\'abord le respect de la consigne.' }
+      ]
+    },
+{
+      id: 'h5-islam', mat: 'histoire', niveau: '5e',
+      titre: 'L\'islam, une nouvelle religion',
+      express: '<li>Mahomet, marchand de La Mecque, reçoit la révélation vers 610.</li><li>Le Coran rassemble les paroles de Dieu transmises par Mahomet.</li><li>Hégire en 622 : départ de Mahomet à Médine, an 1 du calendrier musulman.</li><li>Les 5 piliers : profession de foi, prière, aumône, jeûne du ramadan, pèlerinage à La Mecque.</li><li>Après la mort de Mahomet (632), les conquêtes arabes s\'étendent jusqu\'en Espagne.</li>',
+      complet: '<h3>1. La naissance de l\'islam</h3><p>En Arabie, au VIIe siècle, Mahomet prit l\'unicité de Dieu (Allah). Persécuté à La Mecque, il émigre à Médine en 622 : c\'est l\'Hégire, point de départ du calendrier musulman.</p><h3>2. Le Coran</h3><p>Livre saint dicté à Mahomet par l\'ange Gabriel : règles religieuses, morales et de vie. La langue arabe, sacrée, diffuse avec la religion.</p><h3>3. Les cinq piliers</h3><p>Shahada (croire en un seul Dieu et en son prophète), prière quotidienne, aumône (zakat), jeûne du ramadan, pèlerinage (hajj) à La Mecque.</p><h3>4. Les conquêtes</h3><p>Après 632, les califes (successeurs) conquièrent la Syrie, la Perse, l\'Égypte, l\'Afrique du Nord, puis l\'Espagne (711). En 732, Charles Martel arrête les Arabes à Poitiers.</p><h3>5. Une civilisation brillante</h3><p>Bagdad, Cordoue : bibliothèques, médecine, mathématiques (les « chiffres arabes » !), philosophie. L\'islam transmet aussi l\'héritage grec à l\'Europe.</p><h3>6. Aujourd\'hui</h3><p>L\'islam est l\'une des grandes religions mondiales (~1,9 milliard de croyants), présente surtout en Afrique et en Asie.</p>',
+      quiz: [
+        { q: 'L\'Hégire (622) marque :', choix: ['le départ de Mahomet à Médine', 'la naissance de Mahomet', 'la bataille de Poitiers'], bon: 0, exp: 'An 1 du calendrier musulman.' },
+        { q: 'Le livre saint de l\'islam :', choix: ['le Coran', 'la Torah', 'la Bible'], bon: 0, exp: 'Paroles de Dieu transmises à Mahomet.' },
+        { q: 'Le pèlerinage se fait à :', choix: ['La Mecque', 'Médine', 'Jérusalem'], bon: 0, exp: 'Le hajj, 5e pilier.' },
+        { q: 'En 732, les Arabes sont arrêtés à :', choix: ['Poitiers', 'Tours', 'Rome'], bon: 0, exp: 'Victoire de Charles Martel.' },
+        { q: 'Les « chiffres arabes » viennent de :', choix: ['des mathématiciens du monde musulman', 'de Rome', 'de Grèce'], bon: 0, exp: 'Transmis depuis l\'Inde via le monde arabe.' }
+      ],
+      vf: [
+        { q: 'Mahomet est considéré comme le prophète de l\'islam.', v: true, exp: 'Le dernier prophète, transmetteur du Coran.' },
+        { q: 'Le ramadan est un pèlerinage.', v: false, exp: 'C\'est le jeûne ; le pèlerinage est le hajj.' },
+        { q: 'Les conquêtes arabes ont atteint l\'Espagne.', v: true, exp: 'En 711, puis Poitiers stoppe l\'expansion en 732.' }
+      ]
+    },
+    {
+      id: 'h5-byzance', mat: 'histoire', niveau: '5e',
+      titre: 'L\'empire byzantin',
+      express: '<li>Empire romain d\'Orient (395-1453), capitale Constantinople.</li><li>Empereur Justinien (VIe siècle) : reconquêtes, code de lois.</li><li>Religion : chrétienne, mais séparée de Rome en 1054 (schisme).</li><li>Sainte-Sophie : immense église à la coupole novatrice.</li><li>Prise de Constantinople par les Ottomans en 1453 : fin de l\'empire.</li>',
+      complet: '<h3>1. Une capitale entre deux continents</h3><p>Constantinople (ex-Byzance), fondée par Constantin en 330, contrôle le détroit entre Europe et Asie : position stratégique du commerce.</p><h3>2. Justinien</h3><p>Empereur au VIe siècle : il reconquiert l\'Italie et l\'Afrique du Nord, fait compiler le droit romain (Code de Justinien, base de nombreux droits actuels), embellit la capitale.</p><h3>3. Sainte-Sophie</h3><p>Basilique gigantesque à coupole posée sur pendentifs, décor de mosaïques dorées : sommet de l\'architecture byzantine.</p><h3>4. Le schisme de 1054</h3><p>Chrétiens d\'Orient (grecs, orthodoxes) se séparent des chrétiens d\'Occident (latins, catholiques) : excommunications mutuelles, deux Églises séparées.</p><h3>5. Culture</h3><p>Langue grecque, mosaïques, icônes, textes antiques préservés : Byzance transmettra l\'héritage grec à la Renaissance italienne.</p><h3>6. La chute</h3><p>Long déclin face aux Croisés (sac de 1204) et aux Ottomans : en 1453, Constantinople tombe. L\'empire dura plus de 1000 ans !</p>',
+      quiz: [
+        { q: 'La capitale byzantine était :', choix: ['Constantinople', 'Rome', 'Athènes'], bon: 0, exp: 'Actuelle Istanbul.' },
+        { q: 'Sainte-Sophie est :', choix: ['une église à coupole', 'un temple grec', 'une mosquée d\'origine'], bon: 0, exp: 'Devenue mosquée après 1453, puis musée.' },
+        { q: 'Le schisme de 1054 sépare :', choix: ['Église d\'Orient et d\'Occident', 'Empire et papauté', 'islam et christianisme'], bon: 0, exp: 'Orthodoxes contre catholiques.' },
+        { q: 'L\'empire byzantin disparaît en :', choix: ['1453', '1054', '476'], bon: 0, exp: 'Prise de Constantinople par les Ottomans.' },
+        { q: 'Le Code de Justinien concerne :', choix: ['le droit', 'la religion', 'l\'armée'], bon: 0, exp: 'Compilation du droit romain.' }
+      ],
+      vf: [
+        { q: 'Byzance parlait surtout grec.', v: true, exp: 'L\'empire d\'Orient est hellénophone.' },
+        { q: 'L\'empire byzantin est mort en 476.', v: false, exp: 'C\'est l\'empire d\'Occident ; Byzance dure jusqu\'en 1453.' },
+        { q: 'Byzance a préservé des textes antiques.', v: true, exp: 'Ils ont nourri la Renaissance.' }
+      ]
+    },
+    {
+      id: 'h4-lumieres', mat: 'histoire', niveau: '4e',
+      titre: 'Les Lumières (XVIIIe siècle)',
+      express: '<li>Mouvement intellectuel : raison contre préjugés et obscurantisme.</li><li>Philosophes : Voltaire (tolérance), Rousseau (contrat social), Montesquieu (séparation des pouvoirs), Diderot (Encyclopédie).</li><li>Idées : liberté, égalité, critique de l\'absolutisme et de l\'esclavage.</li><li>Diffusion : livres, salons, cafés, Encyclopédie (1751-1772).</li><li>Influence : Déclaration d\'indépendance américaine (1776), Révolution française (1789).</li>',
+      complet: '<h3>1. L\'esprit des Lumières</h3><p>Kant : « Ose penser par toi-même ! » La raison doit éclairer le monde et combattre l\'ignorance, la superstition, le fanatisme.</p><h3>2. Les grands philosophes</h3><p>Montesquieu : séparer législatif, exécutif, judiciaire (De l\'esprit des lois). Voltaire : tolérance et liberté d\'expression. Rousseau : souveraineté du peuple (Du contrat social). Diderot et d\'Alembert : l\'Encyclopédie, somme des connaissances.</p><h3>3. Critiques</h3><p>Contre l\'absolutisme royal, les privilèges, l\'intolérance religieuse, l\'esclavage (condamné dès les années 1780, club des Amis des Noirs).</p><h3>4. Diffusion</h3><p>Livre cher, censuré : idées qui circulent dans les salons, cafés, journaux, et par des ouvrages interdits imprimés en Suisse ou Hollande.</p><h3>5. Des idées en actes</h3><p>1776 : Déclaration d\'indépendance des États-Unis (Jefferson lecteur des philosophes). 1789 : Déclaration des droits de l\'homme et du citoyen.</p><h3>6. Limites</h3><p>Des philosophes investis dans le commerce colonial, des femmes exclues du débat (Olympe de Gouges dénonce en 1791) : les Lumières étaient perfectibles.</p>',
+      quiz: [
+        { q: 'L\'Encyclopédie est dirigée par :', choix: ['Diderot et d\'Alembert', 'Voltaire', 'Rousseau'], bon: 0, exp: '1751-1772 : 28 volumes.' },
+        { q: 'Montesquieu défend :', choix: ['la séparation des pouvoirs', 'l\'esclavage', 'l\'absolutisme'], bon: 0, exp: 'Législatif, exécutif, judiciaire séparés.' },
+        { q: '« Du contrat social » est écrit par :', choix: ['Rousseau', 'Voltaire', 'Kant'], bon: 0, exp: 'La souveraineté appartient au peuple.' },
+        { q: 'Les Lumières condamnent :', choix: ['l\'intolérance et l\'esclavage', 'la raison', 'la science'], bon: 0, exp: 'Liberté, égalité, tolérance.' },
+        { q: 'La Déclaration d\'indépendance américaine date de :', choix: ['1776', '1789', '1751'], bon: 0, exp: 'Inspirée des philosophes.' }
+      ],
+      vf: [
+        { q: 'Les Lumières défendaient la raison contre les préjugés.', v: true, exp: '« Éclairer » le monde par la connaissance.' },
+        { q: 'Voltaire a écrit « Du contrat social ».', v: false, exp: 'C\'est Rousseau ; Voltaire a écrit Candide.' },
+        { q: 'Les idées des Lumières ont influencé la Révolution française.', v: true, exp: '1789 : Déclaration des droits de l\'homme.' }
+      ]
+    },
+    {
+      id: 'h4-industrie', mat: 'histoire', niveau: '4e',
+      titre: 'La révolution industrielle',
+      express: '<li>Angleterre, fin XVIIIe : machine à vapeur (Watt), usines.</li><li>Innovations : métier à tisser mécanique, chemin de fer (Stephenson, 1830).</li><li>Usines et villes champignons : Manchester, puis le Nord français.</li><li>Une nouvelle société : bourgeois patrons et prolétariat ouvrier.</li><li>Conditions ouvrières dures → luttes, syndicats, lois sociales.</li>',
+      complet: '<h3>1. Le moteur : la machine</h3><p>La machine à vapeur transforme l\'énergie charbon en mouvement : l\'usine remplace l\'atelier, la production explose.</p><h3>2. Transports</h3><p>Chemin de fer (Stockton-Darlington 1825, Liverpool-Manchester 1830), paquebots à vapeur : le monde se rétrécit, les marchandises circulent.</p><h3>3. Villes et travail</h3><p>Exode rural, villes noires de fumée, logements insalubres, journées de 12-14 h, travail des enfants : le prolétariat s\'organise (chartisme, syndicats).</p><h3>4. Patrons et bourgeois</h3><p>La bourgeoisie industrielle accumule les capitaux et le pouvoir politique ; l\'aristocratie ouvrière et le capitalisme moderne naissent.</p><h3>5. Premières luttes</h3><p>Grèves, mutuelles, syndicats légalisés en France en 1884 : les lois sociales viendront plus tard (retraites 1910, congés payés 1936).</p><h3>6. Bilan</h3><p>Révolution industrielle = bouleversement économique (machinisme), social (classes nouvelles), urbain (grandes villes) : socle du monde moderne.</p>',
+      quiz: [
+        { q: 'La machine à vapeur est perfectionnée par :', choix: ['James Watt', 'Stephenson', 'Ford'], bon: 0, exp: 'Watt améliore la machine de Newcomen.' },
+        { q: 'Première ligne de chemin de fer voyageurs (1830) :', choix: ['Liverpool-Manchester', 'Paris-Lyon', 'Moscou-Kiev'], bon: 0, exp: 'Locomotive de Stephenson : Rocket.' },
+        { q: 'Les ouvriers du XIXe travaillaient :', choix: ['12 à 14 heures par jour', '7 heures', 'à domicile'], bon: 0, exp: 'Travail des enfants inclus.' },
+        { q: 'Les syndicats sont légalisés en France en :', choix: ['1884', '1789', '1936'], bon: 0, exp: 'Loi Waldeck-Rousseau.' },
+        { q: 'La révolution industrielle démarre en :', choix: ['Angleterre', 'France', 'Allemagne'], bon: 0, exp: 'Charbon, coton, capitaux disponibles.' }
+      ],
+      vf: [
+        { q: 'Le chemin de fer a accéléré la circulation des marchandises.', v: true, exp: 'Et rapproché les marchés.' },
+        { q: 'Le travail des enfants était interdit au XIXe siècle.', v: false, exp: 'Les premières lois (1841) seront peu appliquées.' },
+        { q: 'La bourgeoisie industrielle a gagné du pouvoir économique.', v: true, exp: 'Et souvent du pouvoir politique.' }
+      ]
+    },
+    {
+      id: 'h3-republique', mat: 'histoire', niveau: '3e',
+      titre: 'La Ve République',
+      express: '<li>1958 : de Gaulle fonde la Ve République (Constitution renforcée).</li><li>Président élu (depuis 1962 par suffrage direct), pouvoir exécutif fort.</li><li>1962 : paix en Algérie après l\'indépendance.</li><li>Mai 68 : crise sociale et culturelle, société qui change.</li><li>Alternances politiques : droite (1969-1981), gauche (1981-1995), cohabitations, puis 2022+.</li>',
+      complet: '<h3>1. La naissance (1958)</h3><p>La IVe République, instable et bloquée par la guerre d\'Algérie, appelle de Gaulle : nouvelle Constitution approuvée par référendum, président aux pouvoirs étendus.</p><h3>2. De Gaulle président (1959-1969)</h3><p>Décolonisation achevée (Algérie indépendante en 1962 après les accords d\'Évian), modernisation (plan monnaie nouvelle, 1960), politique de grandeur (force nucléaire, sortie du commandement OTAN 1966).</p><h3>3. Mai 68</h3><p>Étudiants puis grève générale de 10 millions de salariés : société en mutation, accords de Grenelle (hausse des salaires), vieillissement du général qui quitte le pouvoir en 1969.</p><h3>4. Les présidents suivants</h3><p>Pompidou (1969-74), Giscard (74-81), Mitterrand (81-95, première alternance, abolition de la peine de mort 1981), Chirac (95-2007), Sarkozy, Hollande, Macron (2017).</p><h3>5. Institutions</h3><p>Président (5 ans depuis 2000, renouvelable une fois), Premier ministre, Parlement (Assemblée + Sénat), Conseil constitutionnel.</p><h3>6. Débats actuels</h3><p>Réformes, place du référendum, questions sociales : la Ve République évolue, sans refondation depuis 66 ans.</p>',
+      quiz: [
+        { q: 'La Ve République naît en :', choix: ['1958', '1954', '1968'], bon: 0, exp: 'Constitution de de Gaulle approuvée par référendum.' },
+        { q: 'L\'Algérie devient indépendante en :', choix: ['1962', '1958', '1968'], bon: 0, exp: 'Accords d\'Évian.' },
+        { q: 'Mai 68 commence par :', choix: ['des étudiants', 'une guerre', 'une élection'], bon: 0, exp: 'Avant l\'extension aux ouvriers.' },
+        { q: 'La peine de mort est abolie en :', choix: ['1981', '1968', '2000'], bon: 0, exp: 'Sous Mitterrand, loi Badinter.' },
+        { q: 'Depuis 1962, le président est élu :', choix: ['au suffrage universel direct', 'par le Parlement seul', 'à vie'], bon: 0, exp: 'Réforme de 1962 par de Gaulle.' }
+      ],
+      vf: [
+        { q: 'La Ve République a connu des cohabitations.', v: true, exp: 'Président et majorité parlementaire opposés (1986, 1993, 1997).' },
+        { q: 'Mitterrand fut le premier président de gauche de la Ve République.', v: true, exp: 'Élu en 1981.' },
+        { q: 'Le quinquennat date de 2000.', v: true, exp: 'Mandat réduit de 7 à 5 ans.' }
+      ]
+    },
+    {
+      id: 'h3-decolonisation', mat: 'histoire', niveau: '3e',
+      titre: 'La décolonisation',
+      express: '<li>Après 1945 : les empires coloniaux s\'effritent.</li><li>Voies : négociation (Inde 1947), guerre (Algérie 1954-62), pression internationale.</li><li>1960 : « année de l\'Afrique », 17 indépendances.</li><li>Nouveaux États : difficultés économiques, frontières artificielles.</li><li>Francophonie et relations Nord-Sud : héritages persistants.</li>',
+      complet: '<h3>1. Pourquoi après 1945 ?</h3><p>Métropoles affaiblies par la guerre, mouvements nationalistes renforcés, ONU et USA/URSS hostiles au colonialisme.</p><h3>2. L\'Inde (1947)</h3><p>Gandhi (non-violence) et Nehru obtiennent l\'indépendance du Royaume-Uni. Partition douloureuse : Inde, Pakistan, puis Bangladesh (1971) ; des centaines de milliers de morts.</p><h3>3. L\'Algérie (1954-1962)</h3><p>Guerre longue et brutale, terrorisme des deux camps, putsch des généraux : les accords d\'Évian (1962) donnent l\'indépendance ; un million de pieds-noirs quittent l\'Algérie.</p><h3>4. L\'Afrique</h3><p>1960 : 17 États africains indépendants, dont 14 français par accord. Frontières coloniales conservées : sources de conflits futurs.</p><h3>5. Défis des nouveaux États</h3><p>Sous-développement, dettes, dictatures, mais aussi Mouvement des non-alignés (Belgrade 1961) et revendication d\'un nouvel ordre économique.</p><h3>6. Mémoire</h3><p>En France : reconnaissance progressive (loi de 2005 contestée, travail mémoriel sur la guerre d\'Algérie). Les immigrations postcoloniales transforment la société française.</p>',
+      quiz: [
+        { q: 'L\'indépendance de l\'Inde date de :', choix: ['1947', '1962', '1960'], bon: 0, exp: 'Négociation avec Gandhi et Nehru.' },
+        { q: 'L\'Algérie est indépendante depuis :', choix: ['1962', '1954', '1945'], bon: 0, exp: 'Accords d\'Évian après 8 ans de guerre.' },
+        { q: '1960 est appelée :', choix: ['l\'année de l\'Afrique', 'l\'année de l\'Asie', 'l\'année de l\'ONU'], bon: 0, exp: '17 indépendances africaines.' },
+        { q: 'Gandhi prônait :', choix: ['la non-violence', 'la guerre totale', 'l\'alliance URSS'], bon: 0, exp: 'Désobéissance civile et boycotts.' },
+        { q: 'Les frontières africaines actuelles sont surtout :', choix: ['héritées de la colonisation', 'naturelles', 'négociées en 1960'], bon: 0, exp: 'Sources de tensions ethniques.' }
+      ],
+      vf: [
+        { q: 'Toutes les décolonisations se sont faites par la guerre.', v: false, exp: 'Inde, Afrique noire française : souvent négociées.' },
+        { q: 'L\'ONU a soutenu les mouvements d\'indépendance.', v: true, exp: 'Droit des peuples à disposer d\'eux-mêmes.' },
+        { q: 'La partition de l\'Inde a été pacifique.', v: false, exp: 'Violences massives entre communautés.' }
+      ]
+    },
+    {
+      id: 'g5-urbanisation', mat: 'geo', niveau: '5e',
+      titre: 'Habiter une ville',
+      express: '<li>Plus de la moitié de l\'humanité est urbaine.</li><li>Ville : centre (CBD), banlieues, périphérie.</li><li>Métropoles du Sud explosent (Lagos, Mumbai, Dhaka).</li><li>Problèmes : logements, transports, pollution, inégalités.</li><li>Aménagements : transports en commun, logement social, espaces verts.</li>',
+      complet: '<h3>1. Comment grandit une ville ?</h3><p>Exode rural + forte natalité : les villes du Sud doublent en 20-30 ans. Bidonvilles entourent Lagos, Mumbai, Le Caire.</p><h3>2. Lire un plan de ville</h3><p>Centre historique + quartier d\'affaires, quartiers résidentiels, zones industrielles et commerciales en périphérie, réseaux (eau, transport).</p><h3>3. Vivre en ville</h3><p>Avantages : emplois, écoles, soins, loisirs. Inconvénients : prix des logements, embouteillages, pollution, insécurité parfois.</p><h3>4. Villes durables</h3><p>Transports collectifs (BRT de Curitiba), pistes cyclables, immeubles économes, parcs : la ville compacte limite l\'étalement.</p><h3>5. Exemple : Paris</h3><p>Métropole mondiale : 12 millions d\'habitants dans l\'aire urbaine, Grand Paris Express en construction pour relier les banlieues.</p><h3>6. Habitant et citoyen</h3><p>Démocratie locale, budgets participatifs, associations : les habitants participent aux décisions d\'aménagement.</p>',
+      quiz: [
+        { q: 'Part de l\'humanité urbaine :', choix: ['plus de 50 %', 'moins de 30 %', '90 %'], bon: 0, exp: 'Cap franchi vers 2007.' },
+        { q: 'Une métropole du Sud en très forte croissance :', choix: ['Lagos', 'Lyon', 'Berlin'], bon: 0, exp: 'Nigeria : +500 000 habitants/an.' },
+        { q: 'Le Grand Paris Express est :', choix: ['un réseau de métro', 'un aéroport', 'un quartier'], bon: 0, exp: '200 km de lignes en construction.' },
+        { q: 'Aménagement durable :', choix: ['transports en commun', 'autoroutes géantes', 'étalement urbain'], bon: 0, exp: 'Limiter les déplacements en voiture.' },
+        { q: 'L\'étalement urbain entraîne :', choix: ['étalement des déplacements', 'moins de pollution', 'villes compactes'], bon: 0, exp: 'Plus de voiture, plus de surfaces artificialisées.' }
+      ],
+      vf: [
+        { q: 'Les villes du Sud grossissent surtout par exode rural.', v: true, exp: 'Et par natalité élevée.' },
+        { q: 'Vivre en ville n\'a que des avantages.', v: false, exp: 'Logement cher, pollution, embouteillages.' },
+        { q: 'Le budget participatif associe les habitants aux décisions.', v: true, exp: 'Ex. : Paris, Porto Alegre.' }
+      ]
+    },
+    {
+      id: 'g5-climats', mat: 'geo', niveau: '5e',
+      titre: 'Climats et paysages du monde',
+      express: '<li>Climat = conditions atmosphériques moyennes sur longtemps.</li><li>Grands climats : équatorial, tropical, désertique, tempéré, polaire.</li><li>Chaque climat a ses paysages : forêt dense, savane, désert, forêt tempérée, glaces.</li><li>Le climat conditionne l\'habitat, l\'agriculture, les vêtements.</li><li>Hommes adaptés : cases sur pilotis, igloos, maisons en pisé.</li>',
+      complet: '<h3>1. Équatorial</h3><p>Chaud et humide toute l\'année (Amazonie, Congo) : forêt dense, cultures sur brûlis, mais il pleut chaque après-midi.</p><h3>2. Tropical</h3><p>Saison des pluies + saison sèche (Afrique de l\'Ouest) : savane, cultures du mil, transhumance des troupeaux.</p><h3>3. Désertique</h3><p>Sécheresse extrême (Sahara) : moins de 250 mm/an, oasis, villes autour des points d\'eau, nomades ou irrigués.</p><h3>4. Tempéré</h3><p>Quatre saisons (Europe de l\'Ouest) : agriculture riche, forêts de feuillus, forte densité humaine.</p><h3>5. Polaire</h3><p>Froid permanent (Arctique, Antarctique) : toundra, Inuits, activités adaptées ; climat continental très froid : Sibérie.</p><h3>6. Changement</h3><p>Le réchauffement déplace les zones : sécheresses, canicules, montée des eaux : s\'adapter devient un enjeu mondial.</p>',
+      quiz: [
+        { q: 'Climat chaud et humide toute l\'année :', choix: ['équatorial', 'polaire', 'tempéré'], bon: 0, exp: 'Amazonie, Congo : forêt dense.' },
+        { q: 'La savane est le paysage du climat :', choix: ['tropical', 'équatorial', 'polaire'], bon: 0, exp: 'Saison sèche + saison des pluies.' },
+        { q: 'Le désert reçoit moins de :', choix: ['250 mm de pluie/an', '1000 mm', '10 mm'], bon: 0, exp: 'Sécheresse extrême.' },
+        { q: 'L\'habitat adapté au désert :', choix: ['le pisé (terre crue)', 'les pilotis', 'les chalets'], bon: 0, exp: 'Murs épais qui gardent la fraîcheur.' },
+        { q: 'L\'Europe de l\'Ouest a un climat :', choix: ['tempéré', 'équatorial', 'désertique'], bon: 0, exp: 'Quatre saisons marquées.' }
+      ],
+      vf: [
+        { q: 'Le climat désertique est favorable à l\'agriculture intensive.', v: false, exp: 'Sans irrigation, presque rien ne pousse.' },
+        { q: 'Les Inuits vivent en climat polaire.', v: true, exp: 'Habitat et activités adaptés au froid.' },
+        { q: 'Le réchauffement climatique modifie les zones agricoles.', v: true, exp: 'Sécheresses et déplacements de cultures.' }
+      ]
+    },
+    {
+      id: 'g4-migrations', mat: 'geo', niveau: '4e',
+      titre: 'Les migrations internationales',
+      express: '<li>~281 millions de migrants internationaux (2020, ONU).</li><li>Causes de départ : guerres, pauvreté, climat, études, travail.</li><li>Pôles d\'attraction : Amérique du Nord, Europe, Golfe, Australie.</li><li>Corridors : Mexique→USA, Syrie→Turquie/Europe, Afrique de l\'Ouest→Europe.</li><li>Enjeux : intégration, droit d\'asile, remises des migrants.</li>',
+      complet: '<h3>1. Pourquoi partir ?</h3><p>Push (fuir) : guerres, persécutions, misère, désastres climatiques. Pull (attirer) : emplois, sécurité, salaires, études. Souvent les deux se combinent.</p><h3>2. Les grands flux</h3><p>Du Sud vers le Nord majoritairement, mais aussi Sud-Sud (importants !) : Bangladesh→Inde, Syrie→Turquie (plus grande population de réfugiés), Amérique centrale→USA.</p><h3>3. Réfugiés et migrants économiques</h3><p>Réfugié : fuit persécution, protégé par la convention de Genève (asile). Migrant économique : cherche travail. Les trajets sont souvent dangereux (Méditerranée).</p><h3>4. Effets pour les pays d\'accueil</h3><p>Main-d\'œuvre, enrichissement culturel, mais débats sur l\'intégration, charge sur les systèmes sociaux en période de crise.</p><h3>5. Effets pour les pays de départ</h3><p>Remises d\'argent (énormes : plusieurs fois l\'aide au développement), « fuite des cerveaux », mais aussi moins de pression sur l\'emploi.</p><h3>6. Gouverner les migrations</h3><p>Accords internationaux (Pacte de Marrakech 2018), politique de visas et d\'asile, débats démocratiques vifs : un sujet géopolitique majeur.</p>',
+      quiz: [
+        { q: 'Un réfugié fuit :', choix: ['des persécutions ou une guerre', 'la pluie', 'les impôts'], bon: 0, exp: 'Protégé par la convention de Genève.' },
+        { q: 'Plus grand pays d\'accueil de réfugiés (années 2010) :', choix: ['la Turquie', 'la France', 'le Canada'], bon: 0, exp: 'Plusieurs millions de Syriens.' },
+        { q: 'Les remises des migrants servent :', choix: ['aux familles restées au pays', 'aux banques', 'à l\'ONU'], bon: 0, exp: 'Souvent essentielles aux économies locales.' },
+        { q: 'Un facteur de départ (« push ») :', choix: ['la guerre', 'les salaires élevés', 'les universités'], bon: 0, exp: 'Push = pousse dehors ; pull = attire.' },
+        { q: 'Nombre de migrants internationaux (2020) :', choix: ['~281 millions', '~1 million', '~3 milliards'], bon: 0, exp: 'Environ 3,6 % de l\'humanité.' }
+      ],
+      vf: [
+        { q: 'Les migrations se font uniquement du Sud vers le Nord.', v: false, exp: 'Les flux Sud-Sud sont très importants.' },
+        { q: 'Le droit d\'asile est protégé par des textes internationaux.', v: true, exp: 'Convention de Genève 1951.' },
+        { q: 'Les remises des migrants dépassent l\'aide au développement dans plusieurs pays.', v: true, exp: 'Vrai pour de nombreux pays d\'Afrique et d\'Asie.' }
+      ]
+    },
+    {
+      id: 'g4-tourisme', mat: 'geo', niveau: '4e',
+      titre: 'Le tourisme dans le monde',
+      express: '<li>~1,5 milliard de touristes internationaux par an.</li><li>Tourisme de masse : littoraux méditerranéens, grandes villes.</li><li>Acteurs : tour-opérateurs, États, habitants locaux.</li><li>Effets positifs : emplois, devises, patrimoine restauré.</li><li>Effets négatifs : bétonnage, saisonnalité, pressions sociales et environnementales.</li>',
+      complet: '<h3>1. Une industrie massive</h3><p>1er secteur économique de nombreux pays (France, Espagne, Italie en tête des arrivées ; Paris, Londres, Bangkok parmi les villes les plus visitées).</p><h3>2. Espaces touristiques</h3><p>Littoral méditerranéen (Costa del Sol, Baléares), villes d\'art, montagnes (Alpes), espaces exotiques (Maldives, safaris).</p><h3>3. Tourisme de masse vs alternatif</h3><p>Massification : séjours packagés, hôtels-clubs, pression sur les milieux. Alternatives : écotourisme, tourisme rural, saisons étalées.</p><h3>4. Acteurs et conflits</h3><p>Habitants mobilisés contre la surfréquentation (Barcelone, Venise), Airbnb et logement, gestion de l\'eau en zone aride.</p><h3>5. Étude de cas : la Méditerranée</h3><p>Le littoral le plus touristique au monde : aménagement intégré des années 1960 (Languedoc-Roussillon) puis saturation ; politiques de reconquête des plages.</p><h3>6. Tourisme durable</h3><p>Limiter les vols longue distance, respecter les communautés, répartir les flux : l\'avenir d\'un tourisme qui reste la première aspiration de loisirs mondiale.</p>',
+      quiz: [
+        { q: 'Le littoral le plus touristique du monde :', choix: ['la Méditerranée', 'la Baltique', 'l\'Antarctique'], bon: 0, exp: 'Espagne, France, Italie, Grèce, Turquie.' },
+        { q: 'Nombre de touristes internationaux par an :', choix: ['~1,5 milliard', '~10 millions', '~5 milliards'], bon: 0, exp: 'Avant la crise de 2020, en remontée.' },
+        { q: 'Une conséquence négative du tourisme de masse :', choix: ['le bétonnage des côtes', 'la disparition des hôtels', 'moins de vols'], bon: 0, exp: 'Pression sur les milieux et le logement.' },
+        { q: 'Une forme de tourisme durable :', choix: ['l\'écotourisme', 'les croisières géantes', 'les hôtels-clubs'], bon: 0, exp: 'Respect des milieux et des habitants.' },
+        { q: 'Le tourisme est le 1er secteur économique :', choix: ['de nombreux pays', 'nulle part', 'de l\'Antarctique'], bon: 0, exp: 'Maldives, Espagne, France, Croatie…' }
+      ],
+      vf: [
+        { q: 'Le tourisme crée des emplois dans les pays d\'accueil.', v: true, exp: 'Hôtellerie, transport, restauration : des millions d\'emplois.' },
+        { q: 'La saisonnalité du tourisme est un atout pour l\'emploi.', v: false, exp: 'Emplois précaires, concentration sur quelques mois.' },
+        { q: 'Des habitants protestent contre la surfréquentation (Barcelone, Venise).', v: true, exp: 'Mouvements « tourists go home ».' }
+      ]
+    },
+    {
+      id: 'g3-usa', mat: 'geo', niveau: '3e',
+      titre: 'Les États-Unis, puissance mondiale',
+      express: '<li>1re économie mondiale (~26 000 milliards $), 3e population (~335 M).</li><li>Puissance économique : dollars, entreprises (Google, Apple), universités, agriculture.</li><li>Puissance militaire et diplomatique : 1er budget de défense, alliances (OTAN).</li><li>Puissance culturelle : cinéma, musique, numérique.</li><li>Faiblesses : inégalités, dette, concurrents (Chine), tensions internes.</li>',
+      complet: '<h3>1. Les fondements</h3><p>Territoire immense et riche (ressources, terres agricoles), population nombreuse et qualifiée issue de l\'immigration, fédéralisme dynamique.</p><h3>2. Économie</h3><p>Le dollar, monnaie mondiale ; Silicon Valley (innovation), Wall Street (finance) ; universités de premier rang (Harvard, MIT, Stanford) ; agriculture exportatrice colossale.</p><h3>3. Géopolitique</h3><p>Bases militaires dans le monde, OTAN, alliances asiatiques ; soft power : Hollywood, Netflix, plateformes ; anglais, langue globale.</p><h3>4. Organisation du territoire</h3><p>Sun Belt en croissance (Californie, Texas, Floride), Manufacturing Belt en reconversion, grandes métropoles : New York, Los Angeles, Chicago.</p><h3>5. Contestation et fragilités</h3><p>Inégalités sociales et raciales, dette publique, dépendance énergétique en transition, montée de la Chine : la puissance américaine est challengée.</p><h3>6. Pour l\'examen</h3><p>Savoir montrer un exemple de chaque dimension de la puissance (économie, culture, militaire) et une limite.</p>',
+      quiz: [
+        { q: 'Classement économique des États-Unis :', choix: ['1er', '5e', '10e'], bon: 0, exp: 'Devant la Chine en valeur nominale.' },
+        { q: 'La Sun Belt est :', choix: ['la région en croissance du Sud', 'une ceinture industrielle', 'un désert'], bon: 0, exp: 'Californie, Texas, Floride.' },
+        { q: 'Symbole de la puissance financière :', choix: ['Wall Street', 'Broadway', 'Disneyland'], bon: 0, exp: 'New York, première place mondiale.' },
+        { q: 'Alliance militaire menée par les USA :', choix: ['l\'OTAN', 'l\'OPEP', 'l\'ASEAN'], bon: 0, exp: 'Atlantic alliance depuis 1949.' },
+        { q: 'Un défi interne des États-Unis :', choix: ['les inégalités sociales', 'le manque de terres', 'l\'absence d\'universités'], bon: 0, exp: 'Pauvreté, santé, tensions raciales.' }
+      ],
+      vf: [
+        { q: 'Les États-Unis sont une fédération d\'États.', v: true, exp: '50 États avec leurs propres lois.' },
+        { q: 'La puissance américaine est uniquement militaire.', v: false, exp: 'Économique, culturelle, diplomatique aussi.' },
+        { q: 'La Chine concurrence la puissance américaine.', v: true, exp: 'Économie, technologie, influence régionale.' }
+      ]
+    },
+    {
+      id: 'g3-afrique', mat: 'geo', niveau: '3e',
+      titre: 'L\'Afrique, un continent en transformation',
+      express: '<li>1,4 milliard d\'habitants : population jeune, très forte croissance urbaine.</li><li>Ressources énormes : pétrole, minerais, terres rares, terres agricoles.</li><li>Défis : développement, stabilité, changement climatique.</li><li>Intégration : ZLECAf (marché continental 2021), Chine et nouveaux partenaires.</li><li>Afrique = 54 États, situations très contrastées.</li>',
+      complet: '<h3>1. Un continent jeune</h3><p>Plus de 60 % de moins de 25 ans ; population qui doublera d\'ici 2050. Villes géantes en croissance : Lagos, Kinshasa, Le Caire.</p><h3>2. Richesses</h3><p>Pétrole (Nigeria, Angola), cuivre (Zambie, RDC), cobalt (RDC, 70 % mondial), terres rares, solaires potentielles immenses.</p><h3>3. Défis</h3><p>Dette, corruption, conflits (Sahel, Corne de l\'Afrique), réchauffement (sécheresses), pression sur l\'école et l\'emploi des jeunes.</p><h3>4. Innovations</h3><p>Mobile money (M-Pesa), fintech, villes nouvelles, agriculture intelligente, secteur culturel (Nollywood, afrobeat) : l\'Afrique innove à sa manière.</p><h3>5. Relations extérieures</h3><p>Chine (1er partenaire, Belt and Road), Inde, Turquie, Golfe ; l\'Europe reste proche ; nouvelles alliances Sud-Sud.</p><h3>6. Regard nuancé</h3><p>Pas un bloc : émirats pétroliers, îles stables, géants régionaux (Nigeria, Afrique du Sud, Kenya), États fragiles : savoir situer et comparer.</p>',
+      quiz: [
+        { q: 'Part des moins de 25 ans en Afrique :', choix: ['plus de 60 %', '20 %', '90 %'], bon: 0, exp: 'Le continent le plus jeune du monde.' },
+        { q: 'Le cobalt mondial vient surtout de :', choix: ['la RDC', 'la France', 'l\'Australie'], bon: 0, exp: 'Essentiel aux batteries électriques.' },
+        { q: 'M-Pesa est :', choix: ['du paiement mobile', 'une ONG', 'un aéroport'], bon: 0, exp: 'Pionnier du mobile money au Kenya.' },
+        { q: '1er partenaire commercial de l\'Afrique :', choix: ['la Chine', 'la Belgique', 'le Brésil'], bon: 0, exp: 'Depuis les années 2010.' },
+        { q: 'Nombre d\'États africains :', choix: ['54', '12', '30'], bon: 0, exp: 'Situations très contrastées.' }
+      ],
+      vf: [
+        { q: 'L\'Afrique est un pays.', v: false, exp: 'C\'est un continent de 54 États !' },
+        { q: 'La population africaine doublera d\'ici 2050.', v: true, exp: 'Projection ONU : ~2,5 milliards.' },
+        { q: 'L\'Afrique est riche en ressources minérales.', v: true, exp: 'Cobalt, cuivre, pétrole, terres rares…' }
+      ]
+    },
+{
+      id: 'svt5-vivant', mat: 'svt', niveau: '5e',
+      titre: 'Le vivant et sa classification',
+      express: '<li>Tous les êtres vivants : cellules, nutrition, reproduction.</li><li>Classification emboîtée : groupes dans les groupes (espèce, genre, famille…).</li><li>Cellule : membrane, cytoplasme, noyau (ou ADN).</li><li>Animaux vertébrés/invertébrés, végétaux, champignons, microbes.</li><li>L\'unité du vivant : l\'ADN, présent dans toutes les cellules.</li>',
+      complet: '<h3>1. Qu\'est-ce qu\'un être vivant ?</h3><p>Il naît, se nourrit, grandit, se reproduit, meurt. Les objets non vivants n\'ont pas ces fonctions.</p><h3>2. La cellule</h3><p>Unité du vivant : membrane qui délimite, cytoplasme, noyau contenant l\'ADN. Une cellule végétale a en plus une paroi et des chloroplastes.</p><h3>3. Classification</h3><p>On regroupe les êtres vivants selon leurs attributs (caractères) communs : les groupes sont emboîtés (un vertébré est aussi un chordé, un animal). Le groupe « êtres vivants » contient tout.</p><h3>4. Exemples de rangs</h3><p>espèce (chat) → genre → famille (félidés) → ordre (carnivores) → classe (mammifères). Chaque rang englobe les précédents.</p><h3>5. Diversité</h3><p>Millions d\'espèces : insectes (les plus nombreux), poissons, oiseaux, plantes à fleurs, champignons, bactéries… La biodiversité est un patrimoine à préserver.</p><h3>6. Méthode</h3><p>Savoir classer avec un tableau d\'attributs, construire un arbre de parenté simple.</p>',
+      quiz: [
+        { q: 'L\'unité de structure du vivant :', choix: ['la cellule', 'l\'atome', 'l\'organe'], bon: 0, exp: 'Tout être vivant est fait de cellules.' },
+        { q: 'La cellule contient l\'ADN dans :', choix: ['le noyau', 'la membrane', 'le cytoplasme seul'], bon: 0, exp: 'Le noyau protège le programme génétique.' },
+        { q: 'Le groupe le plus numerous du vivant animal :', choix: ['les insectes', 'les mammifères', 'les oiseaux'], bon: 0, exp: 'Environ un million d\'espèces décrites !' },
+        { q: 'Une classification emboîtée signifie :', choix: ['des groupes dans des groupes', 'une liste plate', 'un classement alphabétique'], bon: 0, exp: 'espèce ⊂ genre ⊂ famille…' },
+        { q: 'Une cellule végétale possède en plus :', choix: ['une paroi et des chloroplastes', 'un noyau double', 'rien'], bon: 0, exp: 'La paroi rigide et la photosynthèse.' }
+      ],
+      vf: [
+        { q: 'Les champignons sont des végétaux.', v: false, exp: 'Règne à part : ni animal, ni végétal.' },
+        { q: 'Tous les êtres vivants possèdent de l\'ADN.', v: true, exp: 'C\'est l\'unité fondamentale du vivant.' },
+        { q: 'Un arbre de parenté regroupe par caractères communs.', v: true, exp: 'La classification est fondée sur la parenté.' }
+      ]
+    },
+    {
+      id: 'svt5-squelette', mat: 'svt', niveau: '5e',
+      titre: 'Le squelette et le mouvement',
+      express: '<li>Squelette = charpente de 206 os chez l\'adulte.</li><li>Os longs, plats, courts : chacun a un rôle.</li><li>Articulations mobiles (genou, coude) et semi-mobiles (colonne).</li><li>Muscles attachés par les tendons : ils tirent sur les os.</li><li>Prévention : calcium, sport, posture, sécurité.</li>',
+      complet: '<h3>1. Rôle du squelette</h3><p>Soutien du corps, protection des organes (crâne → cerveau, côtes → poumons), production des cellules sanguines (moelle osseuse), réserve de calcium.</p><h3>2. Les articulations</h3><p>Deux os en contact + cartilage (glisse) + ligaments (maintien) + liquide synovial. Genou, hanche, épaule : mobiles ; vertèbres : semi-mobiles ; crâne : immobiles (sutures).</p><h3>3. Muscle et mouvement</h3><p>Un muscle relie deux os par des tendons ; en se contractant, il raccourcit et tire : le bras se plie (biceps). Les muscles travaillent en antagonistes (biceps/triceps).</p><h3>4. Croissance</h3><p>Les os grandissent aux cartilages de croissance ; le calcium et la vitamine D sont essentiels ; l\'ossification s\'achève vers 18-25 ans.</p><h3>5. Prévention</h3><p>Activité physique (renforce l\'os), alimentation calcique (produits laitiers), éviter les chutes et protéger sa tête en vélo.</p><h3>6. Fractures et entorses</h3><p>Fracture : os cassé → immobilisation. Entorse : ligament étiré → repos et glace. Voir un médecin rapidement.</p>',
+      quiz: [
+        { q: 'Nombre d\'os chez l\'adulte :', choix: ['206', '106', '306'], bon: 0, exp: 'Le nouveau-né en a plus, certains fusionnent.' },
+        { q: 'Les tendons relient :', choix: ['le muscle à l\'os', 'l\'os à l\'os', 'le muscle à la peau'], bon: 0, exp: 'Ce sont les « cordes » de traction.' },
+        { q: 'Le cartilage sert à :', choix: ['faire glisser les surfaces osseuses', 'produire du sang', 'chauffer'], bon: 0, exp: 'Aux articulations, il amortit.' },
+        { q: 'Minéral essentiel à l\'os :', choix: ['le calcium', 'le sodium', 'le plomb'], bon: 0, exp: 'Avec la vitamine D pour le fixer.' },
+        { q: 'Biceps et triceps sont :', choix: ['antagonistes', 'identiques', 'des os'], bon: 0, exp: 'L\'un plie, l\'autre étend le bras.' }
+      ],
+      vf: [
+        { q: 'Les muscles poussent les os pour créer le mouvement.', v: false, exp: 'Ils tirent en se contractant, jamais poussent.' },
+        { q: 'La moelle osseuse produit les cellules sanguines.', v: true, exp: 'Globules rouges et blancs naissent dans l\'os.' },
+        { q: 'L\'activité physique renforce les os.', v: true, exp: 'Contrainte = stimulation de la croissance osseuse.' }
+      ]
+    },
+    {
+      id: 'svt4-seismes', mat: 'svt', niveau: '4e',
+      titre: 'Les séismes',
+      express: '<li>Un séisme : libération brutale de contraintes dans la roche.</li><li>Foyer (hypocentre) en profondeur, épicentre en surface.</li><li>Faille : fracture le long de laquelle les blocs glissent.</li><li>Ondes sismiques : secousses qui se propagent.</li><li>Magnitude (énergie, Richter) ≠ intensité (dégâts, MSK).</li>',
+      complet: '<h3>1. Où et pourquoi ?</h3><p>Aux frontières de plaques (failles de San Andreas, ceinture pacifique, Alpes-Himalaya). Les plaques se bloquent, les contraintes s\'accumulent puis cèdent : c\'est la rupture.</p><h3>2. Enregistrement</h3><p>Les sismomètres tracisent les ondes (P puis S). L\'écart entre les arrivées permet de localiser le foyer.</p><h3>3. Magnitude et intensité</h3><p>Magnitude : énergie totale, une valeur par séisme. Intensité : dégâts ressentis, variable selon les lieux (échelle MSK I-XII).</p><h3>4. Conséquences</h3><p>Effondrements, tsunamis (Sumatra 2004, Japon 2011), glissements de terrain, incendies. 60 000 morts au Kashmir en 2005.</p><h3>5. Prévention</h3><p>Constructions parasismiques (normes), exercices d\'évacuation, alerte précoce (Japon, secondes gagnées), cartographie des risques.</p><h3>6. En France</h3><p>Sismicité modérée : Alsace, Alpes, Pyrénées, Antilles (plus forte). Zone du séisme de 2019 à Teil (Ardèche).</p>',
+      quiz: [
+        { q: 'L\'épicentre est :', choix: ['le point en surface au-dessus du foyer', 'la profondeur du séisme', 'l\'appareil de mesure'], bon: 0, exp: 'Foyer en profondeur, épicentre en surface.' },
+        { q: 'La magnitude mesure :', choix: ['l\'énergie libérée', 'les dégâts', 'le nombre de victimes'], bon: 0, exp: 'Une seule valeur par séisme.' },
+        { q: 'Un tsunami peut suivre :', choix: ['un séisme sous-marin', 'une sécheresse', 'un orage'], bon: 0, exp: 'Japon 2011, Sumatra 2004.' },
+        { q: 'Ondes les plus rapides :', choix: ['les ondes P', 'les ondes S', 'la lumière'], bon: 0, exp: 'P = premières arrivées.' },
+        { q: 'Zone française la plus sismique :', choix: ['les Antilles', 'la Bretagne', 'le Nord'], bon: 0, exp: 'Guadeloupe et Martinique, proche des plaques.' }
+      ],
+      vf: [
+        { q: 'Les séismes se produisent partout au hasard.', v: false, exp: 'Ils se concentrent aux frontières de plaques.' },
+        { q: 'On peut construire des bâtiments parasismiques.', v: true, exp: 'Normes et architecture adaptées.' },
+        { q: 'Intensité et magnitude sont synonymes.', v: false, exp: 'Intensité = dégâts ressentis ; magnitude = énergie.' }
+      ]
+    },
+    {
+      id: 'svt4-circulation', mat: 'svt', niveau: '4e',
+      titre: 'Le sang et la circulation',
+      express: '<li>Sang = plasma + globules rouges (O₂) + blancs (défense) + plaquettes (coagulation).</li><li>Cœur : 2 ventricules (pompes) + 2 oreillettes, 4 valvules.</li><li>2 circulations : grande (corps) et petite (poumons).</li><li>Artères : du cœur vers les organes. Veines : retour.</li><li>Battement cardiaque : systole (chasse) + diastole (remplissage).</li>',
+      complet: '<h3>1. La composition du sang</h3><p>55 % plasma (eau, nutriments, déchets), 45 % cellules : 5 millions de globules rouges/mm³ (hémoglobine qui fixe le O₂), globules blancs (immunité), plaquettes (bouchent les blessures).</p><h3>2. Le cœur</h3><p>Muscle creux, 4 cavités. Le sang pauvre en O₂ part du ventricule droit vers les poumons ; enrichi, il revient à l\'oreillette gauche, repart du ventricule gauche vers les organes.</p><h3>3. Vaisseaux</h3><p>Artères : parois élastiques, sang pulsé. Capillaires : échanges. Veines : valves anti-retour, sang désoxygéné (sauf veine pulmonaire).</p><h3>4. Le rythme</h3><p>60-80 battements/min au repos ; la contraction (systole) propulse le sang, la relaxation (diastole) remplit. Le pouls = artères battant.</p><h3>5. À l\'effort</h3><p>Cœur et respiration accélèrent pour apporter plus de O₂ et de glucose aux muscles, évacuer le CO₂. L\'entraînement abaisse le rythme de repos.</p><h3>6. Santé cardiovasculaire</h3><p>Activity physique, alimentation équilibrée (limiter sel, sucres, graisses saturées), ne pas fumer : prévention de l\'hypertension et de l\'infarctus.</p>',
+      quiz: [
+        { q: 'Les globules rouges transportent :', choix: ['le dioxygène', 'les anticorps', 'les nutriments'], bon: 0, exp: 'L\'hémoglobine fixe le O₂.' },
+        { q: 'Les plaquettes servent à :', choix: ['la coagulation', 'transporter l\'oxygène', 'défendre'], bon: 0, exp: 'Elles bouchent les blessures.' },
+        { q: 'Le sang part du cœur vers les organes par :', choix: ['les artères', 'les veines', 'les nerfs'], bon: 0, exp: 'Artères = away !' },
+        { q: 'Rythme cardiaque au repos (adulte) :', choix: ['60-80 bpm', '150-200', '20-30'], bon: 0, exp: 'Plus bas chez les sportifs.' },
+        { q: 'La petite circulation passe par :', choix: ['les poumons', 'le foie', 'le cerveau'], bon: 0, exp: 'C\'est là que le sang s\'oxygène.' }
+      ],
+      vf: [
+        { q: 'Les veines contiennent toujours du sang pauvre en oxygène.', v: false, exp: 'Les veines pulmonaires ramènent le sang chargé en O₂.' },
+        { q: 'Les globules blancs participent à la défense.', v: true, exp: 'Phagocytose et anticorps.' },
+        { q: 'L\'entraînement sportif abaisse le pouls de repos.', v: true, exp: 'Le cœur devient plus efficace.' }
+      ]
+    },
+    {
+      id: 'svt3-nerveux', mat: 'svt', niveau: '3e',
+      titre: 'Le système nerveux',
+      express: '<li>Cerveau + moelle épinière + nerfs = système nerveux.</li><li>Message nerveux : signal électrique le long des neurones.</li><li>3 fonctions : capter (récepteurs), intégrer (cerveau), commander (muscles, glandes).</li><li>Réflexe : voie courte (moelle). Acte volontaire : voie longue (cerveau).</li><li>Neurone : dendrites, corps, axone.</li>',
+      complet: '<h3>1. Le neurone</h3><p>Cellule spécialisée : dendrites qui reçoivent, corps cellulaire, axone qui transmet (jusqu\'à 1 m de long !). L\'influx voyage à ~100 m/s.</p><h3>2. Les centres</h3><p>Cerveau (cortex : conscience, mémoire, décision ; cervelet : équilibre et coordination), moelle épinière (réflexes, relais). Protégés par le crâne, les vertèbres et les méninges.</p><h3>3. L\'arc réflexe</h3><p>Récepteur → neurone sensitif → centre (moelle) → neurone moteur → muscle : la main se retire du feu avant même d\'avoir mal. Rapide et involontaire.</p><h3>4. Le geste volontaire</h3><p>Les informations remontent au cortex : perception, décision, ordre moteur descend. Plus lent, mais contrôlé.</p><h3>5. Système nerveux et santé</h3><p>Stupéfiants et alcool perturbent les messages : temps de réaction allongé (danger au volant), addictions. Le sommeil consolide les apprentissages.</p><h3>6. Applications</h3><p>IRM pour observer le cerveau actif, neuroprothèses, prévention routière : le système nerveux est au cœur des sciences du corps humain.</p>',
+      quiz: [
+        { q: 'L\'influx nerveux est :', choix: ['un signal électrique', 'un gaz', 'un liquide'], bon: 0, exp: 'Le long des neurones, jusqu\'à 100 m/s.' },
+        { q: 'Dans un réflexe, le centre est :', choix: ['la moelle épinière', 'le cortex', 'le muscle'], bon: 0, exp: 'Voie courte : rapide et involontaire.' },
+        { q: 'L\'axone transmet le message :', choix: ['vers l\'extérieur du neurone', 'vers les dendrites', 'nulle part'], bon: 0, exp: 'Dendrites = entrées, axone = sortie.' },
+        { q: 'L\'alcool au volant :', choix: ['allonge le temps de réaction', 'améliore le conduite', 'est sans effet'], bon: 0, exp: 'Messages nerveux perturbés.' },
+        { q: 'Le cervelet gère :', choix: ['l\'équilibre et la coordination', 'la mémoire', 'la vue'], bon: 0, exp: 'Le cortex gère les fonctions supérieures.' }
+      ],
+      vf: [
+        { q: 'Un réflexe est volontaire.', v: false, exp: 'Il est involontaire et automatique.' },
+        { q: 'La moelle épinière est protégée par les vertèbres.', v: true, exp: 'Comme le cerveau par le crâne.' },
+        { q: 'Le sommeil participe aux apprentissages.', v: true, exp: 'Le cerveau consolide la mémoire pendant le sommeil.' }
+      ]
+    },
+    {
+      id: 'svt3-sport', mat: 'svt', niveau: '3e',
+      titre: 'Sport, santé et dopage',
+      express: '<li>L\'activité physique régulière : bénéfique (cœur, os, stress).</li><li>Source d\'énergie musculaire : ATP, glucose, graisses + O₂.</li><li>Dopage : substances artificielles pour améliorer la performance — interdit et dangereux.</li><li>Effets : EPO (épaissit le sang), stéroïdes (troubles graves).</li><li>Consommation de produits licites (tabac, alcool, médicaments mal utilisés) : risques aussi.</li>',
+      complet: '<h3>1. Les muscles au travail</h3><p>Les fibres musculaires consomment de l\'énergie (ATP) issue du glucose et des graisses, en présence de O₂ (respiration cellulaire). À l\'effort intense, la fermentation produit de l\'acide lactique : courbatures.</p><h3>2. Bénéfices du sport</h3><p>Renforce cœur et os, entretien la santé mentale, prévention de l\'obésité et du diabète. 1 h par jour recommandée pour les ados.</p><h3>3. Qu\'est-ce que le dopage ?</h3><p>Utiliser des substances ou méthodes interdites pour améliorer la performance : EPO (globules rouges artificiels → caillots, AVC), stéroïdes anabolisants (virilisation, lésions hépatiques), hormones de croissance.</p><h3>4. Pourquoi interdit ?</h3><p>Triche (égalité des concurrents), dangers sanitaires parfois mortels, message faussement transmis à la jeunesse.</p><h3>5. Autres produits</h3><p>Alcool et tabac réduisent les performances et créent une dépendance ; les « boosters » et compléments : prudence, avis médical.</p><h3>6. Esprit sportif</h3><p>Hydratation, entraînement progressif, récupération, respect des règles : la vraie performance, c\'est la santé durable.</p>',
+      quiz: [
+        { q: 'L\'EPO artificielle :', choix: ['épaissit le sang (risque de caillots)', 'est un médicament banal', 'améliore la vue'], bon: 0, exp: 'Risque d\'AVC et d\'infarctus.' },
+        { q: 'L\'acide lactique provient :', choix: ['de la fermentation à l\'effort intense', 'du dopage', 'de la respiration cellulaire'], bon: 0, exp: 'Quand le O₂ manque.' },
+        { q: 'Temps d\'activité physique recommandé pour les ados :', choix: ['1 h/jour', '5 min/semaine', '4 h/jour'], bon: 0, exp: 'OMS : au moins 60 minutes par jour.' },
+        { q: 'Le dopage est interdit car :', choix: ['triche + danger + mauvais exemple', 'trop cher', 'sans effet'], bon: 0, exp: 'Toujours les trois raisons.' },
+        { q: 'Les stéroïdes anabolisants provoquent :', choix: ['des troubles hormonaux et hépatiques', 'une croissance saine', 'aucun effet'], bon: 0, exp: 'Effets irréversibles possibles.' }
+      ],
+      vf: [
+        { q: 'Le sport régulier est bon pour le cœur.', v: true, exp: 'Et pour les os et le moral.' },
+        { q: 'Les compléments alimentaires sont tous inoffensifs.', v: false, exp: 'Certains sont dangereux ou contaminés : avis médical.' },
+        { q: 'Le dopage peut entraîner la mort.', v: true, exp: 'Plusieurs cas documentés (cyclisme). ' }
+      ]
+    },
+    {
+      id: 'pc5-etats', mat: 'physique', niveau: '5e',
+      titre: 'Les états de la matière',
+      express: '<li>3 états : solide, liquide, gaz (et plasma).</li><li>Solide : forme propre. Liquide : prend la forme du récipient. Gaz : occupe tout l\'espace.</li><li>Changements d\'état : fusion, solidification, vaporisation, liquéfaction, sublimation.</li><li>La masse ne change pas au changement d\'état ; le volume oui.</li><li>Eau : glace 0 °C, ébullition 100 °C (pression normale).</li>',
+      complet: '<h3>1. Description microscopique</h3><p>Solide : particules serrées, ordonnées, vibrent. Liquide : particules proches, désordonnées, glissent. Gaz : particules éloignées, rapides, libres.</p><h3>2. Changements d\'état</h3><p>solide ⇄ liquide : fusion / solidification ; liquide ⇄ gaz : vaporisation / liquéfaction ; solide ⇄ gaz : sublimation (neige sèche).</p><h3>3. Conservation de la masse</h3><p>La glace fondue pèse la même masse : 10 g de glace → 10 g d\'eau. Le volume change (l\'eau prend moins de place en fondant : particularité !).</p><h3>4. Températures de changement</h3><p>Pour l\'eau pure : fusion 0 °C, ébullition 100 °C à pression normale. Le sucre dissout élève la température d\'ébullition (confitures !).</p><h3>5. Masse et volume</h3><p>ρ = m/V : la masse volumique de l\'eau = 1 g/cm³ = 1 kg/L. L\'huile flotte (moins dense), le miel coule.</p><h3>6. Applications</h3><p>Distillation, météo (évaporation/condensation des nuages), cuisine : les changements d\'état sont partout.</p>',
+      quiz: [
+        { q: 'L\'eau bout à (pression normale) :', choix: ['100 °C', '0 °C', '50 °C'], bon: 0, exp: 'Et fond à 0 °C.' },
+        { q: 'Passage liquide → gaz :', choix: ['vaporisation', 'fusion', 'solidification'], bon: 0, exp: 'L\'inverse est la liquéfaction.' },
+        { q: 'Lors d\'un changement d\'état, la masse :', choix: ['reste identique', 'double', 'disparaît'], bon: 0, exp: 'Seul le volume change.' },
+        { q: 'Un gaz occupe :', choix: ['tout l\'espace disponible', 'le fond du récipient', 'une forme propre'], bon: 0, exp: 'Particules libres et rapides.' },
+        { q: 'Masse volumique de l\'eau :', choix: ['1 kg/L', '1 g/L', '100 kg/L'], bon: 0, exp: '= 1 g/cm³.' }
+      ],
+      vf: [
+        { q: 'La fusion est le passage solide → liquide.', v: true, exp: 'L\'inverse est la solidification.' },
+        { q: 'La masse change quand la glace fond.', v: false, exp: 'Même masse, volume différent.' },
+        { q: 'L\'huile flotte sur l\'eau car elle est moins dense.', v: true, exp: 'Masse volumique plus faible.' }
+      ]
+    },
+    {
+      id: 'pc5-vitesse', mat: 'physique', niveau: '5e',
+      titre: 'Mouvement et vitesse',
+      express: '<li>Décrire un mouvement : trajectoire + vitesse.</li><li>Trajectoire : ligne droite (curviligne si courbe, circulaire si cercle).</li><li>v = d ÷ t (m/s ou km/h).</li><li>1 m/s = 3,6 km/h.</li><li>Uniforme (v constante) ou varié (accéléré/ralenti).</li>',
+      complet: '<h3>1. Référentiel</h3><p>Un mouvement se décrit par rapport à un objet de référence : passager assis dans un train = immobile pour son voisin, mobile pour l\'observateur sur le quai.</p><h3>2. Calculer une vitesse</h3><p>Une voiture parcourt 150 km en 2 h : v = 150/2 = 75 km/h. Un coureur 100 m en 12 s : v ≈ 8,3 m/s ≈ 30 km/h.</p><h3>3. Convertir</h3><p>m/s → km/h : × 3,6. km/h → m/s : ÷ 3,6. 90 km/h = 25 m/s.</p><h3>4. Trajectoires</h3><p>Rectiligne (ascenseur), circulaire (grande roue), curviligne (vélo qui tourne).</p><h3>5. Uniforme ou varié</h3><p>Uniforme : v constante (autoroute cruise). Accéléré : départ de bus. Ralenti : freinage. La vitesse peut varier en grandeur et en direction.</p><h3>6. Sécurité routière</h3><p>Distance d\'arrêt = distance de réaction (v × 1 s, alcool multiplie !) + distance de freinage (∝ v²) : 50 km/h ↔ 30 m environ pour s\'arrêter. Pourquoi les limitations ?</p>',
+      quiz: [
+        { q: '150 km en 2 h : vitesse =', choix: ['75 km/h', '300 km/h', '30 km/h'], bon: 0, exp: 'v = d/t.' },
+        { q: '90 km/h = ? m/s', choix: ['25', '90', '15'], bon: 0, exp: '90 ÷ 3,6 = 25.' },
+        { q: 'Mouvement circulaire :', choix: ['grande roue', 'ascenseur', 'TGV en ligne'], bon: 0, exp: 'Trajectoire en cercle.' },
+        { q: 'La distance de freinage dépend surtout :', choix: ['du carré de la vitesse', 'de la couleur', 'du temps'], bon: 0, exp: '2× la vitesse ≈ 4× la distance !' },
+        { q: 'Le mouvement est relatif au :', choix: ['référentiel choisi', 'conducteur', 'temps'], bon: 0, exp: 'Tout dépend de l\'observateur.' }
+      ],
+      vf: [
+        { q: '1 m/s = 3,6 km/h.', v: true, exp: 'Car 1 h = 3600 s et 1 km = 1000 m.' },
+        { q: 'Un mouvement uniforme accélère.', v: false, exp: 'Vitesse constante, ni plus ni moins.' },
+        { q: 'L\'alcool allonge le temps de réaction.', v: true, exp: 'D\'où le danger au volant.' }
+      ]
+    },
+    {
+      id: 'pc4-massevolume', mat: 'physique', niveau: '4e',
+      titre: 'Masse, volume et masse volumique',
+      express: '<li>masse (g, kg) ≠ volume (mL, L, cm³, m³).</li><li>ρ = m / V : masse volumique en g/cm³ ou kg/m³.</li><li>Eau : 1 g/cm³. Éthanol : 0,79. Fer : 7,9.</li><li>Un corps moins dense flotte sur un plus dense.</li><li>La masse volumique identifie les matériaux.</li>',
+      complet: '<h3>1. Mesurer</h3><p>Masse : balance (g, kg). Volume liquide : éprouvette graduée (mL) ; solide : différence de niveau d\'eau ou formule géométrique.</p><h3>2. Calcul de ρ</h3><p>Un caillou de 84 g occupe 30 mL : ρ = 84/30 = 2,8 g/cm³. Un liquide de 50 mL pèse 40 g : ρ = 0,8 g/cm³ (probablement de l\'éthanol).</p><h3>3. Flotte ou coule ?</h3><p>ρ corps < ρ liquide → flotte. Le liège (0,2) flotte sur l\'eau, le fer (7,9) coule, mais un bateau en fer flotte (forme, air intérieur) !</p><h3>4. Identification</h3><p>Chaque matériau a sa masse volumique : mesurer m et V permet de reconnaître un métal (alu 2,7, cuivre 8,9, or 19,3).</p><h3>5. Unités</h3><p>1 g/cm³ = 1000 kg/m³. L\'eau : 1000 kg/m³. L\'air : 1,2 kg/m³ (pourquoi les ballons flottent).</p><h3>6. Applications</h3><p>Pétrole sur l\'eau (marées noires), icebergs (ρ glace 0,92), densimètres : la masse volumique explique beaucoup de phénomènes quotidiens.</p>',
+      quiz: [
+        { q: 'ρ = m/V : un corps de 84 g et 30 cm³ a ρ =', choix: ['2,8 g/cm³', '2520 g/cm³', '0,36 g/cm³'], bon: 0, exp: '84 ÷ 30 = 2,8.' },
+        { q: 'Masse volumique de l\'eau :', choix: ['1 g/cm³', '10 g/cm³', '0,1 g/cm³'], bon: 0, exp: '= 1000 kg/m³.' },
+        { q: 'Un corps flotte si sa masse volumique est :', choix: ['plus petite que celle du liquide', 'plus grande', 'égale à l\'air'], bon: 0, exp: 'ρ corps < ρ liquide → flotte.' },
+        { q: 'Le fer coule car :', choix: ['ρ fer (7,9) > ρ eau (1)', 'il est froid', 'il est lourd sans densité'], bon: 0, exp: 'La comparaison des ρ décide.' },
+        { q: 'L\'huile flotte sur l\'eau car :', choix: ['ρ huile < ρ eau', 'elle est chaude', 'elle est liquide'], bon: 0, exp: '≈ 0,92 contre 1.' }
+      ],
+      vf: [
+        { q: 'La masse volumique s\'exprime en g/cm³.', v: true, exp: 'Ou kg/m³, ou kg/L.' },
+        { q: 'Un bateau en fer flotte : le fer flotte donc.', v: false, exp: 'C\'est la forme (air intérieur) qui fait flotter le bateau.' },
+        { q: 'La masse volumique permet d\'identifier un matériau.', v: true, exp: 'Chaque matériau a sa valeur caractéristique.' }
+      ]
+    },
+    {
+      id: 'pc4-transchim', mat: 'physique', niveau: '4e',
+      titre: 'Transformations chimiques',
+      express: '<li>Réaction chimique : réactifs → nouveaux produits.</li><li>Conservation de la masse (Lavoisier) : rien ne se perd.</li><li>Combustion : réaction avec le dioxygène.</li><li>Tests : O₂ (braise), CO₂ (eau de chaux), H₂ (œuf à pétrole).</li><li>Signes d\'une réaction : dégagement gazeux, précipité, changement de couleur, chaleur.</li>',
+      complet: '<h3>1. Reconnaître une transformation</h3><p>Chimique : les molécules changent (rouille, combustion). Physique : seule la forme change (dissolution, changement d\'état).</p><h3>2. Conservation</h3><p>Lavoisier : la masse des réactifs consommés = masse des produits formés. Le fer rouillé pèse plus lourd car il a fixé du dioxygène.</p><h3>3. Combustion du carbone</h3><p>carbone + dioxygène → dioxyde de carbone. Masse : 12 g de C + 32 g de O₂ → 44 g de CO₂. Équation : C + O₂ → CO₂.</p><h3>4. Combustion du méthane</h3><p>CH₄ + 2 O₂ → CO₂ + 2 H₂O : réaction du gaz de ville. Combustion incomplète : formation de CO toxique (dangereux !).</p><h3>5. Tests d\'identification</h3><p>O₂ ravive une braise ; CO₂ trouble l\'eau de chaux ; l\'hydrogène « détone » à l\'approche d\'une flamme.</p><h3>6. Sécurité</h3><p>Ventilation des chauffe-eau, détecteurs de CO, jamais de feu près des solvants : la chimie demande le respect des règles.</p>',
+      quiz: [
+        { q: 'L\'équation C + O₂ → CO₂ traduit :', choix: ['la combustion du carbone', 'la fusion', 'une dissolution'], bon: 0, exp: 'Carbone + dioxygène → dioxyde de carbone.' },
+        { q: 'Le CO₂ se détecte avec :', choix: ['l\'eau de chaux', 'un aimant', 'le brouillard'], bon: 0, exp: 'Elle se trouble.' },
+        { q: 'La combustion complète du méthane produit :', choix: ['CO₂ et H₂O', 'du carbone', 'du fer'], bon: 0, exp: 'CH₄ + 2 O₂ → CO₂ + 2 H₂O.' },
+        { q: 'La masse totale après une réaction chimique :', choix: ['est conservée', 'double', 'diminue'], bon: 0, exp: 'Lavoisier : rien ne se perd.' },
+        { q: 'Le monoxyde de carbone (CO) est :', choix: ['toxique et invisible', 'inoffensif', 'un gaz coloré'], bon: 0, exp: 'Combustion incomplète : danger mortel.' }
+      ],
+      vf: [
+        { q: 'La rouille est une transformation chimique.', v: true, exp: 'Fer + O₂ + eau → oxyde de fer.' },
+        { q: 'Une dissolution est une transformation chimique.', v: false, exp: 'Elle est physique : les molécules ne changent pas.' },
+        { q: 'L\'O₂ ravive une braise.', v: true, exp: 'Test classique du dioxygène.' }
+      ]
+    },
+    {
+      id: 'pc3-acidebase', mat: 'physique', niveau: '3e',
+      titre: 'Acides, bases et pH',
+      express: '<li>pH de 0 (très acide) à 14 (très basique), 7 = neutre.</li><li>papier pH, indicateur coloré, pH-mètre : mesures.</li><li>Acide : jus de citron (pH ≈ 2), vinaigre, Coca.</li><li>Basique : savon (pH ≈ 10), eau de Javel (pH ≈ 12).</li><li>Réaction acide-base → sel + eau, neutralisation.</li>',
+      complet: '<h3>1. Mesurer le pH</h3><p>Papier pH (approximatif), indicateur universel, pH-mètre (précis). Le pH mesure l\'acidité d\'une solution aqueuse.</p><h3>2. Échelle</h3><p>0-7 acide (plus petit = plus acide), 7 neutre (eau pure), 7-14 basique. Le sang : 7,4. L\'estomac : 1 à 3 !</p><h3>3. Neutralisation</h3><p>acide + base → sel + eau. Exemple : HCl + NaOH → NaCl + H₂O. C\'est le principe des comprimés antiacides contre les brûlures d\'estomac.</p><h3>4. Dilution</h3><p>Ajouter de l\'eau rapproche le pH de 7 (sans le traverser) : l\'acide devient moins acide.</p><h3>5. Sécurité</h3><p>Acides et bases concentrés brûlent : gants, lunettes, jamais mélanger eau de Javel et vinaigre (dégagement de chlore toxique) ni Javel + acide.</p><h3>6. Environnement</h3><p>Pluies acides (pH < 5,6) : SO₂ et NOₓ des usines → dégradation des forêts et monuments ; l\'eau de chaulage corrige les lacs trop acides.</p>',
+      quiz: [
+        { q: 'pH de l\'eau pure :', choix: ['7', '0', '14'], bon: 0, exp: 'Neutre.' },
+        { q: 'Le jus de citron est :', choix: ['acide (pH ≈ 2)', 'basique', 'neutre'], bon: 0, exp: 'Très acide, d\'où son goût.' },
+        { q: 'Neutralisation : acide + base →', choix: ['sel + eau', 'gaz', 'feu'], bon: 0, exp: 'Ex. HCl + NaOH → NaCl + H₂O.' },
+        { q: 'Mélange DANGEREUX :', choix: ['eau de Javel + vinaigre', 'eau + sucre', 'sel + poivre'], bon: 0, exp: 'Dégagement de chlore toxique.' },
+        { q: 'Diluer un acide :', choix: ['rapproche le pH de 7', 'rend plus acide', 'ne change rien'], bon: 0, exp: 'Moins concentré, moins acide.' }
+      ],
+      vf: [
+        { q: 'Un pH de 3 est plus acide qu\'un pH de 5.', v: true, exp: 'Plus le pH est petit, plus c\'est acide.' },
+        { q: 'Le pH peut mesurer l\'acidité d\'un sol.', v: true, exp: 'Les plantes préfèrent des pH précis.' },
+        { q: 'On peut traverser le pH 7 en diluant un acide.', v: false, exp: 'La dilution rapproche de 7 sans le dépasser.' }
+      ]
+    },
+    {
+      id: 'pc3-metaux', mat: 'physique', niveau: '3e',
+      titre: 'Métaux et matériaux',
+      express: '<li>Métaux usuels : fer, aluminium, cuivre, zinc, or, argent.</li><li>Propriétés : conducteurs (électricité, chaleur), malléables, brillants.</li><li>Corrosion : le fer rouille (oxydation), l\'aluminium s\'auto-protège.</li><li>Alliages : acier (fer + carbone), inox ( + chrome), bronze (cuivre + étain).</li><li>Recyclage : économie de ressources et d\'énergie.</li>',
+      complet: '<h3>1. Reconnaître un métal</h3><p>Couleur (cuivre orangé), densité (aluminium léger 2,7), conductivité, aimantation (fer, mais pas l\'inox ni l\'aluminium).</p><h3>2. Propriétés et usages</h3><p>Fer : construction. Cuivre : câbles (excellent conducteur). Aluminium : aviation (léger). Or : bijoux (inoxydable, rare).</p><h3>3. Corrosion</h3><p>Le fer + O₂ + eau → rouille (oxyde poreux qui progresse). Protections : peinture, galvanisation (zinc), chrome (inox).</p><h3>4. Tests d\'identification des ions</h3><p>Fe²⁺ : précipité vert à la soude ; Cu²⁺ : précipité bleu ; Zn²⁣⁺ : blanc. Les ions métalliques colorent les solutions (Cu²⁺ bleu).</p><h3>5. Matériaux et société</h3><p>Composites, polymères : le choix d\'un matériau dépend des propriétés recherchées (résistance, masse, coût, recyclabilité).</p><h3>6. Recyclage</h3><p>Recycler l\'aluminium économise 95 % de l\'énergie de production : tri sélectif = enjeu industriel et écologique majeur.</p>',
+      quiz: [
+        { q: 'Métal le plus léger parmi ceux-ci :', choix: ['aluminium', 'fer', 'cuivre'], bon: 0, exp: 'ρ ≈ 2,7 contre 7,9 pour le fer.' },
+        { q: 'Le métal qui rouille :', choix: ['le fer', 'l\'or', 'l\'aluminium'], bon: 0, exp: 'Fer + O₂ + eau → rouille.' },
+        { q: 'L\'acier est un alliage de :', choix: ['fer + carbone', 'cuivre + étain', 'or + argent'], bon: 0, exp: 'Le bronze : cuivre + étain.' },
+        { q: 'Ion cuivre Cu²⁺ en solution :', choix: ['bleu', 'vert', 'incolore'], bon: 0, exp: 'Précipité bleu avec la soude.' },
+        { q: 'Recycler l\'aluminium économise :', choix: ['~95 % d\'énergie', 'rien', '5 %'], bon: 0, exp: 'C\'est pourquoi le tri est si rentable.' }
+      ],
+      vf: [
+        { q: 'Tous les métaux sont attirés par un aimant.', v: false, exp: 'Fer et certains aciers oui ; alu, cuivre, or non.' },
+        { q: 'Les métaux conduisent l\'électricité.', v: true, exp: 'D\'où les câbles en cuivre.' },
+        { q: 'L\'inox résiste à la corrosion grâce au chrome.', v: true, exp: 'Couche protectrice d\'oxyde de chrome.' }
+      ]
+    },
+{ id: 'ang5-be-have', mat: 'anglais', niveau: '5e', titre: 'Be et have got',
+      express: '<p><b>be</b> : I am, you are, he/she/it is, we/you/they are.<br><b>have got</b> : j\'ai / je possède.</p><ul><li>She <b>is</b> my sister.</li><li>He <b>has got</b> a dog.</li></ul>',
+      complet: '<h3>Le verbe be</h3><p>Le verbe <b>be</b> (être) est irrégulier : I am, you are, he/she/it is, we are, you are, they are. Forme négative : I am not, he isn\'t, we aren\'t. Question : Are you...? Is he...?</p><h3>Have got</h3><p><b>Have got</b> exprime la possession : I have got (= I\'ve got) a bike. Négatif : I haven\'t got. À la 3e personne : she has got (she\'s got), she hasn\'t got.</p><h3>Erreurs fréquentes</h3><p>On dit <i>he is</i> (pas « he has » seul pour l\'âge) : <b>He is 12 years old.</b> Pour l\'âge on utilise be, pour la possession have got.</p>',
+      quiz: [
+        { q: 'She ___ my best friend.', choix: ['is', 'are', 'am'], bon: 0, exp: 'She → is (3e personne du singulier).' },
+        { q: 'They ___ got a car.', choix: ['has', 'have', 'is'], bon: 1, exp: 'They → have got.' },
+        { q: 'Comment dit-on « Il a 13 ans » ?', choix: ['He has got 13 years', 'He is 13 years old', 'He is 13 years'], bon: 1, exp: 'L\'âge se dit avec be + ... years old.' },
+        { q: 'Forme négative de « He is late » :', choix: ['He not is late', 'He isn\'t late', 'He doesn\'t late'], bon: 1, exp: 'is + not → isn\'t.' },
+        { q: 'Question correcte :', choix: ['Have you got a pen?', 'Do you have got a pen?', 'Are you have a pen?'], bon: 0, exp: 'Have you got...? est la forme standard.' }
+      ],
+      vf: [
+        { q: '« We is happy » est correct.', v: false, exp: 'On doit dire « We are happy ».' },
+        { q: 'have got exprime la possession.', v: true, exp: 'C\'est sa fonction principale.' },
+        { q: 'On peut dire « Has she got a cat? »', v: true, exp: 'Inversion have/has et sujet pour la question.' }
+      ]
+    },
+    { id: 'ang5-vocab-famille', mat: 'anglais', niveau: '5e', titre: 'Vocabulaire de la famille',
+      express: '<p>father/mother, brother/sister, grandfather... Les membres de la famille en anglais.</p>',
+      complet: '<h3>Les membres de la famille</h3><ul><li>father (père), mother (mère), dad, mum</li><li>brother (frère), sister (sœur)</li><li>son (fils), daughter (fille)</li><li>grandfather (grand-père), grandmother (grand-mère)</li><li>uncle (oncle), aunt (tante), cousin/cousine</li><li>parents (parents), family (famille)</li></ul><h3>Possessif</h3><p>Pour parler de sa famille : <b>my</b> brother, <b>his</b> sister, <b>her</b> parents. Attention au Saxon genitive : <b>my sister\'s cat</b> = le chat de ma sœur.</p>',
+      quiz: [
+        { q: '« mon frère » se dit :', choix: ['my brother', 'my sister', 'my father'], bon: 0, exp: 'brother = frère.' },
+        { q: '« ma grand-mère » :', choix: ['my granddad', 'my grandmother', 'my aunt'], bon: 1, exp: 'grandmother = grand-mère.' },
+        { q: 'my sister\'s bike signifie :', choix: ['le vélo de ma sœur', 'ma sœur est un vélo', 'le vélo pour ma sœur'], bon: 0, exp: 'Structure possessive avec \'s.' },
+        { q: '« mes parents » :', choix: ['my friends', 'my parents', 'my cousins'], bon: 1, exp: 'parents = les parents.' },
+        { q: '« une tante » :', choix: ['an uncle', 'an aunt', 'a cousin'], bon: 1, exp: 'aunt = tante.' }
+      ],
+      vf: [
+        { q: 'cousin désigne toujours un garçon.', v: false, exp: 'En anglais courant, « cousin » sert pour un garçon comme pour une fille.' },
+        { q: 'daughter signifie « fille » (enfant).', v: true, exp: 'son = fils, daughter = fille.' },
+        { q: 'mum est plus familier que mother.', v: true, exp: 'mum/dad sont familiers, comme papa/maman.' }
+      ]
+    },
+    { id: 'ang4-present-continuous', mat: 'anglais', niveau: '4e', titre: 'Present continuous',
+      express: '<p><b>be + -ing</b> : action en cours. I <b>am playing</b> football now.</p>',
+      complet: '<h3>Formation</h3><p>sujet + <b>be</b> + verbe-<b>ing</b> : She is watching TV. Négation : She isn\'t watching. Question : Is she watching?</p><h3>Emploi</h3><p>Action en train de se dérouler (<i>now, at the moment</i>), situation temporaire, projet futur (<i>I\'m leaving tomorrow</i>).</p><h3>vs Present simple</h3><p>Present simple = habitude (I play football on Sundays). Continuous = maintenant (I\'m playing football now). Verbes d\'état (like, know, want) ne se mettent généralement pas au continuous.</p>',
+      quiz: [
+        { q: 'Look! The baby ___ .', choix: ['sleeps', 'is sleeping', 'sleep'], bon: 1, exp: 'Look! → action en cours → present continuous.' },
+        { q: 'Forme négative de « He is running » :', choix: ['He doesn\'t running', 'He isn\'t running', 'He not running'], bon: 1, exp: 'be + not → isn\'t + -ing.' },
+        { q: 'Which sentence is a habit?', choix: ['I\'m drinking tea now', 'I drink tea every morning', 'I\'m drinking tea every morning'], bon: 1, exp: 'Habitude → present simple.' },
+        { q: 'Question : « ___ they coming tonight? »', choix: ['Do', 'Are', 'Is'], bon: 1, exp: 'Inversion de be : Are they...?' },
+        { q: 'Verbe rarement au continuous :', choix: ['run', 'know', 'play'], bon: 1, exp: 'know est un verbe d\'état.' }
+      ],
+      vf: [
+        { q: 'Le present continuous traduit une action en cours.', v: true, exp: 'be + -ing = maintenant.' },
+        { q: '« I am knowing him » est correct.', v: false, exp: 'know est un verbe d\'état : I know him.' },
+        { q: 'On peut exprimer un futur proche avec be + -ing.', v: true, exp: 'I\'m leaving tomorrow = je pars demain.' }
+      ]
+    },
+    { id: 'ang4-vocab-voyage', mat: 'anglais', niveau: '4e', titre: 'Vocabulaire du voyage',
+      express: '<p>airport, plane, ticket, luggage... Le vocabulaire pour voyager en anglais.</p>',
+      complet: '<h3>À l\'aéroport / en voyage</h3><ul><li>airport (aéroport), plane (avion), flight (vol)</li><li>ticket (billet), boarding pass (carte d\'embarquement)</li><li>luggage (bagages), suitcase (valise)</li><li>departure (départ), arrival (arrivée), delay (retard)</li><li>to book (réserver), a return ticket (aller-retour)</li></ul><h3>Demander / renseigner</h3><p>Where is gate 12? / How long is the flight? / Can I pay by credit card? / Where can I buy a ticket?</p>',
+      quiz: [
+        { q: '« un aller-retour » :', choix: ['a single ticket', 'a return ticket', 'a ticket back'], bon: 1, exp: 'return ticket = aller-retour (UK).' },
+        { q: 'luggage signifie :', choix: ['billets', 'bagages', 'portes'], bon: 1, exp: 'luggage = bagages (indénombrable).' },
+        { q: '« Le vol est retardé » :', choix: ['The flight is late', 'The plane is a delay', 'The flight has late'], bon: 0, exp: 'The flight is late / delayed.' },
+        { q: '« réserver un billet » :', choix: ['to book a ticket', 'to command a ticket', 'to buy a flight'], bon: 0, exp: 'to book = réserver.' },
+        { q: 'a boarding pass est :', choix: ['une valise', 'une carte d\'embarquement', 'une porte'], bon: 1, exp: 'boarding pass = carte d\'embarquement.' }
+      ],
+      vf: [
+        { q: '« informations » s\'écrit « informations » en anglais (desk d\'information).', v: true, exp: 'information desk existe ; au singulier information est plus courant.' },
+        { q: 'suitcase est une valise.', v: true, exp: 'Oui, une valise.' },
+        { q: 'departure signifie « arrivée ».', v: false, exp: 'departure = départ, arrival = arrivée.' }
+      ]
+    },
+    { id: 'ang3-conditionnel-if', mat: 'anglais', niveau: '3e', titre: 'Les phrases en if (condition)',
+      express: '<p><b>If + présent, will + BV</b> : If it rains, I will stay home.</p>',
+      complet: '<h3>First conditional (probable)</h3><p><b>If + present simple, will + base verbale</b> : If you study, you will pass. La condition est considérée comme possible.</p><h3>Second conditional (hypothétique)</h3><p><b>If + prétérit, would + BV</b> : If I were rich, I would travel the world. Condition imaginaire ou peu probable. Attention : <i>were</i> pour toutes les personnes dans l\'hypothèse (If I were you...).</p><h3>Astuce</h3><p>Jamais <b>will/would</b> dans la subordonnée en if : on dit <i>If it rains</i> (pas « if it will rain »).</p>',
+      quiz: [
+        { q: 'If it ___ tomorrow, we will stay home.', choix: ['will rain', 'rains', 'rained'], bon: 1, exp: 'First conditional : if + présent.' },
+        { q: 'If I were you, I ___ apologize.', choix: ['will', 'would', 'am'], bon: 1, exp: 'Second conditional : would + BV.' },
+        { q: 'Phrase correcte :', choix: ['If he will come, call me', 'If he comes, call me', 'If he came, call me now'], bon: 1, exp: 'Pas de will après if.' },
+        { q: 'If I had a million euros, I ___ buy a house.', choix: ['will', 'would', 'did'], bon: 1, exp: 'Hypothèse → would.' },
+        { q: 'Which is imaginary?', choix: ['If it rains, I\'ll take my umbrella', 'If I were a bird, I would fly', 'If you help me, I\'ll finish'], bon: 1, exp: '« être un oiseau » = imaginaire → second conditional.' }
+      ],
+      vf: [
+        { q: 'On peut dire « If it will rain, I will stay ».', v: false, exp: 'Pas de will dans la subordonnée if.' },
+        { q: 'If I were you... est correct.', v: true, exp: 'were s\'emploie à toutes les personnes dans l\'hypothèse.' },
+        { q: 'would exprime l\'hypothèse.', v: true, exp: 'would = conditionnel.' }
+      ]
+    },
+    { id: 'ang3-discours-indirect', mat: 'anglais', niveau: '3e', titre: 'Discours indirect',
+      express: '<p>He said (that) he <b>was</b> tired. Les temps reculent d\'un cran au discours indirect.</p>',
+      complet: '<h3>Principe</h3><p>Au discours indirect, on rapporte les paroles : « I am tired » → He said (that) he <b>was</b> tired. Les temps reculent : present → past, past → past perfect, will → would, can → could.</p><h3>Changements</h3><ul><li>now → then, today → that day</li><li>here → there, tomorrow → the next day</li><li>this → that, yesterday → the day before</li></ul><h3>Questions rapportées</h3><p>Ordre sujet + verbe, pas d\'auxiliaire : « Where do you live? » → She asked where I <b>lived</b> (pas « where did I live »).</p>',
+      quiz: [
+        { q: '« I am happy » → He said he ___ happy.', choix: ['is', 'was', 'were'], bon: 1, exp: 'Present → past.' },
+        { q: '« I will call you » → She said she ___ call me.', choix: ['will', 'would', 'did'], bon: 1, exp: 'will → would.' },
+        { q: '« I saw him yesterday » → He said he had seen him ___.', choix: ['yesterday', 'the day before', 'tomorrow'], bon: 1, exp: 'yesterday → the day before.' },
+        { q: 'Question rapportée correcte :', choix: ['She asked where did I live', 'She asked where I lived', 'She asked where I live?'], bon: 1, exp: 'Ordre affirmatif, temps qui recule.' },
+        { q: 'can devient :', choix: ['could', 'can', 'will'], bon: 0, exp: 'can → could.' }
+      ],
+      vf: [
+        { q: 'Au discours indirect, « tomorrow » devient « the next day ».', v: true, exp: 'Correct.' },
+        { q: 'On garde l\'auxiliaire do dans la question rapportée.', v: false, exp: 'do disparaît : She asked where I lived.' },
+        { q: 'said that + phrase est la structure de base.', v: true, exp: 'said (that) + proposition rapportée.' }
+      ]
+    },
+    { id: 'it5-present', mat: 'italien', niveau: '5e', titre: 'Le présent de l\'indicatif',
+      express: '<p>essere/avere + les 3 conjugaisons régulières (-are, -ere, -ire).</p>',
+      complet: '<h3>essere (être) et avere (avoir)</h3><p>io sono, tu sei, lui è, noi siamo, voi siete, loro sono. / io ho, tu hai, lui ha, noi abbiamo, voi avete, loro hanno.</p><h3>Verbes réguliers</h3><p><b>parlare</b> (-are) : parlo, parli, parla, parliamo, parlate, parlano.<br><b>prendere</b> (-ere) : prendo, prendi, prende, prendiamo, prendete, prendono.<br><b>dormire</b> (-ire) : dormo, dormi, dorme, dormiamo, dormite, dormono. (certains -ire insèrent -isc- : capisco).</p><h3>Astuce</h3><p>Les terminaisons sont presque toujours les mêmes : -o, -i, -e, -iamo, -ate/-ete/-ite, -ono.</p>',
+      quiz: [
+        { q: '« je parle » :', choix: ['parlo', 'parli', 'parla'], bon: 0, exp: 'io parlo.' },
+        { q: '« nous avons » :', choix: ['noi sono', 'noi abbiamo', 'noi avete'], bon: 1, exp: 'avere → abbiamo.' },
+        { q: '« il est » :', choix: ['lui ho', 'lui è', 'lui sono'], bon: 1, exp: 'essere → è.' },
+        { q: 'Terminaison de « voi » pour un verbe en -are :', choix: ['-ate', '-ete', '-ite'], bon: 0, exp: 'voi parlate.' },
+        { q: '« tu dors » :', choix: ['dormo', 'dormi', 'dorme'], bon: 1, exp: 'tu dormi.' }
+      ],
+      vf: [
+        { q: '« noi siamo » signifie « nous sommes ».', v: true, exp: 'essere, 1re pers. pluriel.' },
+        { q: '« tu hai » signifie « tu es ».', v: false, exp: 'hai = tu as (avere).' },
+        { q: 'les verbes en -ire se conjuguent comme ceux en -are.', v: false, exp: 'terminaisons différentes (-i, -e...).' }
+      ]
+    },
+    { id: 'it5-vocab-base', mat: 'italien', niveau: '5e', titre: 'Vocabulaire de base',
+      express: '<p>ciao, grazie, per favore... Les mots indispensables pour commencer.</p>',
+      complet: '<h3>Salutations et politesse</h3><ul><li>ciao (salut / coucou), buongiorno (bonjour), buonasera (bonsoir)</li><li>arrivederci (au revoir), buona notte (bonne nuit)</li><li>grazie (merci), prego (je vous en prie), per favore (s\'il te plaît)</li><li>scusa/scusi (excuse-moi / excusez-moi)</li></ul><h3>Se présenter</h3><p>Come ti chiami? (comment tu t\'appelles ?) → Mi chiamo Gabriel. / Quanti anni hai? (quel âge as-tu ?) → Ho undici anni. / Dove abiti? (où habites-tu ?) → Abito a Roma.</p>',
+      quiz: [
+        { q: '« merci » :', choix: ['prego', 'grazie', 'ciao'], bon: 1, exp: 'grazie = merci.' },
+        { q: '« s\'il te plaît » :', choix: ['per favore', 'scusa', 'arrivederci'], bon: 0, exp: 'per favore.' },
+        { q: '« buonanotte » signifie :', choix: ['bonjour', 'bonne nuit', 'bon appétit'], bon: 1, exp: 'buona notte = bonne nuit.' },
+        { q: '« Mi chiamo Emma » signifie :', choix: ['je m\'appelle Emma', 'j\'habite à Emma', 'Emma appelle'], bon: 0, exp: 'chiamarsi = s\'appeler.' },
+        { q: '« Quanti anni hai? » demande :', choix: ['l\'adresse', 'l\'âge', 'le nom'], bon: 1, exp: 'avere + anni = avoir ... ans.' }
+      ],
+      vf: [
+        { q: 'ciao sert pour dire bonjour ou au revoir.', v: true, exp: 'Salutation informelle, dans les deux sens.' },
+        { q: 'prego est la réponse à grazie.', v: true, exp: '« de rien / je vous en prie ».' },
+        { q: 'buongiorno se dit le soir.', v: false, exp: 'buongiorno le jour, buonasera le soir.' }
+      ]
+    },
+    { id: 'it5-articles-pluriel', mat: 'italien', niveau: '5e', titre: 'Articles et pluriels',
+      express: '<p>il/lo/la/gli/le + pluriel en -i/-e/-i.', complet: '<h3>Articles définis</h3><ul><li>il libro (le livre), la casa (la maison)</li><li>lo studente (devant s+cons, z, gn, ps, y), l\'amico (devant voyelle)</li><li>pluriel : i libri, le case, gli studenti, gli amici, le amiche</li></ul><h3>Pluriel des noms</h3><p>-o → -i (libro → libri), -a → -e (casa → case), -e → -i (istituto... attention : nome → nomi).</p><h3>Indéfinis</h3><p>un libro, uno studente, una casa, un\'amica.</p>',
+      quiz: [
+        { q: 'Le pluriel de « libro » :', choix: ['libre', 'libri', 'libra'], bon: 1, exp: '-o → -i.' },
+        { q: '« gli » s\'emploie devant :', choix: ['une voyelle', 'z, gn, s+cons, ps, y', 'une voyelle finale'], bon: 1, exp: 'gli studenti, gli zaini... et gli amici.' },
+        { q: 'Le pluriel de « casa » :', choix: ['casi', 'case', 'casa'], bon: 1, exp: '-a → -e.' },
+        { q: '« l\'amico » : l\'article s\'élide devant :', choix: ['voyelle', 'z', 's impure'], bon: 0, exp: 'l\' + voyelle.' },
+        { q: 'Une amie (fém.) :', choix: ['un amico', 'un\'amica', 'una amica'], bon: 1, exp: 'una → un\' devant voyelle.' }
+      ],
+      vf: [
+        { q: '« i » et « gli » sont des articles définis.', v: true, exp: 'pluriels masculins.' },
+        { q: 'Le pluriel de « amico » est « amice ».', v: false, exp: 'amici (masculin pluriel).' },
+        { q: '« le » est l\'article féminin pluriel.', v: true, exp: 'le case, le amiche.' }
+      ]
+    },
+    { id: 'it4-passato-prossimo', mat: 'italien', niveau: '4e', titre: 'Passato prossimo',
+      express: '<p><b>avere/essere + participe passé</b> : ho mangiato, sono andato.</p>',
+      complet: '<h3>Formation</h3><p>Passato prossimo = <b>avoir ou être</b> au présent + participe passé (parlato, preso, finito). La plupart des verbes prennent <b>avere</b> : ho studiato, hai mangiato.</p><h3>Avec essere</h3><p>Verbes de mouvement et réfléchis : andare, venire, partire, nascere, morire, alzarsi... → <b>Sono andato/a</b>, si è alzato/a. Le participe s\'accorde : sono andata (fém.), siamo partiti.</p><h3>Participes irréguliers</h3><p>fare → fatto, dire → detto, prendere → preso, aprire → aperto, vedere → visto/veduto, scrivere → scritto.</p>',
+      quiz: [
+        { q: '« j\'ai mangé » :', choix: ['sono mangiato', 'ho mangiato', 'ho mangiare'], bon: 1, exp: 'mangiare → avere + mangiato.' },
+        { q: '« je suis allé(e) » :', choix: ['ho andato', 'sono andato', 'sono andare'], bon: 1, exp: 'andare → essere.' },
+        { q: 'Participe de « fare » :', choix: ['fato', 'fatto', 'fareduto'], bon: 1, exp: 'fare → fatto.' },
+        { q: 'Avec « essere », le participe :', choix: ['ne s\'accorde jamais', 's\'accorde en genre et nombre', 'devient un infinitif'], bon: 1, exp: 'sono andata, siamo partiti.' },
+        { q: '« nous avons fini » :', choix: ['siamo finito', 'abbiamo finito', 'abbiamo finita'], bon: 1, exp: 'avere + finito.' }
+      ],
+      vf: [
+        { q: 'Les verbes réfléchis prennent essere au passato prossimo.', v: true, exp: 'mi sono alzato.' },
+        { q: '« ho andato » est correct.', v: false, exp: 'andare prende essere : sono andato.' },
+        { q: 'Le participe de « aprire » est « aperto ».', v: true, exp: 'irrégulier mais très courant.' }
+      ]
+    },
+    { id: 'it4-imperfetto', mat: 'italien', niveau: '4e', titre: 'L\'imperfetto',
+      express: '<p>Habitudes et descriptions au passé : <b>parlavo, facevo, dormivo</b>. <i>Da bambino giocavo sempre.</i>',
+      complet: '<h3>Formation</h3><p>Racine du verbe + -vo, -vi, -va, -vamo, -vate, -vano : parlavo, parlavi, parlava... Verbes en -ire : dormivo. Essere : ero, eri, era, eravamo, eravate, erano. Avere : avevo, avevi, aveva...</p><h3>Emplois</h3><ul><li>habitude au passé (giocavo spesso = je jouais souvent)</li><li>description, décor (era una giornata bellissima)</li><li>action en cours interrompue (mentre dormivo, il telefono ha suonato)</li></ul><h3>vs Passato prossimo</h3><p>Passato prossimo = action ponctuelle finie (ieri ho visto un film). Imperfetto = durée, habitude, décor.</p>',
+      quiz: [
+        { q: '« je jouais » (habitude) :', choix: ['ho giocato', 'giocavo', 'gioco'], bon: 1, exp: 'imperfetto pour l\'habitude.' },
+        { q: '« essere » à l\'imperfetto (io) :', choix: ['sono', 'ero', 'fui'], bon: 1, exp: 'io ero.' },
+        { q: '« mentre dormivo » signifie :', choix: ['pendant que je dormais', 'j\'ai dormi', 'je dormirai'], bon: 0, exp: 'mentre + imperfetto = arrière-plan.' },
+        { q: 'L\'imperfetto exprime :', choix: ['une action unique hier', 'habitudes et descriptions au passé', 'le futur'], bon: 1, exp: 'C\'est sa fonction principale.' },
+        { q: '« avevo » signifie :', choix: ['j\'ai', 'j\'avais', 'je voudrais'], bon: 1, exp: 'avere à l\'imperfetto.' }
+      ],
+      vf: [
+        { q: 'L\'imperfetto italien correspond souvent à l\'imparfait français.', v: true, exp: 'giocavo = je jouais.' },
+        { q: '« ieri ho mangiato una pizza » est à l\'imperfetto.', v: false, exp: 'C\'est un passato prossimo (action ponctuelle).' },
+        { q: 'Les terminaisons de l\'imperfetto contiennent -v-.', v: true, exp: '-vo, -vi, -va...' }
+      ]
+    },
+    { id: 'it4-vocab-cibo', mat: 'italien', niveau: '4e', titre: 'Nourriture et restaurant',
+      express: '<p>pizza, pasta, pane... et commander au restaurant : <i>Un caffè, per favore!</i>',
+      complet: '<h3>À table</h3><ul><li>pane (pain), pasta (pâtes), pizza, riso (riz)</li><li>carne (viande), pesce (poisson), formaggio (fromage)</li><li>frutta (fruit), verdura (légumes), dolce (dessert)</li><li>acqua (eau), latte (lait), caffè</li><li>colazione (petit-déjeuner), pranzo (déjeuner), cena (dîner)</li></ul><h3>Au restaurant</h3><p>Il menù, il conto (l\'addition), la mancia (le pourboire). Utile : Vorrei... (je voudrais), Per me... (pour moi), Il conto, per favore!</p>',
+      quiz: [
+        { q: '« le poisson » :', choix: ['pesce', 'pane', 'riso'], bon: 0, exp: 'pesce = poisson.' },
+        { q: '« le petit-déjeuner » :', choix: ['pranzo', 'colazione', 'cena'], bon: 1, exp: 'colazione.' },
+        { q: '« Il conto, per favore! » :', choix: ['Le menu s\'il vous plaît', 'L\'addition s\'il vous plaît', 'La cuisine s\'il vous plaît'], bon: 1, exp: 'conto = addition.' },
+        { q: '« je voudrais » :', choix: ['Voglio... !', 'Vorrei...', 'Ho...'], bon: 1, exp: 'Vorrei est plus poli que voglio.' },
+        { q: '« formaggio » :', choix: ['fromage', 'dessert', 'lait'], bon: 0, exp: 'fromage.' }
+      ],
+      vf: [
+        { q: '« cena » est le repas du soir.', v: true, exp: 'dîner.' },
+        { q: '« dolce » signifie « doux » ou « dessert ».', v: true, exp: 'Les deux sens existent.' },
+        { q: '« latte » est de l\'eau.', v: false, exp: 'latte = lait, acqua = eau.' }
+      ]
+    },
+    { id: 'it3-futuro', mat: 'italien', niveau: '3e', titre: 'Le futur',
+      express: '<p><b>parlerò, partirò, finirò</b> : infinitif + terminaisons -ò, -ai, -à, -emo, -ete, -anno.',
+      complet: '<h3>Formation</h3><p>Futur simple = infinitif + -ò, -ai, -à, -emo, -ete, -anno : parlerò, parlerai, parlerà, parleremo, parlerete, parleranno. (les -are changent a en e : parler-).</p><h3>Irréguliers</h3><p>essere → sarò, avere → avrò, andare → andrò, fare → farò, dare → darò, venire → verrò, vedere → vedrò.</p><h3>Emploi</h3><p>Prévisions et promesses : Domani pioverà (il pleuvra demain). Conditionnel de politesse : Vorrei un caffè. Après « quand » au futur : Quando tornerò, ti chiamerò (le futur dans les deux propositions, contrairement au français).</p>',
+      quiz: [
+        { q: '« je parlerai » :', choix: ['parlo', 'parlerò', 'parlavo'], bon: 1, exp: 'futur : infinitif + -ò.' },
+        { q: 'Futur de « essere » (io) :', choix: ['sarò', 'esserò', 'sono'], bon: 0, exp: 'sarò, irregulier.' },
+        { q: '« fare » au futur (io) :', choix: ['farò', 'facereò', 'fatto'], bon: 0, exp: 'farò.' },
+        { q: 'Après « quando » au futur, l\'italien met :', choix: ['présent', 'futur', 'imparfait'], bon: 1, exp: 'Quando tornerò, chiamerò.' },
+        { q: '« pioverà » signifie :', choix: ['il pleut', 'il pleuvra', 'il a plu'], bon: 1, exp: 'piovere au futur.' }
+      ],
+      vf: [
+        { q: 'Le futur italien se forme sur l\'infinitif.', v: true, exp: 'parlare → parlerò.' },
+        { q: '« venire » donne « venireò ».', v: false, exp: 'verrò (irrégulier).' },
+        { q: '« avrò » est le futur de « avere ».', v: true, exp: 'io avrò = j\'aurai.' }
+      ]
+    },
+    { id: 'it3-condizionale', mat: 'italien', niveau: '3e', titre: 'Le conditionnel',
+      express: '<p><b>parlerei</b> (je parlerais) : infinitif + -ei, -esti, -ebbe, -emmo, -este, -ebbero.',
+      complet: '<h3>Formation</h3><p>Conditionnel présent = infinitif + -ei, -esti, -ebbe, -emmo, -este, -ebbero : mangerei, mangeresti... (-are → -ere- : parler → parlerei).</p><h3>Irréguliers</h3><p>essere → sarei, avere → avrei, andare → andrei, fare → farei, venire → verrei, vorrei (je voudrais, de volere) — très utilisé pour la politesse !</p><h3>Emplois</h3><ul><li>politesse : Vorrei un caffè (je voudrais un café)</li><li>hypothèse : Se avessi tempo, viaggerei (si j\'avais le temps, je voyagerais)</li><li>conseil : Io al posto tuo, parlerei con lui</li></ul>',
+      quiz: [
+        { q: '« je mangerais » :', choix: ['mangio', 'mangerei', 'mangerò'], bon: 1, exp: 'conditionnel : infinitif + -ei.' },
+        { q: '« je voudrais » :', choix: ['voglio', 'vorrei', 'vorò'], bon: 1, exp: 'volere → vorrei.' },
+        { q: '« Se avessi tempo... » est :', choix: ['une hypothèse', 'le futur', 'un ordre'], bon: 0, exp: 'se + conditionnel passé du subjonctif (avessi) → hypothèse.' },
+        { q: 'Conditionnel de « essere » (io) :', choix: ['sarò', 'sarei', 'sono'], bon: 1, exp: 'sarei = je serais.' },
+        { q: 'Pour commander poliment, on dit :', choix: ['Voglio una pizza!', 'Vorrei una pizza', 'Una pizza ho'], bon: 1, exp: 'vorrei est poli, voglio direct.' }
+      ],
+      vf: [
+        { q: 'Le conditionnel italien se forme sur l\'infinitif.', v: true, exp: 'parlare → parlerei.' },
+        { q: '« vorrei » est plus poli que « voglio ».', v: true, exp: 'Conditionnel de politesse.' },
+        { q: 'Le conditionnel exprime le futur.', v: false, exp: 'Il exprime l\'hypothèse, le souhait, la politesse.' }
+      ]
+    },
+    { id: 'it3-civilisation', mat: 'italien', niveau: '3e', titre: 'Civilisation italienne',
+      express: '<p>Rome, la Renaissance, les régions... Culture et géographie de l\'Italie.',
+      complet: '<h3>Repères</h3><ul><li>Roma (Rome), capitale ; Milano (mode, finance), Napoli (Vesuve, pizza), Venezia (carnaval, canaux), Firenze (Renaissance, art)</li><li>Renaissance (Rinascimento) : XIVe-XVIe s., Léonard de Vinci, Michel-Ange, Botticelli</li><li>l\'italien dérive du latin, langue officielle depuis l\'unification (Risorgimento, 1861)</li><li>Dante Alighieri, « padre della lingua italiana » (Divina Commedia)</li></ul><h3>Culture au quotidien</h3><p>Le calcio (football) est une passion nationale ; la cucina italienne (pasta, pizza, gelato) est mondialement célèbre ; le calendrier scolaire compte souvent le samedi libre, et la « maturità » est l\'examen de fin de lycée.</p>',
+      quiz: [
+        { q: 'La capitale de l\'Italie :', choix: ['Milano', 'Roma', 'Napoli'], bon: 1, exp: 'Roma, capitale.' },
+        { q: 'Dante est l\'auteur de :', choix: ['la Divina Commedia', 'la Monnalisa', 'il Decameron'], bon: 0, exp: 'La Divine Comédie.' },
+        { q: 'La Renaissance a particulièrement fleuri à :', choix: ['Firenze', 'Palermo', 'Torino'], bon: 0, exp: 'Florence, avec les Médicis.' },
+        { q: '« maturità » désigne :', choix: ['un dessert', 'l\'examen de fin de lycée', 'un carnaval'], bon: 1, exp: 'Examen final du liceo.' },
+        { q: 'L\'unification italienne date de :', choix: ['1861', '1789', '1945'], bon: 0, exp: 'Risorgimento, royaume d\'Italie en 1861.' }
+      ],
+      vf: [
+        { q: 'L\'italien dérive du latin.', v: true, exp: 'Langue romane, comme le français.' },
+        { q: 'Le carnaval de Venise existe.', v: true, exp: 'Très célèbre, en février.' },
+        { q: 'Milan est la capitale politique de l\'Italie.', v: false, exp: 'Milan : capitale économique ; Rome : capitale politique.' }
       ]
     },
   ]

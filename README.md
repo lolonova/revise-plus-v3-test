@@ -1,12 +1,14 @@
-# Révise+ V5 🚀✨ — « Réussir pas à pas »
+# Révise+ V6 🚀✨ — « Réussir pas à pas »
 
 Application éducative Android pour le collège (5e, 4e, 3e), en français.
 
 Deux univers : **Gabriel** (thème galaxie 🚀) et **Emma** (thème kawaii 🐱), chacun avec sa progression séparée.
 
+Onboarding V6 : à la première connexion d'un profil, on choisit le **niveau** (5e/4e/3e) puis les **matières** à réviser (liste cochable, italien inclus). L'accueil donne accès à toutes les fonctions (façon maquette) : Reprendre mes révisions, Mes derniers chapitres, Toutes mes fonctions (Apprendre, Jouer, Progresser, Réussir, Tuteur, Scanner), défi et astuce du jour.
+
 ## ✨ Contenu
 
-- **63 chapitres complets** : 7 matières × 3 niveaux × 3 chapitres — Maths, Français, Histoire, Géo, SVT, Physique-Chimie, Anglais.
+- **114 chapitres complets** : 8 matières × 3 niveaux (dont Italien) — Maths, Français, Histoire, Géo, SVT, Physique-Chimie, Anglais.
 - Fiches **express** et **complètes** par chapitre, lecture audio 🔊 (synthèse vocale).
 - Quiz Découverte / Expert adaptatifs : les questions ratées reviennent ; XP, niveaux, badges, défi quotidien (+30 XP), astuce du jour.
 - Tableau de bord par profil : % de progression, derniers chapitres, maîtrise par chapitre.
@@ -17,7 +19,7 @@ Deux univers : **Gabriel** (thème galaxie 🚀) et **Emma** (thème kawaii 🐱
 
 1. Ouvre https://github.com/lolonova/revise-plus-v3-test → onglet **Actions**.
 2. Le dernier push déclenche automatiquement le build ; attends le **vert ✅** (5-10 min).
-3. Ouvre le build vert → **Artifacts** → **RevisePlus-V4-APK** → télécharge.
+3. Ouvre le build vert → **Artifacts** → **RevisePlus-V6-APK** → télécharge.
 4. Dézippe → installe `app-debug.apk` (autoriser les sources inconnues si demandé).
 
 ## 🤖 Activer le tuteur IA (facultatif, parent)
