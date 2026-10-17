@@ -6,72 +6,116 @@
 <title>Révise+</title>
 <style>
 :root {
-  --bg: #0d1b2a; --card: #1b263b; --txt: #e8eef7; --accent: #5aa0ff;
-  --gold: #ffd23f; --ok: #4caf50; --bad: #ef5350;
+  --bg: #0b1026; --bg2: #131a3a; --card: #1a2350; --txt: #eaf0ff;
+  --accent: #5aa0ff; --gold: #ffd23f; --ok: #4caf50; --bad: #ef5350;
+  --pink: #ff8fb1; --violet: #8f6fff;
 }
 body.theme-emma {
-  --bg: #fff0f6; --card: #ffffff; --txt: #5b4a5f; --accent: #ff8fb1;
-  --gold: #ffb3c6;
+  --bg: #fff0f6; --bg2: #ffe3ef; --card: #ffffff; --txt: #5b4a5f;
+  --accent: #ff6f9c; --gold: #ffb3c6; --violet: #b388ff;
 }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-body { margin: 0; font-family: 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--txt); font-size: 16px; }
-body.theme-gabriel { background: radial-gradient(circle at 20% 10%, #16324f 0%, #0d1b2a 60%); }
-body.theme-emma { background: linear-gradient(160deg, #ffe3ef 0%, #fff0f6 60%); }
-header { padding: 14px 16px; text-align: center; font-size: 1.25rem; font-weight: 700; letter-spacing: 0.5px; }
-header .sub { font-size: 0.8rem; font-weight: 400; opacity: 0.8; }
-main { padding: 0 14px 90px; max-width: 640px; margin: 0 auto; }
-.card { background: var(--card); border-radius: 14px; padding: 14px; margin: 10px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
-.card h3, .card h4 { margin: 6px 0; }
-.btn { display: inline-block; background: var(--accent); color: #fff; border: 0; border-radius: 10px; padding: 12px 18px; font-size: 1rem; cursor: pointer; margin: 6px 4px; font-weight: 600; }
-.btn.ghost { background: transparent; border: 2px solid var(--accent); color: var(--accent); }
-.btn.small { padding: 8px 12px; font-size: 0.85rem; }
+body { margin: 0; font-family: 'Segoe UI', Roboto, sans-serif; color: var(--txt); font-size: 15px; }
+body.theme-gabriel { background: radial-gradient(circle at 15% 5%, #1c2f6e 0%, #0b1026 55%), #0b10226; }
+body.theme-emma { background: linear-gradient(160deg, #ffe3ef 0%, #fff0f6 55%); }
+
+/* ===== Bannière ===== */
+.banner { padding: 16px 16px 12px; display: flex; align-items: center; gap: 12px; }
+body.theme-gabriel .banner { background: linear-gradient(135deg, #101a4a 0%, #22348a 100%); border-bottom: 2px solid var(--accent); }
+body.theme-emma .banner { background: linear-gradient(135deg, #ffd3e5 0%, #ffbcd8 100%); border-bottom: 2px solid var(--pink); }
+.logo { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; background: var(--gold); box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
+.banner h1 { margin: 0; font-size: 1.15rem; letter-spacing: 0.5px; }
+.banner .tagline { font-size: 0.72rem; opacity: 0.85; font-weight: 600; letter-spacing: 0.4px; }
+.banner .profile-chip { margin-left: auto; text-align: right; font-size: 0.78rem; font-weight: 700; background: rgba(255,255,255,0.16); padding: 6px 10px; border-radius: 999px; }
+
+main { padding: 12px 14px 96px; max-width: 640px; margin: 0 auto; }
+
+/* ===== Cartes ===== */
+.card { background: var(--card); border-radius: 16px; padding: 14px; margin: 12px 0; box-shadow: 0 3px 10px rgba(0,0,0,0.18); }
+.card h3 { margin: 2px 0 8px; font-size: 1.02rem; display: flex; align-items: center; gap: 8px; }
+.card h3 .em { font-size: 1.2rem; }
+.section-title { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.75; margin: 16px 4px 2px; font-weight: 800; }
+
+.btn { display: inline-block; background: var(--accent); color: #fff; border: 0; border-radius: 12px; padding: 12px 16px; font-size: 0.95rem; cursor: pointer; margin: 5px 3px; font-weight: 700; box-shadow: 0 2px 6px rgba(90,160,255,0.35); }
+body.theme-emma .btn { box-shadow: 0 2px 6px rgba(255,143,177,0.4); }
+.btn.ghost { background: transparent; border: 2px solid var(--accent); color: var(--accent); box-shadow: none; }
+.btn.small { padding: 8px 12px; font-size: 0.82rem; }
+.btn.gold { background: var(--gold); color: #333; }
+
+/* ===== Hero profil ===== */
+.hero { display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: 18px; margin: 12px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.2); position: relative; overflow: hidden; }
+body.theme-gabriel .hero { background: linear-gradient(120deg, #1b2a6b, #2a3da0); }
+body.theme-emma .hero { background: linear-gradient(120deg, #ffd9ea, #ffc2dc); }
+.hero .mascot { font-size: 3rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+.hero .who { flex: 1; }
+.hero .who .name { font-size: 1.25rem; font-weight: 800; }
+.hero .who .cls { font-size: 0.8rem; opacity: 0.85; font-weight: 600; }
+.ring { width: 62px; height: 62px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem;
+  background: conic-gradient(var(--gold) var(--p,68%), rgba(255,255,255,0.22) 0); }
+.ring > span { width: 48px; height: 48px; border-radius: 50%; background: var(--card); display: flex; align-items: center; justify-content: center; }
+
+/* ===== Grilles ===== */
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-.item { background: var(--card); border-radius: 12px; padding: 12px; text-align: center; cursor: pointer; border: 2px solid transparent; }
+.item { background: var(--bg2); border-radius: 14px; padding: 12px 8px; text-align: center; cursor: pointer; border: 2px solid transparent; transition: border-color .15s; }
 .item.sel { border-color: var(--gold); }
-.item .ic { font-size: 1.6rem; display: block; }
-ul { padding-left: 18px; }
-li { margin: 6px 0; }
-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
-td, th { padding: 6px 4px; border-bottom: 1px solid rgba(128,128,128,0.25); text-align: left; }
-.tag { display: inline-block; font-size: 0.72rem; padding: 2px 8px; border-radius: 999px; background: var(--accent); color: #fff; margin-left: 6px; vertical-align: middle; }
-.warn { background: #fff3cd; color: #7a5b00; border-radius: 8px; padding: 8px 10px; font-size: 0.85rem; margin: 8px 0; }
-.badge { display: inline-block; background: var(--gold); color: #333; border-radius: 50%; width: 46px; height: 46px; line-height: 46px; text-align: center; font-size: 1.4rem; margin: 4px; }
-.progress { background: rgba(128,128,128,0.3); border-radius: 999px; height: 10px; overflow: hidden; }
-.progress > div { height: 100%; background: var(--accent); }
-nav.tabs { position: fixed; bottom: 0; left: 0; right: 0; display: flex; background: var(--card); border-top: 1px solid rgba(128,128,128,0.3); z-index: 10; }
-nav.tabs button { flex: 1; background: none; border: 0; color: var(--txt); padding: 8px 2px; font-size: 0.68rem; cursor: pointer; opacity: 0.6; }
-nav.tabs button.on { opacity: 1; color: var(--accent); font-weight: 700; }
-nav.tabs button .ic { display: block; font-size: 1.3rem; margin-bottom: 2px; }
-.choice { display: block; width: 100%; text-align: left; background: var(--bg); color: var(--txt); border: 2px solid var(--accent); border-radius: 10px; padding: 12px; margin: 8px 0; font-size: 1rem; cursor: pointer; }
+.item .ic { font-size: 1.5rem; display: block; margin-bottom: 3px; }
+.item .nm { font-size: 0.78rem; font-weight: 700; }
+.item .sub { font-size: 0.66rem; opacity: 0.7; }
+.tag { display: inline-block; font-size: 0.68rem; padding: 2px 8px; border-radius: 999px; background: var(--accent); color: #fff; margin-left: 4px; vertical-align: middle; }
+.tag.soon { background: #8a8a8a; }
+
+ul { padding-left: 18px; margin: 6px 0; }
+li { margin: 7px 0; line-height: 1.45; }
+.warn { background: #fff3cd; color: #7a5b00; border-radius: 10px; padding: 9px 11px; font-size: 0.82rem; margin: 8px 0; }
+.badge { display: inline-block; background: var(--gold); color: #333; border-radius: 50%; width: 44px; height: 44px; line-height: 44px; text-align: center; font-size: 1.3rem; margin: 4px; }
+.progress { background: rgba(128,128,128,0.3); border-radius: 999px; height: 9px; overflow: hidden; }
+.progress > div { height: 100%; background: var(--accent); border-radius: 999px; }
+
+/* ===== Quiz ===== */
+.choice { display: block; width: 100%; text-align: left; background: var(--bg2); color: var(--txt); border: 2px solid var(--accent); border-radius: 12px; padding: 12px; margin: 9px 0; font-size: 0.95rem; cursor: pointer; }
 .choice.right { border-color: var(--ok); background: rgba(76,175,80,0.25); }
 .choice.wrong { border-color: var(--bad); background: rgba(239,83,80,0.25); }
 .hidden { display: none; }
 .stat { text-align: center; }
-.stat .n { font-size: 1.5rem; font-weight: 700; color: var(--accent); display: block; }
-#chatlog { max-height: 55vh; overflow-y: auto; }
-.msg { padding: 10px 12px; border-radius: 12px; margin: 6px 0; max-width: 85%; }
+.stat .n { font-size: 1.5rem; font-weight: 800; color: var(--accent); display: block; }
+.back { color: var(--accent); cursor: pointer; font-size: 0.85rem; display: inline-block; margin: 4px 0 2px; font-weight: 700; }
+
+/* ===== Tuteur ===== */
+#chatlog { max-height: 52vh; overflow-y: auto; }
+.msg { padding: 10px 12px; border-radius: 14px; margin: 6px 0; max-width: 86%; font-size: 0.9rem; line-height: 1.4; }
 .msg.user { background: var(--accent); color: #fff; margin-left: auto; }
-.msg.bot { background: var(--bg); border: 1px solid rgba(128,128,128,0.3); }
-.demo-tag { font-size: 0.7rem; background: var(--gold); color: #333; padding: 2px 8px; border-radius: 999px; font-weight: 700; }
-input[type=text], textarea { width: 100%; background: var(--bg); color: var(--txt); border: 1px solid var(--accent); border-radius: 10px; padding: 10px; font-size: 1rem; }
-.back { color: var(--accent); cursor: pointer; font-size: 0.9rem; display: inline-block; margin-bottom: 6px; }
+.msg.bot { background: var(--bg2); border: 1px solid rgba(128,128,128,0.3); }
+.demo-tag { font-size: 0.66rem; background: var(--gold); color: #333; padding: 2px 8px; border-radius: 999px; font-weight: 800; vertical-align: middle; }
+input[type=text], textarea { width: 100%; background: var(--bg2); color: var(--txt); border: 1.5px solid var(--accent); border-radius: 12px; padding: 10px; font-size: 0.95rem; margin: 6px 0; }
+
+/* ===== Astuce / défi ===== */
+.tip { background: rgba(255,210,63,0.14); border-left: 4px solid var(--gold); padding: 10px 12px; border-radius: 10px; font-size: 0.88rem; line-height: 1.4; }
+.daily { background: rgba(143,111,255,0.14); border-left: 4px solid var(--violet); padding: 10px 12px; border-radius: 10px; font-size: 0.88rem; line-height: 1.4; }
+
+/* ===== Nav basse ===== */
+nav.tabs { position: fixed; bottom: 0; left: 0; right: 0; display: flex; background: var(--card); border-top: 1.5px solid rgba(128,128,128,0.35); z-index: 10; padding-bottom: env(safe-area-inset-bottom); }
+nav.tabs button { flex: 1; background: none; border: 0; color: var(--txt); padding: 8px 2px 7px; font-size: 0.6rem; cursor: pointer; opacity: 0.55; font-weight: 700; }
+nav.tabs button.on { opacity: 1; color: var(--accent); }
+nav.tabs button .ic { display: block; font-size: 1.25rem; margin-bottom: 1px; }
 </style>
 </head>
-<body>
-<header>
-  <div id="hdrTitle">Révise+</div>
-  <div class="sub" id="hdrSub">Choisis ton profil pour commencer</div>
-</header>
+<body class="theme-gabriel">
+<div class="banner">
+  <div class="logo">🚀</div>
+  <div>
+    <h1>Révise+</h1>
+    <div class="tagline">Réussir pas à pas</div>
+  </div>
+  <div class="profile-chip" id="profileChip">Choisir un profil</div>
+</div>
 <main id="view"></main>
 <nav class="tabs" id="tabs">
-  <button data-tab="profil"><span class="ic">👤</span>Profil</button>
-  <button data-tab="cours"><span class="ic">📖</span>Cours</button>
-  <button data-tab="jeux"><span class="ic">🎮</span>Jeux</button>
-  <button data-tab="scan"><span class="ic">📷</span>Scanner</button>
-  <button data-tab="tuteur"><span class="ic">🤖</span>Tuteur</button>
-  <button data-tab="progres"><span class="ic">📊</span>Progrès</button>
-  <button data-tab="reglages"><span class="ic">⚙️</span>Réglages</button>
+  <button data-tab="accueil"><span class="ic">🏠</span>Accueil</button>
+  <button data-tab="cours"><span class="ic">📖</span>Mes révisions</button>
+  <button data-tab="jeux"><span class="ic">🎮</span>Mes jeux</button>
+  <button data-tab="tuteur"><span class="ic">🤖</span>Mon tuteur</button>
+  <button data-tab="plus"><span class="ic">⋯</span>Plus</button>
 </nav>
 <script src="data.js"></script>
 <script src="app.js"></script>

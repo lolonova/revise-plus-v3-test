@@ -1,7 +1,6 @@
-/* Révise+ V4 — Scanner de cours (OCR + génération de fiche et quiz)
-   Flux : choisir des photos -> OCR (Tesseract.js depuis CDN) -> vérifier le texte
-   -> générer fiche express + mini-quiz. Le contenu généré est toujours marqué
-   « à vérifier » : l'élève doit relire avant de réviser. */
+/* Révise+ V4.1 — Scanner de cours (OCR + génération de fiche et quiz)
+   Flux : photos -> OCR (Tesseract.js depuis CDN) -> vérification du texte
+   -> fiche express + mini-quiz. Contenu toujours marqué « à vérifier ». */
 
 var Scan = (function () {
   var extracted = '';
@@ -27,7 +26,6 @@ var Scan = (function () {
     }, errCb);
   }
 
-  // Heuristiques simples pour construire une fiche express à partir du texte
   function buildExpress(text) {
     var lines = text.split(/\r?\n/).map(function (l) { return l.trim(); })
       .filter(function (l) { return l.length > 2; });
@@ -55,7 +53,6 @@ var Scan = (function () {
   }
 
   function buildQuiz(text, count) {
-    // Questions « texte à trous » générées depuis les phrases contenant " : "
     var lines = text.split(/\r?\n/).map(function (l) { return l.trim(); })
       .filter(function (l) { return l.length > 15 && l.length < 160; });
     var qs = [];

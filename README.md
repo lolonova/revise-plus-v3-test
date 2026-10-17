@@ -1,53 +1,46 @@
-# Révise+ V4 🚀✨
+# Révise+ V4.1 🚀✨ — « Réussir pas à pas »
 
-Application éducative Android pour élèves du collège et du lycée (6e → Terminale), en français.
+Application éducative Android pour le collège (5e, 4e, 3e), en français.
 
-Deux univers : **Gabriel** (thème galaxie / science-fiction) et **Emma** (thème kawaii pastel), chacun avec sa progression sauvegardée séparément.
+Deux univers : **Gabriel** (thème galaxie 🚀) et **Emma** (thème kawaii 🐱), chacun avec sa progression séparée.
 
-## 📱 Récupérer l'APK (depuis un téléphone, sans rien installer)
+## ✨ Contenu
 
-1. Ouvre https://github.com/lolonova/revise-plus-v3-test dans un navigateur (connecte-toi si besoin).
-2. Va dans l'onglet **Actions**.
-3. Clique sur **Build APK** dans la liste de gauche.
-4. Le push a déjà déclenché un build ; sinon, clique sur **Run workflow** → bouton vert **Run workflow**.
-5. Attends que le build passe au **vert ✅** (5 à 10 minutes). Actualise la page si besoin.
-6. Ouvre le build vert → descends à **Artifacts** → clique sur **RevisePlus-V4-APK**.
-7. Dézippe l'archive téléchargée → tu obtiens `app-debug.apk` → ouvre-le → « Installer quand même » (autoriser les sources inconnues si Android le demande).
+- **21 chapitres complets** : 7 matières × 3 niveaux — Maths, Français, Histoire, Géo, SVT, Physique-Chimie, Anglais.
+- Fiches **express** et **complètes** par chapitre, lecture audio 🔊 (synthèse vocale).
+- Quiz Découverte / Expert adaptatifs : les questions ratées reviennent ; XP, niveaux, badges, défi quotidien (+30 XP), astuce du jour.
+- Tableau de bord par profil : % de progression, derniers chapitres, maîtrise par chapitre.
+- Scanner de cours : photo → OCR → vérification → fiche + mini-quiz (marqué « à vérifier »).
+- Tuteur : **mode démonstration** par défaut (base locale, pas une IA, étiqueté) ; mode IA facultatif via Cloudflare (ci-dessous).
 
-## ✨ Fonctionnalités
+## 📱 Récupérer l'APK (depuis un téléphone)
 
-- Choix du profil (Gabriel 🚀 / Emma 🐱), de la classe (6e → Terminale), matière, chapitre.
-- 11 chapitres complets rédigés et vérifiés ; les autres matières sont indiquées « à venir ».
-- Fiches **express** et **complètes** par chapitre.
-- Quiz à choix multiples et vrai/faux, deux niveaux (Découverte / Expert) ; révision ciblée des questions ratées ; XP, niveaux, badges, défi quotidien.
-- Tableau de bord par profil ; progression enregistrée localement (appareil) ; réinitialisation possible.
-- Lecture audio des fiches (synthèse vocale Android en français).
-- Scanner un cours : photo → OCR → vérification → fiche express + mini-quiz (contenu marqué « à vérifier »).
-- Tuteur intégré : **mode démonstration** (base de connaissances locale, étiquetée clairement, pas une IA). Un parent peut activer le **mode IA** (voir ci-dessous).
+1. Ouvre https://github.com/lolonova/revise-plus-v3-test → onglet **Actions**.
+2. Le dernier push déclenche automatiquement le build ; attends le **vert ✅** (5-10 min).
+3. Ouvre le build vert → **Artifacts** → **RevisePlus-V4-APK** → télécharge.
+4. Dézippe → installe `app-debug.apk` (autoriser les sources inconnues si demandé).
 
-## 🤖 Activer le tuteur IA (facultatif, à faire par un parent)
+## 🤖 Activer le tuteur IA (facultatif, parent)
 
-1. Crée un compte gratuit sur https://cloudflare.com → **Workers & Pages**.
-2. Crée un Worker (par ex. `reviseplus-tutor`) et colle le code de `worker/worker.js`.
-3. Dans **Settings → Variables**, ajoute `AI_KEY` de type **Secret** contenant ta clé API Mistral (https://console.mistral.ai).
-4. Déploie le Worker et copie son URL (`https://reviseplus-tutor.ton-compte.workers.dev`).
-5. Dans l'application : onglet Réglages → champ « URL du worker » → Enregistrer.
+1. Compte gratuit sur https://cloudflare.com → Workers & Pages.
+2. Créer un Worker et coller le code de `worker/worker.js`.
+3. Settings → Variables → `AI_KEY` (type Secret) = clé API Mistral (https://console.mistral.ai).
+4. Déployer, copier l'URL du Worker.
+5. Dans l'app : onglet **Plus** → Réglages → coller l'URL.
 
-La clé API n'est **jamais** dans l'application : elle reste côté Cloudflare. Le prompt du worker limite le tuteur aux questions scolaires et interdit la collecte de données personnelles.
+La clé API n'est **jamais** dans l'application. Le prompt du worker limite le tuteur aux questions scolaires.
 
-Coûts : Mistral propose un niveau gratuit limité ; au-delà, le tarif dépend du volume (ordre de quelques centimes pour des milliers de questions).
+## ⚠️ Limites connues
 
-## ⚠️ Limites connues (version 4.0)
+- Contenu limité au collège (5e, 4e, 3e) ; un chapitre par matière et par niveau (21 au total).
+- L'OCR dépend de la qualité des photos ; fiches générées marquées « à vérifier ».
+- Le mode démonstration du tuteur n'est pas une IA (étiqueté comme tel).
+- APK de débogage : usage familial, non destiné au Play Store.
+- Progression stockée localement (aucune donnée envoyée en ligne).
 
-- Le contenu couvre 11 chapitres vérifiés ; les autres sont étiquetés « à venir » (l'application ne prétend pas les contenir).
-- L'OCR dépend de la qualité des photos ; les fiches générées sont marquées « à vérifier ».
-- Le mode démonstration du tuteur n'est pas une IA : il répond sur quelques notions seulement et il est étiqueté comme tel.
-- L'APK produit est un APK de débogage : parfait pour un usage familial, non destiné au Play Store.
-- Pas de synchronisation en ligne : la progression reste sur l'appareil (stockage local).
+## 🗂️ Structure
 
-## 🗂️ Structure du projet
-
-- `app/src/main/assets/` : interface complète (HTML/CSS/JS) embarquée dans une WebView Android.
-- `app/src/main/java/fr/reviseplus/app/MainActivity.java` : coquille Android (WebView, synthèse vocale, sélection de photos).
+- `app/src/main/assets/` : interface complète (HTML/CSS/JS) dans une WebView.
+- `app/src/main/java/fr/reviseplus/app/MainActivity.java` : coquille Android (WebView, TTS, photos).
 - `worker/worker.js` : passerelle IA facultative (Cloudflare Worker).
-- `.github/workflows/build-apk.yml` : compilation automatique de l'APK sur GitHub Actions (Java 17, Gradle 8.7).
+- `.github/workflows/build-apk.yml` : compilation automatique (Java 17, Gradle 8.7).

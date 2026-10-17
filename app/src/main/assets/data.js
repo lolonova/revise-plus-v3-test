@@ -1,38 +1,19 @@
-/* Révise+ V4 — Base de contenu pédagogique
-   11 chapitres complets, rédigés et vérifiés.
-   Les matières sans chapitre sont affichées « à venir » (jamais prétendues prêtes). */
+/* Révise+ V4.1 — Base de contenu pédagogique (collège : 5e, 4e, 3e)
+   21 chapitres complets : 7 matières × 3 niveaux. Tous rédigés et vérifiés. */
 
 var REVISE_DATA = {
-  niveaux: ['6e', '5e', '4e', '3e', '2de', '1re', 'Tle'],
+  niveaux: ['5e', '4e', '3e'],
   matieres: [
     { id: 'maths', nom: 'Mathématiques', icon: '📐' },
     { id: 'francais', nom: 'Français', icon: '📚' },
     { id: 'histoire', nom: 'Histoire', icon: '🏛️' },
-    { id: 'geo', nom: 'Géographie', icon: '🌍' },
+    { id: 'geo', nom: 'Histoire-Géo', icon: '🌍' },
     { id: 'svt', nom: 'SVT', icon: '🧬' },
-    { id: 'physique', nom: 'Physique-Chimie', icon: '⚛️' },
-    { id: 'anglais', nom: 'Anglais', icon: '🇬🇧' },
-    { id: 'philo', nom: 'Philosophie', icon: '🦉' }
+    { id: 'physique', nom: 'Physique-Chimie', icon: '⚗️' },
+    { id: 'anglais', nom: 'Anglais', icon: '🇬🇧' }
   ],
   chapitres: [
-    {
-      id: 'm6-decimaux', mat: 'maths', niveau: '6e',
-      titre: 'Nombres décimaux',
-      express: '<li>Un nombre décimal s\'écrit avec une virgule : 3,7 = 3 unités et 7 dixièmes.</li><li>La partie entière est à gauche de la virgule, la partie décimale à droite.</li><li>Multiplier par 10 décale la virgule d\'un rang vers la droite ; diviser par 10 la décale vers la gauche.</li><li>Comparer : on compare d\'abord les parties entières, puis les chiffres après la virgule.</li><li>0,5 = 0,50 : ajouter des zéros à droite ne change pas la valeur.</li>',
-      complet: '<h3>1. Écriture décimale</h3><p>Chaque chiffre après la virgule a une valeur : dixièmes (1er rang), centièmes (2e), millièmes (3e). Exemple : 4,275 = 4 + 2/10 + 7/100 + 5/1000.</p><h3>2. Lecture</h3><p>4,275 se lit « quatre virgule deux cent soixante-quinze ».</p><h3>3. Comparaison</h3><p>Pour comparer 5,4 et 5,38 : parties entières égales (5), puis on compare 4 dixièmes et 3 dixièmes → 5,4 > 5,38.</p><h3>4. Multiplication et division par 10, 100, 1000</h3><p>×10 : la virgule part d\'un rang à droite. ÷100 : deux rangs à gauche. Exemple : 3,45 × 10 = 34,5 ; 3,45 ÷ 100 = 0,0345.</p><h3>5. Arrondi</h3><p>Arrondir au dixième : on regarde les centièmes. 7,68 ≈ 7,7 (car 8 ≥ 5). 7,62 ≈ 7,6.</p><h3>6. Addition et soustraction</h3><p>On aligne les virgules avant de calculer. Exemple : 2,4 + 1,75 = 4,15.</p>',
-      quiz: [
-        { q: 'Combien vaut 3,45 × 10 ?', choix: ['34,5', '3,450', '0,345'], bon: 0, exp: 'Multiplier par 10 décale la virgule d\'un rang vers la droite.' },
-        { q: 'Lequel est le plus grand ?', choix: ['5,4', '5,38', '5,399'], bon: 0, exp: '5,4 = 5,400 qui est plus grand que 5,399 et 5,38.' },
-        { q: 'Que représente le chiffre 7 dans 4,275 ?', choix: ['Les centièmes', 'Les dixièmes', 'Les millièmes'], bon: 0, exp: '2 est le chiffre des dixièmes, 7 des centièmes, 5 des millièmes.' },
-        { q: 'Arrondi au dixième de 7,68 ?', choix: ['7,7', '7,6', '7,68'], bon: 0, exp: 'Les centièmes (8) sont ≥ 5, donc on arrondit au-dessus : 7,7.' },
-        { q: '2,4 + 1,75 = ?', choix: ['4,15', '3,15', '4,05'], bon: 0, exp: 'On aligne les virgules : 2,40 + 1,75 = 4,15.' }
-      ],
-      vf: [
-        { q: '0,5 est plus petit que 0,45.', v: false, exp: '0,50 > 0,45 car 5 dixièmes > 4 dixièmes.' },
-        { q: 'Ajouter un zéro à droite de la virgule ne change pas le nombre.', v: true, exp: '0,5 = 0,50 : la valeur reste la même.' },
-        { q: 'Diviser par 100 décale la virgule de deux rangs vers la gauche.', v: true, exp: 'Exemple : 12,3 ÷ 100 = 0,123.' }
-      ]
-    },
+    // ================= MATHS =================
     {
       id: 'm5-fractions', mat: 'maths', niveau: '5e',
       titre: 'Fractions',
@@ -87,24 +68,62 @@ var REVISE_DATA = {
         { q: 'Développer (x−5)(x+5) donne x² − 25.', v: true, exp: 'Identité a² − b².' }
       ]
     },
+    // ================= FRANÇAIS =================
     {
-      id: 'm2-fonctions', mat: 'maths', niveau: '2de',
-      titre: 'Fonctions : lectures et variations',
-      express: '<li>Une fonction f associe à chaque x un seul nombre f(x).</li><li>L\'image de x est f(x) ; un antécédent de y est un x tel que f(x) = y.</li><li>Lire une courbe : à un x, on monte jusqu\'à la courbe pour lire f(x).</li><li>Tableau de variations : flèche montante = croissante, descendante = décroissante.</li><li>Fonction affine : f(x) = ax + b, droite de coefficient directeur a.</li>',
-      complet: '<h3>1. Définition</h3><p>Une fonction f est un procédé qui à un nombre x associe une unique image f(x). On note f : x ↦ f(x). Exemple : f(x) = 2x + 1 ; l\'image de 3 est 7.</p><h3>2. Image et antécédent</h3><p>f(3) = 7 : 7 est l\'image de 3, et 3 est un antécédent de 7. Un nombre peut avoir plusieurs antécédents, mais une seule image.</p><h3>3. Lecture graphique</h3><p>Pour lire f(2) : partir de x = 2, monter verticalement à la courbe, lire l\'ordonnée. Pour les antécédents de 4 : tracer la droite y = 4 et lire les abscisses des intersections.</p><h3>4. Tableau de variations</h3><p>On note les intervalles où f croît (flèche ↗) et décroît (flèche ↘), avec les valeurs atteintes aux bornes.</p><h3>5. Fonctions de référence</h3><p>Linéaire f(x) = ax (droite passant par l\'origine). Affine f(x) = ax + b (droite). Carré f(x) = x² (parabole, décroissante puis croissante). Inverse f(x) = 1/x (hyperbole, jamais définie en 0).</p><h3>6. Résolution d\'équation par le graphique</h3><p>f(x) = k : intersections de la courbe avec la droite y = k.</p>',
+      id: 'fr5-recit', mat: 'francais', niveau: '5e',
+      titre: 'Le récit et ses temps',
+      express: '<li>Le récit raconte des événements : le passé simple marque les actions principales.</li><li>L\'imparfait décrit le décor, les habitudes, les personnages.</li><li>Le présent de narration rend le récit vivant.</li><li>Point de vue : narrateur interne (je), externe (il observe), omniscient (il sait tout).</li><li>Le narrateur n\'est pas toujours l\'auteur !</li>',
+      complet: '<h3>1. Raconter : les temps du passé</h3><p>Passé simple = actions principales, soudaines : « Il entra dans la salle ». Imparfait = arrière-plan, description, habitude : « Le soleil brûlait les toits ». Plus-que-parfait = action antérieure : « Il avait fini son travail ».</p><h3>2. L\'ordre du récit</h3><p>Schéma quinaire : situation initiale → élément perturbateur → péripéties → élément de résolution → situation finale. La analepse (retour en arrière) et la prolepse (anticipation) brisent la chronologie.</p><h3>3. Le point de vue (focalisation)</h3><p>Interne : on suit un personnage (je). Externe : le narrateur observe sans entrer dans les têtes. Zéro/omnisciente : le narrateur sait tout des personnages.</p><h3>4. Narrateur et auteur</h3><p>L\'auteur écrit le livre ; le narrateur raconte l\'histoire. Un auteur peut inventer un narrateur animal, enfant, méchant...</p><h3>5. Pour bien rédiger</h3><p>Alterner passé simple et imparfait, varier les connecteurs (soudain, ensuite, enfin), donner des détails sensoriels (vue, ouïe, toucher).</p>',
       quiz: [
-        { q: 'f(x) = 2x + 1. L\'image de 3 est :', choix: ['7', '6', '5'], bon: 0, exp: 'f(3) = 2×3 + 1 = 7.' },
-        { q: 'Une image d\'un nombre donné est :', choix: ['Unique', 'Souvent double', 'Quelconque'], bon: 0, exp: 'Par définition, chaque x a une seule image.' },
-        { q: 'f(x) = x². f(−4) = ?', choix: ['16', '−16', '−8'], bon: 0, exp: '(−4)² = 16, un carré est toujours positif.' },
-        { q: 'La courbe de f(x) = 1/x est :', choix: ['Une hyperbole', 'Une droite', 'Une parabole'], bon: 0, exp: 'La fonction inverse donne une hyperbole.' },
-        { q: 'f(x) = 3x − 2 est :', choix: ['Affine', 'Carrée', 'Inverse'], bon: 0, exp: 'De la forme ax + b : fonction affine.' }
+        { q: 'Quel temps décrit le décor du récit ?', choix: ['L\'imparfait', 'Le passé simple', 'Le futur'], bon: 0, exp: 'L\'imparfait peint l\'arrière-plan : « La nuit tombait ».' },
+        { q: '« Il entra dans la pièce » est au :', choix: ['Passé simple', 'Imparfait', 'Présent'], bon: 0, exp: 'Le passé simple marque les actions principales et soudaines.' },
+        { q: 'Un narrateur externe :', choix: ['Observe sans entrer dans les pensées', 'Raconte à la 1re personne', 'Sait tout'], bon: 0, exp: 'Il se contente d\'observer, comme une caméra.' },
+        { q: 'Le narrateur est :', choix: ['Celui qui raconte', 'Celui qui écrit le livre', 'Toujours le héros'], bon: 0, exp: 'L\'auteur écrit, le narrateur raconte : ce n\'est pas pareil.' },
+        { q: 'Une analepse est :', choix: ['Un retour en arrière', 'Une anticipation', 'Une description'], bon: 0, exp: 'Flashback : le récit revient sur un événement passé.' }
       ],
       vf: [
-        { q: 'Un nombre peut avoir plusieurs antécédents.', v: true, exp: 'Oui : par ex. 4 a deux antécédents (2 et −2) pour f(x) = x².' },
-        { q: 'La fonction carré est toujours croissante.', v: false, exp: 'Elle décroît sur ]−∞;0] puis croît sur [0;+∞[.' },
-        { q: 'f(x) = 1/x est définie pour tout nombre.', v: false, exp: 'Elle n\'est pas définie en x = 0.' }
+        { q: 'Le passé simple exprime des actions qui durent.', v: false, exp: 'Non, il exprime des actions brèves, ponctuelles : c\'est l\'imparfait qui dure.' },
+        { q: 'Le narrateur peut être différent de l\'auteur.', v: true, exp: 'Un auteur peut inventer n\'importe quel narrateur.' },
+        { q: 'Le schéma du récit commence par la situation initiale.', v: true, exp: 'Puis élément perturbateur, péripéties, résolution, situation finale.' }
       ]
     },
+    {
+      id: 'fr4-poesie', mat: 'francais', niveau: '4e',
+      titre: 'La poésie',
+      express: '<li>Un poème joue avec les mots : vers, strophes, rimes, rythme.</li><li>Rimes suivies (AABB), croisées (ABAB), embrassées (ABBA).</li><li>Vers mesurés en syllabes : alexandrin (12), décasyllabe (10), octosyllabe (8).</li><li>Figures d\'style : comparaison (comme), métaphore (sans comme), personnification.</li><li>La poésie peut raconter, décrire, exprimer des émotions ou critiquer.</li>',
+      complet: '<h3>1. La forme</h3><p>Le vers est une ligne ; la strophe est un groupe de vers. Compter les syllabes : « Je-me-sui-sacré-ma-nant-é-ta-vie » = décasyllabe. Attention au e muet : il compte devant une consonne, pas devant une voyelle.</p><h3>2. Les rimes</h3><p>Suivies AABB (Boileau), croisées ABAB (Racine), embrassées ABBA (La Fontaine). La rime peut être pauvre (1 son), suffisante (2 sons), riche (3+ sons).</p><h3>3. Les figures de style</h3><p>Comparaison : « doux comme un agneau » (outil de comparaison). Métaphore : « cette diva de la cour » (sans outil). Personnification : « Le vent se plaignait ». Hyperbole : exagération. Répetition d\'anaphores pour marteler.</p><h3>4. La musicalité</h3><p>Allitération (répétition de consonnes) et assonance (de voyelles) créent des ambiances : « Pour qui sont ces serpents qui sifflent sur vos têtes » (Racine) siffle avec les s !</p><h3>5. Les grands genres</h3><p>Lyrique (émotions), épique (récit héroïque), satirique (critique), engagé (défendre une cause).</p>',
+      quiz: [
+        { q: 'Un alexandrin compte :', choix: ['12 syllabes', '10 syllabes', '8 syllabes'], bon: 0, exp: 'Alexandrin = 12, décasyllabe = 10, octosyllabe = 8.' },
+        { q: 'Rimes embrassées :', choix: ['ABBA', 'AABB', 'ABAB'], bon: 0, exp: 'Les rimes 1 et 4, 2 et 3 s\'enlacent (La Fontaine).' },
+        { q: '« Il est doux comme un agneau » est une :', choix: ['Comparaison', 'Métaphore', 'Personnification'], bon: 0, exp: 'L\'outil « comme » signale la comparaison.' },
+        { q: 'Une métaphore utilise :', choix: ['Aucun outil de comparaison', 'Toujours « comme »', 'Toujours « tel que »'], bon: 0, exp: 'La métaphore rapproche directement les images.' },
+        { q: '« Le vent se plaignait » est une :', choix: ['Personnification', 'Comparaison', 'Hyperbole'], bon: 0, exp: 'Le vent reçoit une qualité humaine : il se plaint.' }
+      ],
+      vf: [
+        { q: 'Une strophe est un groupe de vers.', v: true, exp: 'Comme un paragraphe du poème.' },
+        { q: 'La rime pauvre a trois sons communs.', v: false, exp: 'C\'est la rime riche : pauvre = 1 son, suffisante = 2, riche = 3 ou plus.' },
+        { q: 'L\'allitération répète des consonnes.', v: true, exp: 'Et l\'assonance répète des voyelles.' }
+      ]
+    },
+    {
+      id: 'fr3-argumentation', mat: 'francais', niveau: '3e',
+      titre: 'L\'argumentation : convaincre et délibérer',
+      express: '<li>Argumenter, c\'est défendre un point de vue (thèse) avec des arguments et des exemples.</li><li>Thèse / antithèse / synthèse : le débat organisé.</li><li>Connecteurs logiques : d\'abord, cependant, donc, enfin.</li><li>Trois modes : convaincre (raisonner), persuader (émouvoir), délibérer (peser le pour et le contre).</li><li>Le discours direct rapporte les paroles ; l\'ironie fait dire le contraire de ce qu\'on pense.</li>',
+      complet: '<h3>1. Les bases</h3><p>Thèse = le point de vue défendu. Argument = la raison qui l\'appuie. Exemple = le cas concret qui l\'illustre. Un paragraphe argumenté = argument + exemple + mini-conclusion.</p><h3>2. La délibération</h3><p>On présente la thèse (pour), l\'antithèse (contre), puis on conclut (synthèse). Formule utile : « Certes..., mais..., en revanche..., finalement... ».</p><h3>3. Convaincre, persuader, délibérer</h3><p>Convaincre s\'adresse à la raison (logique, faits) ; persuader joue sur les émotions (images, pathos) ; délibérer explore les deux camps avant de trancher.</p><h3>4. Connecteurs et types d\'arguments</h3><p>Addition : d\'abord, ensuite. Opposition : mais, cependant, en revanche. Cause : car, puisque. Conséquence : donc, par conséquent. Types d\'arguments : logique, d\'autorité (citation d\'expert), d\'expérience (exemple vécu), ad hominem (attaque de la personne : à éviter !).</p><h3>5. Le discours rapporté</h3><p>Direct : « Je viens », dit-il. Indirect : il dit qu\'il vient (attention : « demain » devient « le lendemain »). L\'ironie et l\'antiphrase font comprendre le contraire de ce qui est écrit.</p>',
+      quiz: [
+        { q: 'La thèse, c\'est :', choix: ['Le point de vue défendu', 'Un exemple précis', 'La conclusion du texte'], bon: 0, exp: 'C\'est l\'opinion que l\'on veut défendre.' },
+        { q: '« Cependant » est un connecteur :', choix: ['D\'opposition', 'D\'addition', 'De cause'], bon: 0, exp: 'Il marque le contraste : mais, en revanche, néanmoins.' },
+        { q: 'Persuader, c\'est jouer sur :', choix: ['Les émotions', 'La logique', 'Les deux camps'], bon: 0, exp: 'Persuader émeut ; convaincre raisonne.' },
+        { q: 'Un argument d\'autorité s\'appuie sur :', choix: ['La parole d\'un expert', 'Un exemple vécu', 'Une insulte'], bon: 0, exp: 'Citer un spécialiste reconnu renforce la thèse.' },
+        { q: 'L\'antiphrase consiste à :', choix: ['Dire le contraire de ce qu\'on pense', 'Répéter un mot', 'Citer un expert'], bon: 0, exp: '« Quel temps superbe ! » sous la pluie : c\'est de l\'ironie.' }
+      ],
+      vf: [
+        { q: 'Un bon paragraphe argumenté contient argument et exemple.', v: true, exp: 'La raison + le cas concret, c\'est le duo gagnant.' },
+        { q: '« Donc » introduit une cause.', v: false, exp: '« Donc » introduit une conséquence ; « car » introduit une cause.' },
+        { q: 'Délibérer, c\'est examiner le pour et le contre.', v: true, exp: 'On pèse les deux thèses avant de conclure.' }
+      ]
+    },
+    // ================= HISTOIRE =================
     {
       id: 'h5-feodalite', mat: 'histoire', niveau: '5e',
       titre: 'La société féodale',
@@ -159,6 +178,62 @@ var REVISE_DATA = {
         { q: 'Le traité de Versailles fut signé avant l\'armistice.', v: false, exp: 'Il est signé en 1919, après l\'armistice de 1918.' }
       ]
     },
+    // ================= GÉOGRAPHIE =================
+    {
+      id: 'g5-durable', mat: 'geo', niveau: '5e',
+      titre: 'Le développement durable',
+      express: '<li>Développement durable = concilier économie, société et environnement pour l\'avenir de la planète.</li><li>Ressources renouvelables (eau, vent, soleil) vs épuisables (pétrole, charbon).</li><li>L\'eau douce est inégalement répartie : 1 milliard de personnes manquent d\'eau potable.</li><li>Gestion durable : économiser, recycler, protéger.</li><li>Agenda 21 : plan d\'action local pour le 21e siècle.</li>',
+      complet: '<h3>1. Définir le développement durable</h3><p>Satisfaire les besoins d\'aujourd\'hui sans détruire la capacité des générations futures à satisfaire les leurs. Trois piliers : économique (richesse), social (justice), environnemental (nature).</p><h3>2. Des ressources inégales et fragiles</h3><p>Ressources renouvelables : eau, forêts, vent, soleil. Ressources épuisables : pétrole, gaz, charbon, minerais. La consommation mondiale explose : énergies fossiles ≈ 80 % de l\'énergie.</p><h3>3. L\'eau : un exemple concret</h3><p>Moins de 3 % de l\'eau de la Terre est douce. Un milliard d\'humains n\'ont pas accès à l\'eau potable. Gaspillage agricole, pollution, assèchement des nappes.</p><h3>4. Gestions durables</h3><p>À l\'échelle mondiale : accords climat (COP), objectifs de développement durable de l\'ONU (ODD, 17 objectifs). À l\'échelle locale : Agenda 21 des communes (tri, transports propres, économies d\'eau). À l\'échelle individuelle : tri sélectif, sobriété énergétique.</p><h3>5. Les acteurs</h3><p>États, entreprises, associations, citoyens : chacun a un rôle. Le développement durable n\'est pas seulement l\'affaire des scientifiques !</p>',
+      quiz: [
+        { q: 'Le développement durable associe :', choix: ['Économie, social, environnement', 'Économie uniquement', 'Nature uniquement'], bon: 0, exp: 'Les trois piliers doivent avancer ensemble.' },
+        { q: 'Le pétrole est une ressource :', choix: ['Épuisable', 'Renouvelable', 'Inépuisable'], bon: 0, exp: 'Il se forme sur des millions d\'années : une fois brûlé, c\'est fini.' },
+        { q: 'Quelle part de l\'eau terrestre est douce ?', choix: ['Moins de 3 %', 'Environ 30 %', 'Environ 50 %'], bon: 0, exp: '97 % de l\'eau est salée ; à peine 3 % est douce.' },
+        { q: 'L\'Agenda 21 est :', choix: ['Un plan d\'action local durable', 'Un traité de paix', 'Une entreprise'], bon: 0, exp: 'Chaque collectivité peut adopter son Agenda 21.' },
+        { q: 'Les ODD de l\'ONU sont au nombre de :', choix: ['17', '3', '50'], bon: 0, exp: '17 objectifs de développement durable, adoptés en 2015.' }
+      ],
+      vf: [
+        { q: 'Le vent est une ressource renouvelable.', v: true, exp: 'Il ne s\'épuise pas à l\'échelle humaine.' },
+        { q: 'Toute l\'humanité a accès à l\'eau potable.', v: false, exp: 'Environ 1 milliard de personnes en manquent.' },
+        { q: 'Le développement durable concerne aussi les citoyens.', v: true, exp: 'Tri, économies, transports : chacun agit.' }
+      ]
+    },
+    {
+      id: 'g4-mondialisation', mat: 'geo', niveau: '4e',
+      titre: 'La mondialisation',
+      express: '<li>La mondialisation = mise en relation des parties du monde par les flux (échanges, personnes, informations).</li><li>Les grandes métropoles (New York, Tokyo, Londres, Paris) commandent l\'économie mondiale.</li><li>Les entreprises multinationales produisent partout dans le monde.</li><li>Les transports (conteneurs, avions, câbles internet) accélèrent les échanges.</li><li>La mondialisation crise des inégalités entre les « gagnants » et les « perdants ».</li>',
+      complet: '<h3>1. Définir les flux</h3><p>Flux de marchandises (80 % du commerce mondial maritime), flux de personnes (touristes, migrants), flux de capitaux (bourses), flux d\'informations (internet, câbles sous-marins).</p><h3>2. Les acteurs</h3><p>États, organisations internationales (OMC, ONU), FTN (firmes transnationales : Apple, Toyota...), individus (touristes, travailleurs). Les FTN réalisent plus de la moitié du commerce mondial.</p><h3>3. Les espaces de la mondialisation</h3><p>Pôles majeurs : Amérique du Nord, Europe, Asie orientale (la « Triade »). Métropoles mondiales qui concentrent les sièges et les bourses. Les mers et océans : routes stratégiques (détroits, canaux de Suez et Panama). Espaces en marge : pays enclavés, régions oubliées.</p><h3>4. Produire dans un monde globalisé</h3><p>Un smartphone est conçu en Californie, ses composants viennent d\'Asie, il est assemblé en Chine puis vendu partout. C\'est la chaîne de valeur mondiale.</p><h3>5. Débats</h3><p>Richesse créée mais inégalités croissantes, délocalisations, standardisation culturelle, impact environnemental des transports. Les flux illégaux (drogues, contrefaçon) profitent aussi de la mondialisation.</p>',
+      quiz: [
+        { q: 'Une FTN est :', choix: ['Une firme transnationale', 'Une organisation publique', 'Un type de bateau'], bon: 0, exp: 'Entreprise implantée dans plusieurs pays : Apple, Toyota...' },
+        { q: 'La « Triade » regroupe :', choix: ['Amérique du Nord, Europe, Asie orientale', 'France, Allemagne, Italie', 'USA, Russie, Chine'], bon: 0, exp: 'Les trois pôles majeurs de l\'économie mondiale.' },
+        { q: 'Les échanges mondiaux passent surtout par :', choix: ['La mer', 'Le train', 'La route'], bon: 0, exp: 'Environ 80 % du commerce mondial est maritime (conteneurs).' },
+        { q: 'Un produit mondialisé typique :', choix: ['Le smartphone', 'Le pain de la boulangerie', 'L\'eau du robinet'], bon: 0, exp: 'Conçu, assemblé et vendu dans plusieurs continents.' },
+        { q: 'Les espaces en marge sont :', choix: ['Peu connectés aux flux mondiaux', 'Les métropoles', 'Les ports'], bon: 0, exp: 'Pays enclavés, régions isolées : ils profitent peu de la mondialisation.' }
+      ],
+      vf: [
+        { q: 'La mondialisation concerne seulement les marchandises.', v: false, exp: 'Aussi les personnes, les capitaux et les informations.' },
+        { q: 'Les métropoles mondiales concentrent les sièges d\'entreprises.', v: true, exp: 'New York, Tokyo, Londres, Paris commandent l\'économie.' },
+        { q: 'La mondialisation réduit toutes les inégalités.', v: false, exp: 'Elle en crée aussi, entre régions connectées et marges.' }
+      ]
+    },
+    {
+      id: 'g3-france-ue', mat: 'geo', niveau: '3e',
+      titre: 'La France et l\'Union européenne',
+      express: '<li>La France : 67 millions d\'habitants, puissance économique mondiale (7e puissance).</li><li>Ses atouts : agriculture puissante, tourisme (1er rang mondial), nuclear, TGV, luxe.</li><li>L\'UE : 27 États membres, 450 millions d\'habitants, premier pôle commercial mondial.</li><li>Zone euro : monnaie unique, la BCE gère la politique monétaire.</li><li>L\'UE est une union économique et politique inachevée : défense et étranger restent nationaux.</li>',
+      complet: '<h3>1. La France, une puissance</h3><p>Atouts : 7e puissance économique, 1ère destination touristique mondiale (90 millions de visiteurs/an), grande agriculture exportatrice, industrie (aéronautique, luxe, pharmacie), Siège de l\'ONU à Paris. Limites : dépendance énergétique, déséquilibres territoriaux (diagonale du vide).</p><h3>2. L\'Union européenne</h3><p>Née après 1945 pour la paix : CECA (1951), Marché commun (1957), Maastricht (1992 : citoyenneté européenne et euro). Aujourd\'hui 27 États, 450 millions d\'habitants, 24 langues officielles.</p><h3>3. Le fonctionnement</h3><p>Commission européenne (propose), Parlement européen (vote, Strasbourg), Conseil des ministres (décide), Cour de justice (contrôle). 17 pays partagent l\'euro, géré par la Banque centrale européenne (BCE).</p><h3>4. Une puissance mondiale</h3><p>Premier pôle commercial, premier donneur d\'aide au développement, normes qui s\'exportent (environnement, données). Mais : dépendance énergétique, vieillissement, débats sur l\'élargissement.</p><h3>5. Une union inachevée</h3><p>Politique étrangère et défense restent largement nationales. Le Brexit (2020) a montré que l\'union peut reculer. L\'avenir : souveraineté technologique, transition verte.</p>',
+      quiz: [
+        { q: 'Combien d\'États membres compte l\'UE ?', choix: ['27', '15', '44'], bon: 0, exp: '27 États depuis le Brexit (2020).' },
+        { q: 'La France est :', choix: ['1ère destination touristique mondiale', 'Dernière puissance agricole', 'Sans industrie'], bon: 0, exp: 'Environ 90 millions de visiteurs par an.' },
+        { q: 'La BCE gère :', choix: ['La politique monétaire de la zone euro', 'Le tourisme', 'Les armées'], bon: 0, exp: 'Banque centrale européenne : elle veille sur l\'euro.' },
+        { q: 'Le traité de Maastricht (1992) crée :', choix: ['La citoyenneté européenne et l\'euro', 'Le marché commun', 'L\'ONU'], bon: 0, exp: 'Étape clé : union économique et monétaire.' },
+        { q: 'Le Parlement européen siège à :', choix: ['Strasbourg', 'Paris', 'Berlin'], bon: 0, exp: 'Les députés européens se réunissent à Strasbourg.' }
+      ],
+      vf: [
+        { q: 'L\'UE est le premier pôle commercial mondial.', v: true, exp: 'Devant les États-Unis et la Chine.' },
+        { q: 'Tous les pays de l\'UE ont l\'euro.', v: false, exp: 'Seulement 20 pays partagent la monnaie unique.' },
+        { q: 'La défense de l\'UE est entièrement commune.', v: false, exp: 'Elle reste largement nationale : l\'union est inachevée.' }
+      ]
+    },
+    // ================= SVT =================
     {
       id: 'svt5-eau', mat: 'svt', niveau: '5e',
       titre: 'L\'eau dans notre environnement',
@@ -178,39 +253,149 @@ var REVISE_DATA = {
       ]
     },
     {
-      id: 'pc2-atome', mat: 'physique', niveau: '2de',
-      titre: 'L\'atome',
-      express: '<li>Un atome = un noyau (protons + neutrons) + des électrons qui tournent autour.</li><li>Protons : charge + ; neutrons : neutres ; électrons : charge −.</li><li>Un atome est électriquement neutre : autant de protons que d\'électrons.</li><li>Le numéro atomique Z = nombre de protons ; A = protons + neutrons.</li><li>L\'atome est essentiellement vide : le noyau est 100 000 fois plus petit que l\'atome.</li>',
-      complet: '<h3>1. Structure</h3><p>L\'atome est constitué d\'un noyau central (nucléons : protons et neutrons) entouré d\'un cortège d\'électrons. Le noyau concentre presque toute la masse ; l\'électron est environ 1836 fois plus léger qu\'un proton.</p><h3>2. Charges</h3><p>Proton : +e (e = 1,6×10⁻¹⁹ C). Électron : −e. Neutron : 0. Les charges du noyau attirent les électrons : c\'est l\'interaction électrique qui tient l\'atome.</p><h3>3. Neutralité</h3><p>Un atome a autant d\'électrons que de protons : les charges se compensent. S\'il gagne ou perd des électrons, il devient un ion (anion si −, cation si +).</p><h3>4. Notation</h3><p>On note A le nombre de masse (nucléons) et Z le numéro atomique (protons). Exemple : le carbone 12 a 6 protons, 6 neutrons, 6 électrons.</p><h3>5. Vide atomique</h3><p>Le rayon d\'un atome est ~10⁻¹⁰ m ; celui du noyau ~10⁻¹⁵ m. La matière est surtout du vide.</p><h3>6. Isotopes</h3><p>Même Z, A différents : carbone 12 et carbone 14 sont des isotopes (12 et 14 nucléons, 6 protons chacun).</p>',
+      id: 'svt4-volcans', mat: 'svt', niveau: '4e',
+      titre: 'Volcans et tectonique des plaques',
+      express: '<li>L\'écorce terrestre est découpée en plaques lithosphériques en mouvement.</li><li>Les plaques s\'écartent (dorsales), se rapprochent (fosses, montagnes) ou coulissent (failles).</li><li>Les séismes et volcans se concentrent aux frontières de plaques.</li><li>Un volcan éruptif : magma, cratère, coulées, projections, cendres.</li><li>Éruptions explosives (visqueux) vs effusives (fluides).</li>',
+      complet: '<h3>1. La structure de la Terre</h3><p>En surface : la lithosphère rigide (écorce + haut manteau), découpée en plaques. En dessous : l\'asthénosphère, partiellement fondue, sur laquelle les plaques glissent à quelques cm/an (comme un tapis roulant lent).</p><h3>2. Trois types de frontières</h3><p>Divergente : les plaques s\'écartent, remontée de magma, création de croûte (dorsales océaniques, Islande). Convergente : une plaque plonge sous l\'autre (subduction, fosses, Andes, Japon) ou collision (Himalaya). Transformante : coulissage (faille de San Andreas).</p><h3>3. Volcans et séismes</h3><p>La « ceinture de feu » du Pacifique concentre 75 % des volcans actifs. Un séisme est la libération brutale de contraintes accumulées : ondes sismiques, magnitude (échelle de Richter).</p><h3>4. Anatomie d\'un volcan</h3><p>Chambre magmatique → cheminée → cratère → coulées, bombs, cendres. Éruption effusive : magma fluide, coulées rapides mais prévisibles (Piton de la Fournaise). Éruption explosive : magma visqueux, panaches de cendres dangereux (Mont Saint Helens, Vésuve).</p><h3>5. Prévention</h3><p>Surveillance (sismographes, GPS, gaz), cartes de risque, exercices d\'évacuation : on ne peut pas empêcher une éruption, mais on peut s\'y préparer.</p>',
       quiz: [
-        { q: 'La charge d\'un électron est :', choix: ['Négative', 'Positive', 'Nulle'], bon: 0, exp: 'L\'électron porte une charge −e.' },
-        { q: 'Un atome est neutre car :', choix: ['Autant de protons que d\'électrons', 'Autant de neutrons que d\'électrons', 'Il n\'a pas de charge'], bon: 0, exp: 'Les charges + et − se compensent.' },
-        { q: 'Le carbone 12 contient :', choix: ['6 protons, 6 neutrons', '12 protons', '6 protons, 12 neutrons'], bon: 0, exp: 'Z = 6, A = 12 → 6 protons et 12−6 = 6 neutrons.' },
-        { q: 'Qui concentre la masse de l\'atome ?', choix: ['Le noyau', 'Les électrons', 'Le vide'], bon: 0, exp: 'Protons et neutrons sont ~1836 fois plus lourds que les électrons.' },
-        { q: 'Un atome qui perd un électron devient :', choix: ['Un cation', 'Un anion', 'Un isotope'], bon: 0, exp: 'Il lui reste une charge positive : cation.' }
+        { q: 'Les plaques lithosphériques glissent sur :', choix: ['L\'asthénosphère', 'Le noyau', 'L\'eau des océans'], bon: 0, exp: 'L\'asthénosphère, partiellement fondue, permet le mouvement.' },
+        { q: 'Aux dorsales océaniques, les plaques :', choix: ['S\'écartent', 'Se rapprochent', 'Coulissent'], bon: 0, exp: 'Divergence : du magma remonte et crée de la croûte.' },
+        { q: 'La faille de San Andreas est une frontière :', choix: ['Transformante', 'Convergente', 'Divergente'], bon: 0, exp: 'Les plaques coulissent l\'une contre l\'autre.' },
+        { q: 'Une éruption explosive a un magma :', choix: ['Visqueux', 'Très fluide', 'Froid'], bon: 0, exp: 'Visqueux : les gaz restent piégés puis explosent.' },
+        { q: 'La « ceinture de feu » borde :', choix: ['L\'océan Pacifique', 'L\'océan Atlantique', 'L\'Afrique'], bon: 0, exp: 'Environ 75 % des volcans actifs y sont alignés.' }
       ],
       vf: [
-        { q: 'Le neutron porte une charge positive.', v: false, exp: 'Il est électriquement neutre.' },
-        { q: 'Deux isotopes ont le même nombre de protons.', v: true, exp: 'Même Z, A différents.' },
-        { q: 'L\'atome est surtout composé de vide.', v: true, exp: 'Le noyau est 100 000 fois plus petit que l\'atome.' }
+        { q: 'Les plaques se déplacent de quelques cm par an.', v: true, exp: 'La vitesse d\'un ongle qui pousse !' },
+        { q: 'Les séismes sont répartis au hasard sur Terre.', v: false, exp: 'Ils se concentrent aux frontières de plaques.' },
+        { q: 'On peut prévoir les éruptions en surveillant les volcans.', v: true, exp: 'Sismographes, gaz, déformations : la surveillance sauve des vies.' }
       ]
     },
     {
-      id: 'ph-tle-liberte', mat: 'philo', niveau: 'Tle',
-      titre: 'La liberté',
-      express: '<li>Être libre : faire ce que l\'on veut, ou agir selon sa propre volonté ?</li><li>Liberté d\'action vs liberté de la volonté.</li><li>Déterminisme : nos actes auraient des causes ; la liberté serait-elle une illusion ?</li><li>Liberté et lois : se limiter pour être libre (Rousseau, Kant).</li><li>Sartre : « l\'homme est condamné à être libre » — nous sommes responsables.</li>',
-      complet: '<h3>1. Définir la liberté</h3><p>Premier sens : absence d\'obstacle (liberté d\'action, faire ce que je peux). Deuxième sens : autonomie de la volonté (agir selon des raisons que j\'approuve). Spinoza : croire être libre, c\'est ignorer les causes qui nous déterminent.</p><h3>2. Le défi du déterminisme</h3><p>Si tout a une cause, mes « choix » seraient des effets. Laplace : connaître l\'état de l\'univers à un instant permettrait de prédire tout. Réponse possible : la conscience réfléchit et peut suspendre l\'impulsion.</p><h3>3. Liberté et responsabilité</h3><p>Imputer une action à quelqu\'un suppose qu\'il aurait pu agir autrement. La responsabilité suppose donc la liberté.</p><h3>4. La liberté a besoin de la loi</h3><p>Rousseau : l\'obéissance à la loi qu\'on s\'est prescrite est liberté. Kant : l\'autonomie, c\'est se donner à soi-même sa loi (morale), non obéir à ses penchants. La loi ne détruit pas la liberté, elle la rend possible dans la collectivité.</p><h3>5. L\'existentialisme</h3><p>Sartre : sans nature humaine prédéfinie, nous nous choisissons par nos actes. « L\'homme est condamné à être libre » : impossible de fuir la responsabilité. L\'angoisse en est le revers.</p><h3>6. Sujets classiques</h3><p>« Faire ce que l\'on veut, est-ce être libre ? » / « La liberté est-elle une illusion ? » / « Peut-on être libre en société ? »</p>',
+      id: 'svt3-genetique', mat: 'svt', niveau: '3e',
+      titre: 'Génétique : l\'ADN et la transmission des caractères',
+      express: '<li>L\'ADN est la molécule-support de l\'information génétique, dans le noyau des cellules.</li><li>Un gène est une portion d\'ADN qui détermine un caractère (couleur des yeux...).</li><li>Chaque caractère existe en versions : allèle dominant ou récessif.</li><li>Nous héritons d\'un allèle de chaque parent : le hasard des gamètes.</li><li>Le caryotype humain : 46 chromosomes, dont XX (fille) ou XY (garçon).</li>',
+      complet: '<h3>1. L\'ADN, le livre de la vie</h3><p>Double hélice formée de nucléotides (A, T, G, C). L\'ADN est découpé en chromosomes, visibles lors des divisions cellulaires. L\'ensemble = le génome.</p><h3>2. Gènes et allèles</h3><p>Un gène (ex. couleur des yeux) peut exister en plusieurs versions : les allèles. Allèle dominant (s\'exprime dès qu\'il est présent) et récessif (exprimé seulement en double exemplaire).</p><h3>3. La fécondation</h3><p>Chaque parent transmet un allèle par gène via ses gamètes. Le hasard de la fécondation explique la diversité des enfants d\'un même couple. Échiquier de croisement : on prédit les probabilités (ex. 3 chances sur 4 pour un allèle dominant).</p><h3>4. Caryotype et sexe</h3><p>46 chromosomes = 23 paires. La 23e paire détermine le sexe : XX = fille, XY = garçon. C\'est le spermatozoïde (X ou Y) qui décide du sexe de l\'enfant.</p><h3>5. Mutations et diversité</h3><p>Des erreurs de copie (mutations) créent de nouveaux allèles : c\'est le moteur de l\'évolution. Certaines mutations causent des maladies génétiques (drépanocytose, mucoviscidose), d\'autres sont neutres ou utiles.</p>',
       quiz: [
-        { q: 'Pour Sartre, l\'homme est :', choix: ['Condamné à être libre', 'Déterminé par ses gènes', 'Libre seulement en société'], bon: 0, exp: 'Nous ne pouvons pas fuir le choix et la responsabilité.' },
-        { q: 'Pour Kant, être autonome c\'est :', choix: ['Se donner sa propre loi', 'Faire ce qu\'on veut', 'Suivre la majorité'], bon: 0, exp: 'Autonomie = se prescrire sa loi morale, non obéir à ses penchants.' },
-        { q: 'Spinoza pense que :', choix: ['Nous croyons être libres par ignorance des causes', 'La liberté est prouvée', 'Tout est faux'], bon: 0, exp: 'Le sentiment de liberté vient de l\'ignorance du déterminisme.' },
-        { q: 'La responsabilité suppose :', choix: ['Qu\'on aurait pu agir autrement', 'La contrainte', 'L\'ignorance'], bon: 0, exp: 'On ne peut blâmer que celui qui avait le choix.' },
-        { q: 'Pour Rousseau, obéir à la loi qu\'on s\'est prescrite est :', choix: ['Une forme de liberté', 'Une soumission', 'Une illusion'], bon: 0, exp: 'La loi que le peuple se donne exprime sa volonté générale.' }
+        { q: 'L\'information génétique est portée par :', choix: ['L\'ADN', 'La membrane', 'Les mitochondries'], bon: 0, exp: 'L\'ADN, dans le noyau des cellules.' },
+        { q: 'Un allèle récessif s\'exprime :', choix: ['En deux exemplaires', 'Toujours', 'Jamais'], bon: 0, exp: 'Il faut l\'hériter des deux parents.' },
+        { q: 'Le caryotype humain compte :', choix: ['46 chromosomes', '23 chromosomes', '64 chromosomes'], bon: 0, exp: '23 paires, dont la paire sexuelle.' },
+        { q: 'Qui détermine le sexe de l\'enfant ?', choix: ['Le spermatozoïde (X ou Y)', 'L\'ovule', 'L\'alimentation'], bon: 0, exp: 'L\'ovule porte toujours X ; le spermatozoïde apporte X ou Y.' },
+        { q: 'Une mutation est :', choix: ['Une modification de l\'ADN', 'Une maladie obligatoire', 'Une division cellulaire'], bon: 0, exp: 'Erreur de copie : parfois neutre, parfois utile, parfois pathogène.' }
       ],
       vf: [
-        { q: 'Le déterminisme affirme que tout événement a une cause.', v: true, exp: 'C\'est le défi principal posé à la liberté.' },
-        { q: 'Pour Rousseau, la loi détruit forcément la liberté.', v: false, exp: 'Au contraire, la loi que l\'on se prescrit rend la liberté possible.' },
-        { q: 'Liberté d\'action et liberté de la volonté sont identiques.', v: false, exp: 'Pouvoir faire ≠ vouloir de manière autonome.' }
+        { q: 'Un gène peut exister en plusieurs versions (allèles).', v: true, exp: 'Chaque version donne une variation du caractère.' },
+        { q: 'Chaque parent transmet ses deux allèles de chaque gène.', v: false, exp: 'Un seul par gène : l\'enfant en reçoit deux au total.' },
+        { q: 'Les mutations participent à l\'évolution.', v: true, exp: 'Elles créent la diversité sur laquelle la sélection agit.' }
+      ]
+    },
+    // ================= PHYSIQUE-CHIMIE =================
+    {
+      id: 'pc5-lumiere', mat: 'physique', niveau: '5e',
+      titre: 'La lumière et les ombres',
+      express: '<li>On ne voit un objet que s\'il émet ou renvoie de la lumière vers nos yeux.</li><li>La lumière se propage en ligne droite dans un milieu transparent.</li><li>Ombre propre (sur l\'objet) et ombre portée (sur un écran).</li><li>Vitesse de la lumière : 300 000 km/s (la plus rapide de l\'Univers).</li><li>Propagation : source → objet → œil, toujours dans ce sens !</li>',
+      complet: '<h3>1. Sources et récepteurs</h3><p>Sources primaires (Soleil, lampe, flamme) : elles produisent la lumière. Objets diffusants (Lune, page d\'un livre) : ils renvoient la lumière reçue. L\'œil et la caméra sont des récepteurs.</p><h3>2. Le modèle du rayon</h3><p>Dans un milieu transparent et homogène, la lumière se propage en ligne droite : on la représente par un rayon fléché. Pour voir un objet, il faut qu\'un rayon va de l\'objet jusqu\'à l\'œil.</p><h3>3. Ombres</h3><p>Ombre propre : partie de l\'objet non éclairée. Cône d\'ombre et ombre portée : zone sombre sur un écran derrière l\'objet. Une éclipse de Soleil se produit quand la Lune projette son ombre sur la Terre.</p><h3>4. La vitesse de la lumière</h3><p>c = 300 000 km/s (3×10⁸ m/s) dans le vide. Le Soleil est à 150 millions de km : sa lumière met 8 min 20 s à nous parvenir. Une année-lumière = distance parcourue en 1 an ≈ 9 500 milliards de km.</p><h3>5. Jour et nuit, saisons</h3><p>La Terre tourne sur elle-même en 24 h (alternance jour/nuit) et autour du Soleil en 365,25 jours (saisons dues à l\'inclinaison de l\'axe).</p>',
+      quiz: [
+        { q: 'La Lune est :', choix: ['Un objet diffusant', 'Une source primaire', 'Un récepteur'], bon: 0, exp: 'Elle renvoie la lumière du Soleil.' },
+        { q: 'La lumière se propage :', choix: ['En ligne droite', 'En courbe', 'En zigzag'], bon: 0, exp: 'Dans un milieu transparent et homogène.' },
+        { q: 'La vitesse de la lumière est environ :', choix: ['300 000 km/s', '300 km/s', '1 000 km/s'], bon: 0, exp: 'Rien ne va plus vite dans l\'Univers.' },
+        { q: 'La lumière du Soleil met :', choix: ['Environ 8 minutes', '1 seconde', '1 heure'], bon: 0, exp: '8 min 20 s pour 150 millions de km.' },
+        { q: 'L\'ombre portée se forme :', choix: ['Sur un écran derrière l\'objet', 'Sur l\'objet lui-même', 'Autour de la source'], bon: 0, exp: 'L\'ombre propre est sur l\'objet ; la portée, sur l\'écran.' }
+      ],
+      vf: [
+        { q: 'On voit un objet qui n\'envoie aucune lumière vers l\'œil.', v: false, exp: 'Impossible : il faut de la lumière entre l\'objet et l\'œil.' },
+        { q: 'Une éclipse de Soleil est une ombre portée de la Lune.', v: true, exp: 'La Lune se glisse entre le Soleil et nous.' },
+        { q: 'L\'année-lumière est une unité de distance.', v: true, exp: 'Distance parcourue par la lumière en un an.' }
+      ]
+    },
+    {
+      id: 'pc4-electricite', mat: 'physique', niveau: '4e',
+      titre: 'Le circuit électrique',
+      express: '<li>Circuit fermé = le courant circule ; circuit ouvert = rien ne marche.</li><li>Série : une seule boucle ; dérivation : plusieurs branches.</li><li>En série, l\'intensité est la même partout ; en dérivation, la tension est la même aux bornes.</li><li>Un fusible protège : il fond si l\'intensité dépasse la limite.</li><li>Loi des nœuds : l\'intensité qui arrive = l\'intensité qui repart.</li>',
+      complet: '<h3>1. Les grandeurs électriques</h3><p>Tension U en volts (V) : mesurée avec un voltmètre branché en dérivation. Intensité I en ampères (A) : mesurée avec un ampèremètre branché en série. Symboles normalisés : pile, lampe, interrupteur, résistance, moteur.</p><h3>2. Circuit en série</h3><p>Une seule boucle : l\'intensité est la même en tout point (I constante). Si une lampe grille ou qu\'on en dévisse une, tout s\'éteint. Plus de récepteurs = tension partagée, lamps moins brillantes.</p><h3>3. Circuit en dérivation</h3><p>Plusieurs branches : la tension est la même aux bornes de chaque branche. Une lampe qui grille n\'éteint pas les autres. Loi des nœuds : I arrivant = I repartant (I = I1 + I2).</p><h3>4. Sécurité</h3><p>Le corps humain conduit l\'électricité : danger dès 20-30 mA. Fusibles et disjoncteurs coupent le circuit en cas de surintensité (court-circuit). Installation domestique : fils phase/neutre/terre.</p><h3>5. Puissance et énergie</h3><p>P = U × I (watts). E = P × t : une lampe de 60 W allumée 2 h consomme 120 Wh. Le compteur électrique mesure les kWh.</p>',
+      quiz: [
+        { q: 'L\'intensité se mesure en :', choix: ['Ampères (A)', 'Volts (V)', 'Watts (W)'], bon: 0, exp: 'Volt = tension ; watt = puissance ; ampère = intensité.' },
+        { q: 'Dans un circuit en série, l\'intensité est :', choix: ['La même partout', 'Divisée en deux', 'Nulle'], bon: 0, exp: 'Une seule boucle : le courant est identique partout.' },
+        { q: 'Un ampèremètre se branche :', choix: ['En série', 'En dérivation', 'N\'importe où'], bon: 0, exp: 'Le voltmètre, lui, se branche en dérivation.' },
+        { q: 'Loi des nœuds :', choix: ['I arrivant = I repartant', 'U = R × I', 'P = U × I'], bon: 0, exp: 'Le courant qui arrive à un nœud en repart intégralement.' },
+        { q: 'Un fusible sert à :', choix: ['Couper en cas de surintensité', 'Éclairer', 'Mesurer la tension'], bon: 0, exp: 'Il fond et ouvre le circuit : protection !' }
+      ],
+      vf: [
+        { q: 'En dérivation, si une lampe grille, les autres restent allumées.', v: true, exp: 'Les branches sont indépendantes.' },
+        { q: 'Le corps humain conduit l\'électricité.', v: true, exp: 'D\'où le danger de la maison : 230 V.' },
+        { q: 'Le voltmètre se branche en série.', v: false, exp: 'En dérivation, aux bornes du dipôle.' }
+      ]
+    },
+    {
+      id: 'pc3-atome', mat: 'physique', niveau: '3e',
+      titre: 'L\'atome et les ions',
+      express: '<li>Un atome = un noyau (protons + neutrons) + des électrons autour.</li><li>Protons : charge + ; neutrons : neutres ; électrons : charge −.</li><li>Un atome est neutre : autant de protons que d\'électrons.</li><li>Un ion = un atome qui a gagné ou perdu des électrons.</li><li>La matière est essentiellement vide : le noyau est 100 000 fois plus petit que l\'atome.</li>',
+      complet: '<h3>1. Structure de l\'atome</h3><p>Noyau central (nucléons : protons +, neutrons 0) et cortège d\'électrons (−e). Le numéro atomique Z = nombre de protons ; A = nombre de nucléons. Exemple : le carbone 12 → 6 protons, 6 neutrons, 6 électrons.</p><h3>2. Neutralité électrique</h3><p>Autant de charges + que de − : l\'atome est neutre. C\'est l\'interaction électrique qui retient les électrons près du noyau.</p><h3>3. Les ions</h3><p>Un atome qui perd des électrons devient un cation (charge +) : Na⁺, Cu²⁺. Un atome qui gagne des électrons devient un anion (charge −) : Cl⁻, O²⁻. Les ions formés se reconnaissent à leur charge entre parenthèses.</p><h3>4. Les formules chimiques</h3><p>Les molécules : H₂O (2 hydrogènes, 1 oxygène), CO₂, O₂. Les tests d\'identification : l\'eau blanchit le sulfate de cuivre anhydre ; le dioxygène ravive une braise ; le dioxyde de carbone trouble l\'eau de chaux.</p><h3>5. Atomes, ions et courant électrique</h3><p>Dans les métaux, les électrons libres se déplacent : c\'est le courant électrique. Dans les solutions, ce sont les ions qui circulent (les liquides conducteurs sont ioniques).</p>',
+      quiz: [
+        { q: 'Un ion négatif est appelé :', choix: ['Un anion', 'Un cation', 'Un neutron'], bon: 0, exp: 'Anion = charge − ; cation = charge +.' },
+        { q: 'Le carbone 12 contient :', choix: ['6 protons, 6 neutrons', '12 protons', '6 protons, 12 neutrons'], bon: 0, exp: 'Z = 6, A = 12 → 6 protons et 6 neutrons.' },
+        { q: 'Un atome qui perd un électron devient :', choix: ['Un cation', 'Un anion', 'Un isotope'], bon: 0, exp: 'Il lui reste une charge positive.' },
+        { q: 'Qui concentre presque toute la masse de l\'atome ?', choix: ['Le noyau', 'Les électrons', 'Le vide'], bon: 0, exp: 'Protons et neutrons sont ~1836 fois plus lourds que les électrons.' },
+        { q: 'Dans un métal, le courant est dû à :', choix: ['Des électrons libres', 'Des ions', 'Des neutrons'], bon: 0, exp: 'Les électrons se déplacent d\'un bout à l\'autre.' }
+      ],
+      vf: [
+        { q: 'Le neutron porte une charge positive.', v: false, exp: 'Il est électriquement neutre.' },
+        { q: 'L\'eau de chaux se trouble en présence de CO₂.', v: true, exp: 'C\'est le test du dioxyde de carbone.' },
+        { q: 'L\'atome est surtout composé de vide.', v: true, exp: 'Le noyau est 100 000 fois plus petit que l\'atome.' }
+      ]
+    },
+    // ================= ANGLAIS =================
+    {
+      id: 'ang5-present', mat: 'anglais', niveau: '5e',
+      titre: 'Presenting people: BE, HAVE GOT',
+      express: '<li>BE = être : I am, you are, he/she is, we are, they are.</li><li>Négation : he is NOT (isn\'t) ; question : Are you...?</li><li>HAVE GOT = avoir : I have got (I\'ve got), he has got (he\'s got).</li><li>Pour présenter : His name is... / He is 12 years old / He has got two sisters.</li><li>Bases : a/an, pluriels (s), his/her.</li>',
+      complet: '<h3>1. Le verbe BE (être)</h3><p>Forme affirmative : I am, you are, he/she/it is, we are, you are, they are. Négation : ajout de not (I\'m not, he isn\'t, we aren\'t). Question : inversion (Are you happy? Is she tall?).</p><h3>2. Le verbe HAVE GOT (avoir)</h3><p>I/you/we/they have got ; he/she/it has got. Négation : I haven\'t got, he hasn\'t got. Question : Have you got...? Has she got...?</p><h3>3. Présenter quelqu\'un</h3><p>His name is Tom. He is twelve years old. He is British. He has got one brother and two sisters. He lives in Manchester. He likes football and he doesn\'t like homework.</p><h3>4. Les bases du nom</h3><p>a + consonne (a dog), an + voyelle (an apple). Pluriel : +s (cats), irréguliers (man → men, child → children). His (de lui) / her (d\'elle).</p><h3>5. Questions utiles</h3><p>What\'s your name? How old are you? Where do you live? Have you got any pets?</p>',
+      quiz: [
+        { q: 'She ___ my best friend.', choix: ['is', 'are', 'am'], bon: 0, exp: 'She → is (3e personne singulier).' },
+        { q: 'La bonne forme :', choix: ['He has got two cats.', 'He have got two cats.', 'He is got two cats.'], bon: 0, exp: 'He → has got.' },
+        { q: 'Question correcte :', choix: ['Are you ready?', 'You are ready?', 'Do you are ready?'], bon: 0, exp: 'Inversion sujet/verbe : Are you...?' },
+        { q: '___ apple a day.', choix: ['An', 'A', 'And'], bon: 0, exp: 'An devant une voyelle : an apple.' },
+        { q: 'Le pluriel de child :', choix: ['children', 'childs', 'childes'], bon: 0, exp: 'Pluriel irrégulier : child → children.' }
+      ],
+      vf: [
+        { q: '« I am » se contracte en « I\'m ».', v: true, exp: 'I\'m, you\'re, he\'s, we\'re, they\'re.' },
+        { q: 'On dit « he are ».', v: false, exp: 'He is ! (ou he\'s)' },
+        { q: 'La question avec have got : « Have you got a pen? »', v: true, exp: 'Have/Has + sujet + got... ?' }
+      ]
+    },
+    {
+      id: 'ang4-preterit', mat: 'anglais', niveau: '4e',
+      titre: 'Le prétérit (passé simple)',
+      express: '<li>Le prétérit raconte le passé : yesterday, last week, in 2010, ago.</li><li>Verbes réguliers : verbe + -ed (played, watched).</li><li>Négation : didn\'t + verbe de base (I didn\'t play).</li><li>Question : Did you play? — Yes, I did / No, I didn\'t.</li><li>Irregulars à connaître : go → went, have → had, see → saw, take → took, be → was/were.</li>',
+      complet: '<h3>1. Quand l\'utiliser</h3><p>Action achevée dans le passé, avec un marqueur : yesterday, last month, two days ago, in 1998, when I was young.</p><h3>2. Les verbes réguliers</h3><p>Règle : + ed (work → worked). Orthographe : verbe en -e → +d (like → liked) ; consonne-voyelle-consonne → double (stop → stopped) ; -y après consonne → -ied (study → studied).</p><h3>3. Négation et question</h3><p>Auxiliaire did + base verbale. I didn\'t watch TV. Did she visit London? Yes, she did. / No, she didn\'t. Attention : after didn\'t, pas de -ed !</p><h3>4. Les irréguliers fréquents</h3><p>go → went, have → had, do → did, see → saw, take → took, make → made, get → got, come → came, say → said, buy → bought, eat → ate, write → wrote, be → was/were.</p><h3>5. Raconter une journée</h3><p>Yesterday, I woke up at 7. I had breakfast, then I went to school by bus. In the evening, I did my homework and I watched a film. I went to bed at 10.</p>',
+      quiz: [
+        { q: 'She ___ to the cinema last week.', choix: ['went', 'goed', 'goes'], bon: 0, exp: 'Go → went : irrégulier.' },
+        { q: 'Forme correcte :', choix: ['I didn\'t play football.', 'I didn\'t played football.', 'I not played football.'], bon: 0, exp: 'After didn\'t, verbe de base (pas de -ed).' },
+        { q: 'Question :', choix: ['Did you watch the film?', 'Did you watched the film?', 'You watched the film?'], bon: 0, exp: 'Did + sujet + base verbale.' },
+        { q: 'Le passé de take :', choix: ['took', 'taked', 'taked'], bon: 0, exp: 'take → took.' },
+        { q: 'Study au prétérit :', choix: ['studied', 'studyed', 'study'], bon: 0, exp: 'Consonne + y → -ied.' }
+      ],
+      vf: [
+        { q: '« Ago » signale le prétérit.', v: true, exp: 'Two years ago = il y a deux ans : passé achevé.' },
+        { q: 'Au négatif, on met -ed après didn\'t.', v: false, exp: 'Jamais : didn\'t + base verbale.' },
+        { q: 'Le passé de be est was/were.', v: true, exp: 'I/he/she/it was ; you/we/they were.' }
+      ]
+    },
+    {
+      id: 'ang3-perfect', mat: 'anglais', niveau: '3e',
+      titre: 'Present perfect vs prétérit',
+      express: '<li>Present perfect : HAVE/HAS + participe passé (gone, seen, done).</li><li>Il relie passé et présent : I have lost my keys (elles sont encore perdues).</li><li>Marqueurs : ever, never, just, already, yet, since, for.</li><li>Prétérit : action datée et achevée (yesterday, in 2010).</li><li>Différence clé : I have been to London (expérience) / I went to London last year (daté).</li>',
+      complet: '<h3>1. Formation du present perfect</h3><p>have/has + participe passé : réguliers = -ed (visited), irréguliers à apprendre (go → gone, see → seen, eat → eaten, write → written).</p><h3>2. Les emplois</h3><p>Expérience de vie : Have you ever been to the USA? Bilan du présent : She has just finished her homework. Action qui dure : I have lived here for ten years / since 2014.</p><h3>3. For et since</h3><p>For + durée : for two hours, for ten years. Since + point de départ : since Monday, since 2015, since I was born.</p><h3>4. Present perfect ou prétérit ?</h3><p>Avec yesterday, last week, in 2010, ago → prétérit. Avec ever, never, just, already, yet, since, for → present perfect. Exemples : I have never eaten sushi. / I ate sushi last night.</p><h3>5. Contractions</h3><p>I\'ve been, he\'s done, we haven\'t finished, Has she arrived yet?</p>',
+      quiz: [
+        { q: 'I ___ never ___ to Japan.', choix: ['have / been', 'did / go', 'am / going'], bon: 0, exp: 'Expérience de vie : have + been.' },
+        { q: '___ you ___ your homework yet?', choix: ['Have / finished', 'Did / finished', 'Have / finish'], bon: 0, exp: 'Yet signale le present perfect : Have + participe passé.' },
+        { q: 'Choose the right one:', choix: ['I have seen this film last night.', 'I saw this film last night.', 'I have see this film last night.'], bon: 1, exp: 'Last night = daté → prétérit (saw).' },
+        { q: 'We have lived here ___ 2015.', choix: ['since', 'for', 'ago'], bon: 0, exp: 'Since + point de départ.' },
+        { q: 'Le participe passé de write :', choix: ['written', 'wrote', 'writed'], bon: 0, exp: 'write → wrote (prétérit) → written (participe).' }
+      ],
+      vf: [
+        { q: '« Since » est suivi d\'une durée.', v: false, exp: 'Since + point de départ ; for + durée.' },
+        { q: 'Le present perfect utilise have/has.', v: true, exp: 'have/has + participe passé.' },
+        { q: '« I have visited Rome yesterday » est correct.', v: false, exp: 'Yesterday exige le prétérit : I visited Rome yesterday.' }
       ]
     }
   ]

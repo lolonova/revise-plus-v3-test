@@ -1,24 +1,15 @@
-/* Révise+ V4 — Worker Cloudflare (passerelle IA)
-   Rôle : recevoir la question de l'application, l'envoyer à un service IA
-   (exemple : l'API Mistral) avec la clé secrète stockée côté Cloudflare,
-   et renvoyer la réponse. La clé API n'est JAMAIS dans l'application Android.
+/* Révise+ V4.1 — Worker Cloudflare (passerelle IA)
+   La clé API n'est JAMAIS dans l'application Android : elle reste côté Cloudflare.
 
-   Déploiement (à faire par un parent, une seule fois) :
-   1. Créer un compte gratuit sur cloudflare.com -> Workers & Pages.
+   Déploiement (parent, une seule fois) :
+   1. Compte gratuit sur cloudflare.com -> Workers & Pages.
    2. Créer un Worker (par ex. reviseplus-tutor) et coller ce code.
-   3. Ajouter un secret AI_KEY : via le tableau de bord (Settings -> Variables
-      -> AI_KEY, type "Secret") ou avec: wrangler secret put AI_KEY
-   4. Déployer, puis copier l'URL du worker (https://reviseplus-tutor.compte.workers.dev).
-   5. Dans l'application Révise+ : Réglages -> coller cette URL dans le champ tuteur.
+   3. Settings -> Variables -> AI_KEY (type "Secret") = clé API Mistral.
+   4. Déployer, copier l'URL du worker.
+   5. Dans l'application : Plus -> Réglages -> coller l'URL. */
 
-   Coûts : Mistral propose un niveau gratuit limité ; au-delà, le tarif dépend de
-   l'usage (ordre de quelques centimes pour des milliers de questions).
-
-   Protection des mineurs : le prompt système restreint le tuteur aux questions
-   scolaires uniquement, sans données personnelles. */
-
-const SYSTEM_PROMPT = 'Tu es un tuteur scolaire bienveillant pour un élève français de 6e à Terminale. ' +
-  'Tu réponds uniquement aux questions de cours et de méthodes scolaires (français, maths, histoire-géo, sciences, langues, philosophie). ' +
+const SYSTEM_PROMPT = 'Tu es un tuteur scolaire bienveillant pour un collégien français (5e, 4e ou 3e). ' +
+  'Tu réponds uniquement aux questions de cours et de méthodes scolaires (français, maths, histoire-géo, SVT, physique-chimie, anglais). ' +
   'Si la question sort de ce cadre, refuse poliment en une phrase et propose de revenir aux révisions. ' +
   'Explique simplement, avec un exemple concret, puis propose un petit exercice. Reste concis (moins de 200 mots). ' +
   'Ne demande jamais d\u2019informations personnelles. Ton encourageant et positif.';
