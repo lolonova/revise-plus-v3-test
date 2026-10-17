@@ -26,9 +26,9 @@ body.theme-emma .banner { background: linear-gradient(135deg, #ffd3e5 0%, #ffbcd
 .logo { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; background: var(--gold); box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
 .banner h1 { margin: 0; font-size: 1.15rem; letter-spacing: 0.5px; }
 .banner .tagline { font-size: 0.72rem; opacity: 0.85; font-weight: 600; letter-spacing: 0.4px; }
-.banner .profile-chip { margin-left: auto; text-align: right; font-size: 0.78rem; font-weight: 700; background: rgba(255,255,255,0.16); padding: 6px 10px; border-radius: 999px; }
+.banner .menu-btn { margin-left: auto; background: var(--accent); color: #fff; border: 0; border-radius: 12px; width: 44px; height: 44px; font-size: 1.3rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.25); }
 
-main { padding: 12px 14px 96px; max-width: 640px; margin: 0 auto; }
+main { padding: 12px 14px 24px; max-width: 640px; margin: 0 auto; }
 
 /* ===== Cartes ===== */
 .card { background: var(--card); border-radius: 16px; padding: 14px; margin: 12px 0; box-shadow: 0 3px 10px rgba(0,0,0,0.18); }
@@ -93,11 +93,26 @@ input[type=text], textarea { width: 100%; background: var(--bg2); color: var(--t
 .tip { background: rgba(255,210,63,0.14); border-left: 4px solid var(--gold); padding: 10px 12px; border-radius: 10px; font-size: 0.88rem; line-height: 1.4; }
 .daily { background: rgba(143,111,255,0.14); border-left: 4px solid var(--violet); padding: 10px 12px; border-radius: 10px; font-size: 0.88rem; line-height: 1.4; }
 
-/* ===== Nav basse ===== */
-nav.tabs { position: fixed; bottom: 0; left: 0; right: 0; display: flex; background: var(--card); border-top: 1.5px solid rgba(128,128,128,0.35); z-index: 10; padding-bottom: env(safe-area-inset-bottom); }
-nav.tabs button { flex: 1; background: none; border: 0; color: var(--txt); padding: 8px 2px 7px; font-size: 0.6rem; cursor: pointer; opacity: 0.55; font-weight: 700; }
-nav.tabs button.on { opacity: 1; color: var(--accent); }
-nav.tabs button .ic { display: block; font-size: 1.25rem; margin-bottom: 1px; }
+/* ===== Menu latéral (drawer) ===== */
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 19; }
+.overlay.open { opacity: 1; pointer-events: auto; }
+.drawer { position: fixed; top: 0; left: 0; bottom: 0; width: 258px; max-width: 82vw; background: var(--card); z-index: 20; transform: translateX(-102%); transition: transform .22s; box-shadow: 4px 0 18px rgba(0,0,0,0.35); display: flex; flex-direction: column; overflow-y: auto; padding-bottom: env(safe-area-inset-bottom); }
+.drawer.open { transform: translateX(0); }
+.drawer .head { padding: 18px 16px 12px; }
+body.theme-gabriel .drawer .head { background: linear-gradient(135deg, #101a4a 0%, #22348a 100%); }
+body.theme-emma .drawer .head { background: linear-gradient(135deg, #ffd3e5 0%, #ffbcd8 100%); }
+.drawer .head .who { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.05rem; }
+.drawer .head .who .m { font-size: 1.8rem; }
+.drawer .head .sub { font-size: 0.74rem; opacity: 0.8; font-weight: 600; margin-top: 2px; }
+.drawer .close-row { display: flex; justify-content: flex-end; padding: 8px 12px 0; }
+.drawer .close { background: rgba(255,255,255,0.18); color: var(--txt); border: 0; border-radius: 10px; font-size: 1rem; width: 34px; height: 34px; cursor: pointer; }
+.drawer nav { display: flex; flex-direction: column; padding: 8px; }
+.drawer nav button { display: flex; align-items: center; gap: 12px; background: none; border: 0; color: var(--txt); text-align: left; padding: 13px 14px; font-size: 0.95rem; font-weight: 700; border-radius: 12px; cursor: pointer; opacity: 0.8; }
+.drawer nav button.on { background: var(--accent); color: #fff; opacity: 1; }
+.drawer nav button .ic { font-size: 1.25rem; }
+.drawer .sep { height: 1.5px; background: rgba(128,128,128,0.3); margin: 8px 14px; }
+.drawer .foot { margin-top: auto; padding: 10px 8px 14px; }
+.drawer .foot button { display: flex; align-items: center; gap: 12px; background: none; border: 0; color: var(--txt); text-align: left; padding: 13px 14px; font-size: 0.9rem; font-weight: 700; border-radius: 12px; cursor: pointer; opacity: 0.75; }
 </style>
 </head>
 <body class="theme-gabriel">
@@ -107,16 +122,28 @@ nav.tabs button .ic { display: block; font-size: 1.25rem; margin-bottom: 1px; }
     <h1>Révise+</h1>
     <div class="tagline">Réussir pas à pas</div>
   </div>
-  <div class="profile-chip" id="profileChip">Choisir un profil</div>
+  <button class="menu-btn" id="menuBtn" aria-label="Menu">☰</button>
 </div>
 <main id="view"></main>
-<nav class="tabs" id="tabs">
-  <button data-tab="accueil"><span class="ic">🏠</span>Accueil</button>
-  <button data-tab="cours"><span class="ic">📖</span>Mes révisions</button>
-  <button data-tab="jeux"><span class="ic">🎮</span>Mes jeux</button>
-  <button data-tab="tuteur"><span class="ic">🤖</span>Mon tuteur</button>
-  <button data-tab="plus"><span class="ic">⋯</span>Plus</button>
-</nav>
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer">
+  <div class="close-row"><button class="close" id="drawerClose">✕</button></div>
+  <div class="head">
+    <div class="who"><span class="m" id="drawerMascot">🚀</span><span id="drawerName">Révise+</span></div>
+    <div class="sub" id="drawerSub">Réussir pas à pas</div>
+  </div>
+  <nav id="tabs">
+    <button data-tab="accueil"><span class="ic">🏠</span>Accueil</button>
+    <button data-tab="cours"><span class="ic">📖</span>Mes révisions</button>
+    <button data-tab="jeux"><span class="ic">🎮</span>Mes jeux</button>
+    <button data-tab="tuteur"><span class="ic">🤖</span>Mon tuteur</button>
+    <button data-tab="plus"><span class="ic">⚙️</span>Plus</button>
+  </nav>
+  <div class="sep"></div>
+  <div class="foot">
+    <button id="switchProfileBtn"><span class="ic">🔄</span>Changer de profil</button>
+  </div>
+</aside>
 <script src="data.js"></script>
 <script src="app.js"></script>
 <script src="tutor.js"></script>

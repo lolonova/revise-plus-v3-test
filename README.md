@@ -1,4 +1,4 @@
-# Révise+ V4.1 🚀✨ — « Réussir pas à pas »
+# Révise+ V5 🚀✨ — « Réussir pas à pas »
 
 Application éducative Android pour le collège (5e, 4e, 3e), en français.
 
@@ -6,7 +6,7 @@ Deux univers : **Gabriel** (thème galaxie 🚀) et **Emma** (thème kawaii 🐱
 
 ## ✨ Contenu
 
-- **21 chapitres complets** : 7 matières × 3 niveaux — Maths, Français, Histoire, Géo, SVT, Physique-Chimie, Anglais.
+- **63 chapitres complets** : 7 matières × 3 niveaux × 3 chapitres — Maths, Français, Histoire, Géo, SVT, Physique-Chimie, Anglais.
 - Fiches **express** et **complètes** par chapitre, lecture audio 🔊 (synthèse vocale).
 - Quiz Découverte / Expert adaptatifs : les questions ratées reviennent ; XP, niveaux, badges, défi quotidien (+30 XP), astuce du jour.
 - Tableau de bord par profil : % de progression, derniers chapitres, maîtrise par chapitre.

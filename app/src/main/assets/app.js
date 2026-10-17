@@ -1,4 +1,4 @@
-/* Révise+ V4.1 — Logique applicative (design "dashboard" inspiré des maquettes)
+/* Révise+ V5 — Logique applicative (design "dashboard" inspiré des maquettes)
    Progression par profil dans localStorage (reviseplus_<profil>). */
 
 var App = (function () {
@@ -83,9 +83,17 @@ var App = (function () {
   function render(html) { document.getElementById('view').innerHTML = html; window.scrollTo(0, 0); }
   function setTab(t) {
     state.tab = t;
-    document.querySelectorAll('#tabs button').forEach(function (b) {
+    document.querySelectorAll('#drawer nav button').forEach(function (b) {
       b.classList.toggle('on', b.dataset.tab === t);
     });
+  }
+  function openDrawer() {
+    document.getElementById('drawer').classList.add('open');
+    document.getElementById('overlay').classList.add('open');
+  }
+  function closeDrawer() {
+    document.getElementById('drawer').classList.remove('open');
+    document.getElementById('overlay').classList.remove('open');
   }
   function needProfile() {
     if (state.profile) return false;
@@ -93,13 +101,25 @@ var App = (function () {
     return true;
   }
   function updateChip() {
-    var chip = document.getElementById('profileChip');
+    var who = document.getElementById('drawerName');
+    var sub = document.getElementById('drawerSub');
+    var mas = document.getElementById('drawerMascot');
     if (state.profile) {
       var p = load();
-      chip.textContent = MASCOT[state.profile] + ' ' + state.profile + ' · ' + overallPct(p) + ' %';
+      who.textContent = state.profile;
+      sub.textContent = 'Classe de ' + state.niveau + ' · ' + overallPct(p) + ' %';
+      mas.textContent = MASCOT[state.profile];
     } else {
-      chip.textContent = 'Choisir un profil';
+      who.textContent = 'Révise+';
+      sub.textContent = 'Choisir un profil';
+      mas.textContent = '🚀';
     }
+  }
+  function switchProfile() {
+    closeDrawer();
+    state.profile = null; state.mat = null; state.chap = null;
+    localStorage.removeItem('reviseplus_currentProfile');
+    viewWelcome();
   }
 
   // ================= ACCUEIL =================
@@ -403,6 +423,7 @@ var App = (function () {
     html += '</div>';
     html += '<div class="card"><h3><span class="em">⚙️</span>Réglages</h3>'
       + '<p>Profil : <b>' + state.profile + '</b></p>'
+      + '<button class="btn small ghost" onclick="switchProfile()">🔄 Changer de profil</button> '
       + '<button class="btn small ghost" onclick="resetProgress()">Réinitialiser ma progression</button>'
       + '<h3 style="margin-top:12px"><span class="em">🤖</span>Tuteur</h3>'
       + '<p>Mode actuel : ' + (Tutor.mode() === 'IA' ? '<b>IA</b> (passerelle parentale)' : '<span class="demo-tag">DÉMONSTRATION</span> (base locale, pas une IA)') + '</p>'
@@ -559,6 +580,7 @@ var App = (function () {
   function backToSubjects() { state.mat = null; state.chap = null; viewCours(); }
   function backToChapters() { state.chap = null; state.mat = null; viewCours(); }
   function goTab(t) {
+    closeDrawer();
     if (t === 'accueil') { viewAccueil(); return; }
     if (t === 'cours') { state.mat = null; state.chap = null; viewCours(); return; }
     if (t === 'jeux') { viewJeux(); return; }
@@ -566,9 +588,13 @@ var App = (function () {
     if (t === 'plus') { viewPlus(); return; }
   }
   function init() {
-    document.querySelectorAll('#tabs button').forEach(function (b) {
+    document.querySelectorAll('#drawer nav button').forEach(function (b) {
       b.onclick = function () { goTab(b.dataset.tab); };
     });
+    document.getElementById('menuBtn').onclick = openDrawer;
+    document.getElementById('drawerClose').onclick = closeDrawer;
+    document.getElementById('overlay').onclick = closeDrawer;
+    document.getElementById('switchProfileBtn').onclick = switchProfile;
     var cur = localStorage.getItem('reviseplus_currentProfile');
     if (cur === 'Gabriel' || cur === 'Emma') {
       state.niveau = localStorage.getItem('reviseplus_niveau_' + cur) || '5e';
@@ -586,12 +612,13 @@ var App = (function () {
     pickImages: pickImages, onFiles: onFiles, makeFromScan: makeFromScan,
     scanAnswer: scanAnswer, showFull: function () { document.getElementById('fullCard').classList.remove('hidden'); },
     doDaily: doDaily, showQuestion: showQuestion, quizMode: quizMode,
-    viewProgres: viewProgres, viewScan: viewScan, viewPlus: viewPlus, init: init
+    viewProgres: viewProgres, viewScan: viewScan, viewPlus: viewPlus, init: init,
+    switchProfile: switchProfile, closeDrawer: closeDrawer
   };
   ['chooseProfile','setLevel','selectSubject','openChapter','startQuiz','answer','goTab',
    'backToSubjects','backToChapters','askTutor','saveGateway','resetProgress','readAloud',
    'showFull','pickImages','onFiles','makeFromScan','scanAnswer','doDaily','showQuestion',
-   'quizMode','viewProgres','viewScan','viewPlus'].forEach(function (f) { window[f] = pub[f]; });
+   'quizMode','viewProgres','viewScan','viewPlus','switchProfile'].forEach(function (f) { window[f] = pub[f]; });
   return pub;
 })();
 
