@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Révise+</title>
+<style>
+:root {
+  --bg: #0d1b2a; --card: #1b263b; --txt: #e8eef7; --accent: #5aa0ff;
+  --gold: #ffd23f; --ok: #4caf50; --bad: #ef5350;
+}
+body.theme-emma {
+  --bg: #fff0f6; --card: #ffffff; --txt: #5b4a5f; --accent: #ff8fb1;
+  --gold: #ffb3c6;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body { margin: 0; font-family: 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--txt); font-size: 16px; }
+body.theme-gabriel { background: radial-gradient(circle at 20% 10%, #16324f 0%, #0d1b2a 60%); }
+body.theme-emma { background: linear-gradient(160deg, #ffe3ef 0%, #fff0f6 60%); }
+header { padding: 14px 16px; text-align: center; font-size: 1.25rem; font-weight: 700; letter-spacing: 0.5px; }
+header .sub { font-size: 0.8rem; font-weight: 400; opacity: 0.8; }
+main { padding: 0 14px 90px; max-width: 640px; margin: 0 auto; }
+.card { background: var(--card); border-radius: 14px; padding: 14px; margin: 10px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+.card h3, .card h4 { margin: 6px 0; }
+.btn { display: inline-block; background: var(--accent); color: #fff; border: 0; border-radius: 10px; padding: 12px 18px; font-size: 1rem; cursor: pointer; margin: 6px 4px; font-weight: 600; }
+.btn.ghost { background: transparent; border: 2px solid var(--accent); color: var(--accent); }
+.btn.small { padding: 8px 12px; font-size: 0.85rem; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.item { background: var(--card); border-radius: 12px; padding: 12px; text-align: center; cursor: pointer; border: 2px solid transparent; }
+.item.sel { border-color: var(--gold); }
+.item .ic { font-size: 1.6rem; display: block; }
+ul { padding-left: 18px; }
+li { margin: 6px 0; }
+table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+td, th { padding: 6px 4px; border-bottom: 1px solid rgba(128,128,128,0.25); text-align: left; }
+.tag { display: inline-block; font-size: 0.72rem; padding: 2px 8px; border-radius: 999px; background: var(--accent); color: #fff; margin-left: 6px; vertical-align: middle; }
+.warn { background: #fff3cd; color: #7a5b00; border-radius: 8px; padding: 8px 10px; font-size: 0.85rem; margin: 8px 0; }
+.badge { display: inline-block; background: var(--gold); color: #333; border-radius: 50%; width: 46px; height: 46px; line-height: 46px; text-align: center; font-size: 1.4rem; margin: 4px; }
+.progress { background: rgba(128,128,128,0.3); border-radius: 999px; height: 10px; overflow: hidden; }
+.progress > div { height: 100%; background: var(--accent); }
+nav.tabs { position: fixed; bottom: 0; left: 0; right: 0; display: flex; background: var(--card); border-top: 1px solid rgba(128,128,128,0.3); z-index: 10; }
+nav.tabs button { flex: 1; background: none; border: 0; color: var(--txt); padding: 8px 2px; font-size: 0.68rem; cursor: pointer; opacity: 0.6; }
+nav.tabs button.on { opacity: 1; color: var(--accent); font-weight: 700; }
+nav.tabs button .ic { display: block; font-size: 1.3rem; margin-bottom: 2px; }
+.choice { display: block; width: 100%; text-align: left; background: var(--bg); color: var(--txt); border: 2px solid var(--accent); border-radius: 10px; padding: 12px; margin: 8px 0; font-size: 1rem; cursor: pointer; }
+.choice.right { border-color: var(--ok); background: rgba(76,175,80,0.25); }
+.choice.wrong { border-color: var(--bad); background: rgba(239,83,80,0.25); }
+.hidden { display: none; }
+.stat { text-align: center; }
+.stat .n { font-size: 1.5rem; font-weight: 700; color: var(--accent); display: block; }
+#chatlog { max-height: 55vh; overflow-y: auto; }
+.msg { padding: 10px 12px; border-radius: 12px; margin: 6px 0; max-width: 85%; }
+.msg.user { background: var(--accent); color: #fff; margin-left: auto; }
+.msg.bot { background: var(--bg); border: 1px solid rgba(128,128,128,0.3); }
+.demo-tag { font-size: 0.7rem; background: var(--gold); color: #333; padding: 2px 8px; border-radius: 999px; font-weight: 700; }
+input[type=text], textarea { width: 100%; background: var(--bg); color: var(--txt); border: 1px solid var(--accent); border-radius: 10px; padding: 10px; font-size: 1rem; }
+.back { color: var(--accent); cursor: pointer; font-size: 0.9rem; display: inline-block; margin-bottom: 6px; }
+</style>
+</head>
+<body>
+<header>
+  <div id="hdrTitle">Révise+</div>
+  <div class="sub" id="hdrSub">Choisis ton profil pour commencer</div>
+</header>
+<main id="view"></main>
+<nav class="tabs" id="tabs">
+  <button data-tab="profil"><span class="ic">👤</span>Profil</button>
+  <button data-tab="cours"><span class="ic">📖</span>Cours</button>
+  <button data-tab="jeux"><span class="ic">🎮</span>Jeux</button>
+  <button data-tab="scan"><span class="ic">📷</span>Scanner</button>
+  <button data-tab="tuteur"><span class="ic">🤖</span>Tuteur</button>
+  <button data-tab="progres"><span class="ic">📊</span>Progrès</button>
+  <button data-tab="reglages"><span class="ic">⚙️</span>Réglages</button>
+</nav>
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script src="tutor.js"></script>
+<script src="scan.js"></script>
+</body>
+</html>
