@@ -19,7 +19,7 @@ Deux univers : **Gabriel** (thème galaxie / science-fiction) et **Emma** (thèm
 - Choix du profil (Gabriel 🚀 / Emma 🐱), de la classe (6e → Terminale), matière, chapitre.
 - 11 chapitres complets rédigés et vérifiés ; les autres matières sont indiquées « à venir ».
 - Fiches **express** et **complètes** par chapitre.
-- Quiz à choix multiples et vrai/faux, deux niveaux (Découverte / Expert) ; révision ciblée des questions ratées ; XP, niveaux, badges, missions, défi quotidien.
+- Quiz à choix multiples et vrai/faux, deux niveaux (Découverte / Expert) ; révision ciblée des questions ratées ; XP, niveaux, badges, défi quotidien.
 - Tableau de bord par profil ; progression enregistrée localement (appareil) ; réinitialisation possible.
 - Lecture audio des fiches (synthèse vocale Android en français).
 - Scanner un cours : photo → OCR → vérification → fiche express + mini-quiz (contenu marqué « à vérifier »).

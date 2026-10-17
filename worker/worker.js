@@ -9,7 +9,7 @@
    3. Ajouter un secret AI_KEY : via le tableau de bord (Settings -> Variables
       -> AI_KEY, type "Secret") ou avec: wrangler secret put AI_KEY
    4. Déployer, puis copier l'URL du worker (https://reviseplus-tutor.compte.workers.dev).
-   5. Dans l'application Révise+ : Réglages -> coller cette URL dans « Mode du tuteur ».
+   5. Dans l'application Révise+ : Réglages -> coller cette URL dans le champ tuteur.
 
    Coûts : Mistral propose un niveau gratuit limité ; au-delà, le tarif dépend de
    l'usage (ordre de quelques centimes pour des milliers de questions).

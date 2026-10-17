@@ -13,7 +13,6 @@ var App = (function () {
     { id: 'explorateur', nom: 'Explorateur', ic: '🧭', test: function (p) { return Object.keys(p.maitrise || {}).length >= 5; } },
     { id: 'maitre', nom: 'Maître du chapitre', ic: '🎓', test: function (p) { return Object.values(p.maitrise || {}).some(function (m) { return m >= 90; }); } }
   ];
-  var EASY = [1, 2, 3], MED = [4, 5, 6], HARD = [7, 8, 9];
 
   function key() { return 'reviseplus_' + state.profile; }
   function load() {
@@ -168,19 +167,17 @@ var App = (function () {
   // ---------- Quiz ----------
   function poolFor(c, mode) {
     var p = load();
-    var errs = (p.erreurs[c.id] || []).map(function (q) {
-      return c.quiz.concat(c.vf.map(function (v) { return { q: v.q, choix: ['Vrai', 'Faux'], bon: v.v ? 0 : 1, exp: v.exp, vf: true }; }))
-        .filter(function (x) { return x.q === q; })[0];
-    }).filter(Boolean);
-    if (errs.length && Math.random() < 0.5) return errs.slice(0, 5);
     var all = c.quiz.concat(c.vf.map(function (v) {
       return { q: v.q, choix: ['Vrai', 'Faux'], bon: v.v ? 0 : 1, exp: v.exp, vf: true };
     }));
+    var errs = (p.erreurs[c.id] || []).map(function (q) {
+      return all.filter(function (x) { return x.q === q; })[0];
+    }).filter(Boolean);
+    if (errs.length && Math.random() < 0.5) return errs.slice(0, 5);
     if (mode === 1) {
-      // Découverte : moitié des questions, aide à l'explication
       return shuffle(all).slice(0, Math.ceil(all.length / 2));
     }
-    return shuffle(all); // Expert : tout
+    return shuffle(all);
   }
   function shuffle(a) {
     var arr = a.slice();
@@ -202,7 +199,7 @@ var App = (function () {
     var q = quiz.qs[quiz.i];
     var html = '<div class="card"><h3>' + quiz.c.titre + ' — question ' + (quiz.i + 1) + '/' + quiz.qs.length
       + (quiz.mode === 1 ? ' <span class="demo-tag">DÉCOUVERTE</span>' : ' <span class="demo-tag">EXPERT</span>') + '</h3>';
-    html += '<p><b>' + q.q.replace(' = ?', ' = ?') + '</b></p>';
+    html += '<p><b>' + q.q + '</b></p>';
     q.choix.forEach(function (ch, idx) {
       html += '<button class="choice" id="ch' + idx + '" onclick="answer(' + idx + ')">' + ch + '</button>';
     });
@@ -244,12 +241,7 @@ var App = (function () {
     var p = load();
     if (pct === 100) { p.perfect = (p.perfect || 0) + 1; save(p); }
     p = addXP(20 + pct / 5);
-    var newBadge = '';
-    BADGES.forEach(function (b) {
-      if (p.badges.indexOf(b.id) !== -1 && !(window['_seen_' + b.id + '_' + state.profile])) {
-        window['_seen_' + b.id + '_' + state.profile] = true;
-      }
-    });
+    if (quiz.daily) grantDaily();
     var html = '<div class="card stat"><h3>Résultat</h3>'
       + '<span class="n">' + pct + ' %</span>'
       + '<p>' + quiz.score + ' / ' + quiz.qs.length + ' bonnes réponses</p>'
@@ -274,13 +266,9 @@ var App = (function () {
       + '<button class="btn" onclick="doDaily(\'' + c.id + '\')">Relever le défi</button>';
   }
   function doDaily(chapId) {
-    var p = load();
-    var today = new Date().toISOString().slice(0, 10);
     state.chap = chapId;
-    quiz = { c: REVISE_DATA.chapitres.filter(function (x) { return x.id === chapId; })[0], mode: 1, qs: null, i: 0, score: 0, streak: 0 };
-    var c = quiz.c;
-    quiz.qs = poolFor(c, 1);
-    quiz.daily = true;
+    var c = REVISE_DATA.chapitres.filter(function (x) { return x.id === chapId; })[0];
+    quiz = { c: c, mode: 1, qs: poolFor(c, 1), i: 0, score: 0, streak: 0, daily: true };
     setTab('jeux');
     showQuestion();
   }
@@ -333,7 +321,7 @@ var App = (function () {
       + '<button class="btn ghost small" onclick="resetProgress()">Réinitialiser la progression</button></div>';
     html += '<div class="card"><h3>Tuteur</h3><p>Mode actuel : '
       + (Tutor.mode() === 'IA' ? '<b>IA</b> (via passerelle parentale)' : '<span class="demo-tag">DÉMONSTRATION</span> (base locale, pas une IA)')
-      + '</p><p><small>Le mode démonstration n\'est pas une intelligence artificielle : il ne connaît que quelques notions. Un parent peut activer le mode IA (voir le README).</small></p>'
+      + '</p><p><small>Le mode démonstration n\'est pas une intelligence artificielle : il ne connaît que quelques notions. Un parent peut activer le mode IA (voir le README du projet).</small></p>'
       + '<input type="text" id="gwInput" placeholder="URL du worker Cloudflare (parent)" value="' + gw.replace(/"/g, '&quot;') + '">'
       + '<button class="btn small" onclick="saveGateway()">Enregistrer</button></div>';
     html += '<div class="card"><h3>À propos</h3><p>Révise+ version 4.0 — 11 chapitres rédigés et vérifiés, du collège au lycée.</p>'
@@ -495,9 +483,6 @@ var App = (function () {
     else viewProfil();
   }
 
-  // Hook résultats quiz pour défi quotidien
-  var _origResults = showResults;
-
   // Exposition publique
   var pub = {
     chooseProfile: chooseProfile, setLevel: setLevel, selectSubject: selectSubject,
@@ -507,8 +492,7 @@ var App = (function () {
     readAloud: readAloud, pickImages: pickImages, onFiles: onFiles,
     makeFromScan: makeFromScan, scanAnswer: scanAnswer, showFull: function () {
       document.getElementById('fullCard').classList.remove('hidden');
-    }, doDaily: doDaily, showQuestion: showQuestion, quizMode: quizMode,
-    _grantDaily: grantDaily, init: init
+    }, doDaily: doDaily, showQuestion: showQuestion, quizMode: quizMode, init: init
   };
   window.chooseProfile = pub.chooseProfile;
   window.setLevel = pub.setLevel;
