@@ -4,12 +4,18 @@ on:
   push:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Java 17
         uses: actions/setup-java@v4
@@ -17,24 +23,82 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Set up Python + Pillow (icone)
+      - name: Set up Python + Pillow
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      - name: Generer l'icone
+      - name: Récupérer les illustrations 3D et créer la bibliothèque visuelle
+        env:
+          GABRIEL_URL: 'https://dnznrvs05pmza.cloudfront.net/gemini/gemini-3-pro-image/images/4dc15555-e56a-4b74-b488-c2b9124a7fe2/9ef5398b-e60a-4a45-abd4-c50efb43785a/Premium_stylized_3D_game_character_portrait_for_a_children_s.png?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiMjA0ODljZjhhMjJiOTI3YSIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsImV4cCI6MTc5NDA4NDA4OH0.UqDPDMgxfZpdf1BPJ9k6IorR7O1TBGG61DU3SWNuHMo'
+          NOVA_URL: 'https://dnznrvs05pmza.cloudfront.net/gemini/gemini-3-pro-image/images/4cc76ca2-2d60-46da-8c70-6f63fe41324b/0cec1abf-2639-4b83-b1dd-47db4f2fb071/Premium_stylized_3D_companion_robot_character_for_a_children.png?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiM2UwY2FhNzBiOTU0ZjQxYyIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsImV4cCI6MTc54166256n0.xcdJ0ZoLWpzCpQ2NyErs8u9sxfznm7Dt2EzIyX38Kzc'
+          LUMI_URL: 'https://dnznrvs05pmza.cloudfront.net/gemini/gemini-3-pro-image/images/24ce47cf-6d82-40ef-918a-2f8d4c8d7565/e9f879c0-f2c6-40b6-8c79-34a3312ea060/Premium_stylized_3D_fairy_guardian_character_for_a_children_.png?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiNzhkMmU4Y2Q2ZjgzODIwZSIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsImV4cCI6MTc54153677Nn0.NmRnjEdLrmLIyjZRHjlyqFj3Syyk3DEdQ32-yJ7nEm4'
+          WORLD_URL: 'https://dnznrvs05pmza.cloudfront.net/gemini/gemini-3-pro-image/images/73052e4f-e4b6-4fd0-acef-23e7a5ebd7ba/03f8b2ae-80f9-4c3a-966c-d4e17f333906/A_breathtaking_premium_3D_fantasy_learning_world_for_a_mobil.png?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiMzU5NTZkNWQ1NTc1MzBlZSIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsImV4cCI6MTc54089309f0.0L_HSeqLH2CAMN2ztCCkzpZGmsBKz5xgbeMPzEfHpp8'
+        run: |
+          set -euo pipefail
+          mkdir -p app/src/main/assets/images/3d
+          curl -fL --retry 3 "$GABRIEL_URL" -o app/src/main/assets/images/3d/gabriel-explorer-3d.png
+          curl -fL --retry 3 "$NOVA_URL" -o app/src/main/assets/images/3d/nova-robot-3d.png
+          curl -fL --retry 3 "$LUMI_URL" -o app/src/main/assets/images/3d/lumi-fairy-3d.png
+          curl -fL --retry 3 "$WORLD_URL" -o app/src/main/assets/images/3d/magic-world-3d.png
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('app/src/main/assets/visual-library.json')
+          p.write_text("""{
+            "version": 1,
+            "characters": {
+              "gabriel": "images/3d/gabriel-explorer-3d.png",
+              "nova": "images/3d/nova-robot-3d.png",
+              "emma": "images/3d/lumi-fairy-3d.png"
+            },
+            "worlds": {"magicGarden": "images/3d/magic-world-3d.png"},
+            "style": "premium-3d-cinematic"
+          }""", encoding='utf-8')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/src/main/assets/images/3d app/src/main/assets/visual-library.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Add premium 3D character and world assets"
+            git push
+          fi
+
+      - name: Générer une icône d'application premium
         run: |
           python -m pip install --quiet Pillow
           mkdir -p app/src/main/res/drawable
-          python - <<'EOF'
-          from PIL import Image, ImageDraw
-          img = Image.new("RGBA", (512, 512), (11, 16, 38, 255))
-          d = ImageDraw.Draw(img)
-          d.ellipse([96, 96, 416, 416], fill=(90, 160, 255, 255))
-          d.rectangle([236, 140, 276, 300], fill=(255, 255, 255, 255))
-          d.polygon([(256, 360), (200, 280), (312, 280)], fill=(255, 205, 60, 255))
-          img.save("app/src/main/res/drawable/icon.png")
-          EOF
+          python - <<'PY'
+          from PIL import Image, ImageDraw, ImageFilter
+          import math
+          S=512
+          im=Image.new("RGBA",(S,S),(8,13,35,255))
+          px=im.load()
+          for y in range(S):
+            for x in range(S):
+              dx=x-256; dy=y-256
+              glow=max(0,1-math.sqrt(dx*dx+dy*dy)/370)
+              px[x,y]=(int(8+18*glow),int(13+48*glow),int(35+92*glow),255)
+          d=ImageDraw.Draw(im)
+          d.ellipse((72,72,440,440),outline=(103,224,255,210),width=7)
+          d.ellipse((91,91,421,421),outline=(153,115,255,130),width=3)
+          # Livre ouvert lumineux
+          d.rounded_rectangle((116,175,252,340),radius=24,fill=(239,247,255,255))
+          d.rounded_rectangle((260,175,396,340),radius=24,fill=(205,226,255,255))
+          d.line((256,184,256,337),fill=(77,111,183,255),width=8)
+          d.line((143,222,224,222),fill=(96,142,211,255),width=8)
+          d.line((143,252,224,252),fill=(96,142,211,255),width=8)
+          d.line((287,222,368,222),fill=(96,142,211,255),width=8)
+          d.line((287,252,368,252),fill=(96,142,211,255),width=8)
+          # Étoile centrale
+          pts=[]
+          for i in range(10):
+            a=-math.pi/2+i*math.pi/5
+            r=56 if i%2==0 else 25
+            pts.append((256+math.cos(a)*r,130+math.sin(a)*r))
+          d.polygon(pts,fill=(255,207,91,255))
+          im=im.filter(ImageFilter.SMOOTH)
+          im.save("app/src/main/res/drawable/icon.png")
+          PY
 
       - name: Configurer Gradle 8.7
         uses: gradle/actions/setup-gradle@v3
@@ -47,5 +111,5 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: RevisePlus-V10-Neo-Generation-APK
+          name: RevisePlus-V11-Univers-3D-APK
           path: app/build/outputs/apk/debug/app-debug.apk
