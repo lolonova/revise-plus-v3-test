@@ -32,13 +32,11 @@
   }
   function go(t){
     if(t==='accueil'){
-      oldGo('accueil');
-      home();
-      return;
+      App.saveCurrentView(); App.setTab('accueil'); home(); return;
     }
     oldGo(t);
   }
-  App.goTab=go;window.goTab=go;
+  App.goTab=go;window.goTab=go;window.ReviseHome=home;
   var oldFinish=App.finishOnboarding;
   if(oldFinish){App.finishOnboarding=function(){oldFinish();home();};window.finishOnboarding=App.finishOnboarding;}
   document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){if((localStorage.getItem('reviseplus_currentProfile')||'')!=='')home();},80);});
