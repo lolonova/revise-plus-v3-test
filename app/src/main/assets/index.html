@@ -26,6 +26,9 @@ body.theme-emma .banner { background: linear-gradient(135deg, #ffd3e5 0%, #ffbcd
 .logo { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; background: var(--gold); box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
 .banner h1 { margin: 0; font-size: 1.15rem; letter-spacing: 0.5px; }
 .banner .tagline { font-size: 0.72rem; opacity: 0.85; font-weight: 600; letter-spacing: 0.4px; }
+.banner .back-btn { background: rgba(255,255,255,.16); color: #fff; border: 1px solid rgba(255,255,255,.28); border-radius: 12px; width: 42px; height: 42px; font-size: 1.45rem; cursor: pointer; display:flex; align-items:center; justify-content:center; opacity:.42; transition:opacity .18s, transform .18s; }
+.banner .back-btn.back-ready { opacity:1; }
+.banner .back-btn:active { transform:scale(.94); }
 .banner .menu-btn { margin-left: auto; background: var(--accent); color: #fff; border: 0; border-radius: 12px; width: 44px; height: 44px; font-size: 1.3rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.25); }
 
 main { padding: 12px 14px 24px; max-width: 640px; margin: 0 auto; }
@@ -129,6 +132,21 @@ body.theme-emma .drawer .head { background: linear-gradient(135deg, #ffd3e5 0%, 
 .drawer .foot { margin-top: auto; padding: 10px 8px 14px; }
 .drawer .foot button { display: flex; align-items: center; gap: 12px; background: none; border: 0; color: var(--txt); text-align: left; padding: 13px 14px; font-size: 0.9rem; font-weight: 700; border-radius: 12px; cursor: pointer; opacity: 0.75; }
 
+/* ===== Habillage aventure V8 : univers plus immersif ===== */
+body.theme-gabriel { background-image: radial-gradient(ellipse at 80% 12%,rgba(74,119,255,.22),transparent 38%), radial-gradient(ellipse at 12% 55%,rgba(33,211,238,.10),transparent 35%), linear-gradient(180deg,#080f2d,#111a3c 65%,#0b1026); background-attachment:fixed; }
+body.theme-emma { background-image: radial-gradient(ellipse at 85% 8%,rgba(255,160,205,.38),transparent 36%), radial-gradient(ellipse at 8% 60%,rgba(195,164,255,.25),transparent 36%), linear-gradient(180deg,#fff4fa,#fce7f2 65%,#fff0f6); background-attachment:fixed; }
+.card { border:1px solid rgba(255,255,255,.10); backdrop-filter:blur(8px); }
+body.theme-gabriel .card { background:linear-gradient(145deg,rgba(30,46,99,.96),rgba(20,29,68,.97)); box-shadow:0 8px 24px rgba(0,0,0,.24),inset 0 1px rgba(255,255,255,.08); }
+body.theme-emma .card { background:linear-gradient(145deg,rgba(255,255,255,.97),rgba(255,239,247,.98)); border:1px solid rgba(255,151,190,.35); box-shadow:0 8px 22px rgba(190,112,155,.12),inset 0 1px #fff; }
+.banner { min-height:74px; box-shadow:0 5px 20px rgba(0,0,0,.18); position:sticky;top:0;z-index:10; }
+.banner .logo { border-radius:15px; border:2px solid rgba(255,255,255,.4); }
+.btn,.big-cta { transition:transform .15s,filter .15s; }
+.btn:active,.big-cta:active,.item:active { transform:scale(.97); filter:brightness(1.08); }
+.item { box-shadow:inset 0 1px rgba(255,255,255,.08); }
+body.theme-gabriel .item { background:linear-gradient(145deg,#26366f,#1a2858); }
+body.theme-emma .item { background:linear-gradient(145deg,#fff,#ffe7f1); }
+.section-title { color:var(--gold); }
+
 /* ===== Aventure & personnalisation V7 ===== */
 .adventure-hero{border-radius:22px;padding:18px;color:white;margin:12px 0;background:linear-gradient(135deg,#18285f,#516bd6);box-shadow:0 8px 22px #0003;position:relative;overflow:hidden}
 body.theme-emma .adventure-hero{background:linear-gradient(135deg,#f6a8ca,#c5a0f5);color:#573d65}
@@ -149,7 +167,7 @@ body.theme-emma .adventure-hero{background:linear-gradient(135deg,#f6a8ca,#c5a0f
 </head>
 <body class="theme-gabriel">
 <div class="banner">
-  <div class="logo">🚀</div>
+  <button class="back-btn" id="backBtn" aria-label="Retour" title="Écran précédent">‹</button><div class="logo">🚀</div>
   <div>
     <h1>Révise+</h1>
     <div class="tagline">Réussir pas à pas</div>
