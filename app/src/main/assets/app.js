@@ -717,6 +717,7 @@ var App = (function () {
     if (t === 'cours') { state.mat = null; state.chap = null; viewCours(); return; }
     if (t === 'jeux') { viewJeux(); return; }
     if (t === 'aventure') { if (window.Adventure) Adventure.open(); else viewAccueil(); return; }
+    if (t === 'controles') { if (window.Controls) Controls.open(); else viewAccueil(); return; }
     if (t === 'tuteur') { viewTuteur(); return; }
     if (t === 'plus') { viewPlus(); return; }
   }
@@ -747,7 +748,7 @@ var App = (function () {
     backToSubjects: backToSubjects, backToChapters: backToChapters, askTutor: askTutor,
     saveGateway: saveGateway, resetProgress: resetProgress, readAloud: readAloud,
     pickImages: pickImages, onFiles: onFiles, makeFromScan: makeFromScan,
-    scanAnswer: scanAnswer, handleBack: handleBack, saveCurrentView: saveCurrentView, showFull: function () { document.getElementById('fullCard').classList.remove('hidden'); },
+    scanAnswer: scanAnswer, handleBack: handleBack, saveCurrentView: saveCurrentView, render: render, setTab: setTab, load: load, addXP: addXP, showFull: function () { document.getElementById('fullCard').classList.remove('hidden'); },
     doDaily: doDaily, showQuestion: showQuestion, quizMode: quizMode,
     viewProgres: viewProgres, viewScan: viewScan, viewPlus: viewPlus, init: init,
     switchProfile: switchProfile, closeDrawer: closeDrawer,
