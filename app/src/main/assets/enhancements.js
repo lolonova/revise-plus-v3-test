@@ -39,5 +39,7 @@
     oldGo(t);
   }
   App.goTab=go;window.goTab=go;
+  var oldFinish=App.finishOnboarding;
+  if(oldFinish){App.finishOnboarding=function(){oldFinish();home();};window.finishOnboarding=App.finishOnboarding;}
   document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){if((localStorage.getItem('reviseplus_currentProfile')||'')!=='')home();},80);});
 })();
