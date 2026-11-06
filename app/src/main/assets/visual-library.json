@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "characters": {
+    "gabriel": "images/3d/gabriel-explorer-3d.png",
+    "nova": "images/3d/nova-robot-3d.png",
+    "emma": "images/3d/lumi-fairy-3d.png"
+  },
+  "worlds": {"magicGarden": "images/3d/magic-world-3d.png"},
+  "style": "premium-3d-cinematic"
+}
