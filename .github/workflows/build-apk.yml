@@ -28,40 +28,14 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Récupérer les illustrations 3D et créer la bibliothèque visuelle
-        env:
-          GABRIEL_URL: 'https://dnznrvs05pmza.cloudfront.net/gemini/gemini-3-pro-image/images/4dc15555-e56a-4b74-b488-c2b9124a7fe2/9ef5398b-e60a-4a45-abd4-c50efb43785a/Premium_stylized_3D_game_character_portrait_for_a_children_s.png?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiMjA0ODljZjhhMjJiOTI3YSIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc5NDE3MDQ4OH0._sKnS_Oc-4bjF_Q-rHcNVDVS-hiYShnxAOBrBtB2kqg'
-          NOVA_URL: 'https://dnznrvs05pmza.cloudfront.net/gemini/gemini-3-pro-image/images/4cc76ca2-2d60-46da-8c70-6f63fe41324b/0cec1abf-2639-4b83-b1dd-47db4f2fb071/Premium_stylized_3D_companion_robot_character_for_a_children.png?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiM2UwY2FhNzBiOTU0ZjQxYyIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc5NDE2NjI1Nn0.xcdJ0ZoLWpzCpQ2NyErs8u9sxfznm7Dt2EzIyX38Kzc'
-          LUMI_URL: 'https://dnznrvs05pmza.cloudfront.net/gemini/gemini-3-pro-image/images/24ce47cf-6d82-40ef-918a-2f8d4c8d7565/e9f879c0-f2c6-40b6-8c79-34a3312ea060/Premium_stylized_3D_fairy_guardian_character_for_a_children_.png?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiNzhkMmU4Y2Q2ZjgzODIwZSIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc5NDE1MzY3N30.NmRnjEdLrmLIyjZRHjlyqFj3Syyk3DEdQ32-yJ7nEm4'
-          WORLD_URL: 'https://dnznrvs05pmza.cloudfront.net/gemini/gemini-3-pro-image/images/73052e4f-e4b6-4fd0-acef-23e7a5ebd7ba/03f8b2ae-80f9-4c3a-966c-d4e17f333906/A_breathtaking_premium_3D_fantasy_learning_world_for_a_mobil.png?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiMzU5NTZkNWQ1NTc1MzBlZSIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc5NDA4OTMwOX0.0L_HSeqLH2CAMN2ztCCkzpZGmsBKz5xgbeMPzEfHpp8'
+      - name: Vérifier la bibliothèque d'illustrations 3D
         run: |
           set -euo pipefail
-          mkdir -p app/src/main/assets/images/3d
-          curl -fL --retry 3 "$GABRIEL_URL" -o app/src/main/assets/images/3d/gabriel-explorer-3d.png
-          curl -fL --retry 3 "$NOVA_URL" -o app/src/main/assets/images/3d/nova-robot-3d.png
-          curl -fL --retry 3 "$LUMI_URL" -o app/src/main/assets/images/3d/lumi-fairy-3d.png
-          curl -fL --retry 3 "$WORLD_URL" -o app/src/main/assets/images/3d/magic-world-3d.png
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('app/src/main/assets/visual-library.json')
-          p.write_text("""{
-            "version": 1,
-            "characters": {
-              "gabriel": "images/3d/gabriel-explorer-3d.png",
-              "nova": "images/3d/nova-robot-3d.png",
-              "emma": "images/3d/lumi-fairy-3d.png"
-            },
-            "worlds": {"magicGarden": "images/3d/magic-world-3d.png"},
-            "style": "premium-3d-cinematic"
-          }""", encoding='utf-8')
-          PY
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add app/src/main/assets/images/3d app/src/main/assets/visual-library.json
-          if ! git diff --cached --quiet; then
-            git commit -m "Add premium 3D character and world assets"
-            git push
-          fi
+          test -s app/src/main/assets/images/3d/gabriel-explorer-3d.png
+          test -s app/src/main/assets/images/3d/nova-robot-3d.png
+          test -s app/src/main/assets/images/3d/lumi-fairy-3d.png
+          test -s app/src/main/assets/images/3d/magic-world-3d.png
+          test -s app/src/main/assets/visual-library.json
 
       - name: Générer une icône d'application premium
         run: |
