@@ -163,6 +163,73 @@ body.theme-emma .adventure-hero{background:linear-gradient(135deg,#f6a8ca,#c5a0f
 .reward-box{border:2px dashed var(--gold);border-radius:16px;padding:14px;text-align:center;background:rgba(255,210,63,.10)}
 .reward-box .chest{font-size:48px}.coin{color:var(--gold);font-weight:900}
 @media(min-width:500px){.world-map{grid-template-columns:repeat(3,1fr)}}
+
+/* RÉVISE+ V8 — univers de jeu immersif */
+.banner{background:rgba(10,18,48,.94)!important;border:0!important;backdrop-filter:blur(16px);padding-top:calc(10px + env(safe-area-inset-top))}
+body.theme-emma .banner{background:rgba(105,66,117,.94)!important}
+.banner h1{color:#fff;font-weight:900;letter-spacing:.8px}.banner .tagline{color:#dbe9ff}
+.banner .logo{background:linear-gradient(145deg,#ffe78a,#ffb34f)}
+main{max-width:720px;padding:12px 13px 36px}
+.game-home{margin:-12px -13px 0;padding:0 13px 28px}
+.home-sky{min-height:300px;position:relative;overflow:hidden;border-radius:0 0 30px 30px;padding:17px;color:#fff;box-shadow:0 12px 32px #0003}
+.home-gabriel .home-sky{background:radial-gradient(circle at 82% 28%,#6386ed 0 5%,transparent 6%),linear-gradient(145deg,#101943,#1b3278 58%,#3457a5)}
+.home-emma .home-sky{background:radial-gradient(circle at 82% 20%,#fff4ad 0 5%,transparent 6%),linear-gradient(145deg,#e98eb9,#c38edb 55%,#8d9fe2)}
+.home-sky:before{content:"";position:absolute;width:230px;height:230px;border-radius:50%;right:-95px;top:40px;background:radial-gradient(circle at 35% 30%,#ffffff88,#ffffff10 60%,transparent 70%);border:1px solid #ffffff28}
+.home-topline,.home-greeting,.home-xp{position:relative;z-index:1}
+.home-topline{display:flex;justify-content:space-between;align-items:center}
+.season-pill,.level-pill{border:1px solid #ffffff55;background:#ffffff18;border-radius:99px;padding:6px 10px;font-size:.65rem;font-weight:900;letter-spacing:1px}
+.home-greeting{display:flex;align-items:center;min-height:158px;gap:2px}
+.home-greeting>div:first-child{flex:1;min-width:0}
+.hello-small{font-size:.7rem;font-weight:900;letter-spacing:2px;color:#ffe18a}
+.home-greeting h2{font-size:1.52rem;line-height:1.08;margin:7px 0 8px;max-width:245px}
+.home-greeting p{font-size:.82rem;line-height:1.4;max-width:220px;color:#e6edff;margin:0}
+.hero-character{width:145px;max-width:46%;height:155px;overflow:visible;filter:drop-shadow(0 12px 10px #0004);animation:floatHero 4s ease-in-out infinite}
+@keyframes floatHero{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-7px) rotate(2deg)}}
+.home-xp{background:#07122d66;border:1px solid #ffffff2e;border-radius:17px;padding:11px 13px}
+.home-xp>div:first-child{display:flex;justify-content:space-between;font-size:.8rem}
+.xp-track{height:9px;border-radius:99px;background:#ffffff30;margin:8px 0 5px;overflow:hidden}
+.xp-track i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#ffe27a,#ffad49)}
+.game-primary{display:flex;align-items:center;gap:12px;width:calc(100% - 12px);margin:-17px auto 20px;position:relative;z-index:2;border:0;border-radius:19px;padding:13px 15px;text-align:left;color:#fff;background:linear-gradient(110deg,#ff9b43,#ff6b8c);box-shadow:0 9px 22px #c45a5a55}
+.primary-icon{width:47px;height:47px;display:grid;place-items:center;background:#ffffff35;border-radius:15px;font-size:1.65rem}
+.game-primary span:nth-child(2){flex:1}.game-primary b,.game-primary small{display:block}.game-primary b{font-size:.98rem}.game-primary small{font-size:.7rem;opacity:.9;margin-top:3px}.game-primary strong{font-size:1.8rem}
+.home-section-head{display:flex;align-items:end;justify-content:space-between;margin:19px 3px 10px}
+.home-section-head small{font-size:.62rem;font-weight:900;letter-spacing:1.6px;opacity:.62}
+.home-section-head h3{margin:3px 0 0;font-size:1.08rem}
+.streak-pill,.progress-number{font-size:.72rem;font-weight:900;padding:6px 9px;border-radius:99px;background:#ffb34f25;color:var(--gold)}
+.quest-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.quest-card{min-height:132px;border:1px solid #ffffff18;border-radius:19px;padding:13px;text-align:left;color:#fff;display:flex;flex-direction:column;align-items:flex-start;box-shadow:0 6px 16px #0002}
+.quest-study{background:linear-gradient(145deg,#243d83,#3557a7)}.quest-play{background:linear-gradient(145deg,#6a4bba,#9a69d4)}.quest-test{background:linear-gradient(145deg,#1c8b91,#43b6a8)}.quest-tutor{background:linear-gradient(145deg,#d16a9e,#ee9cba)}
+.quest-art{font-size:1.85rem;margin-bottom:7px;filter:drop-shadow(0 3px 2px #0003)}
+.quest-card b{font-size:.95rem}.quest-card small{font-size:.68rem;opacity:.84;margin-top:2px}.quest-card em{font-style:normal;font-size:.68rem;font-weight:900;margin-top:auto;padding-top:10px}
+.progress-panel{border-radius:18px;padding:15px;background:var(--card);box-shadow:0 5px 17px #0002}
+.progress-panel-top{display:flex;justify-content:space-between;font-weight:800;font-size:.82rem;margin-bottom:9px}
+.progress-panel p{margin:9px 0 0;font-size:.72rem;opacity:.7}
+.daily-mission{display:flex;gap:12px;align-items:center;margin-top:12px;border-radius:17px;padding:13px;background:linear-gradient(110deg,#ffcf6d2b,#ff9f4320);border:1px solid #ffcf6d55}
+.mission-icon{width:43px;height:43px;border-radius:14px;background:#ffcb6338;display:grid;place-items:center;font-size:1.5rem}
+.daily-mission b,.daily-mission span,.daily-mission small{display:block}.daily-mission small{font-size:.6rem;font-weight:900;letter-spacing:1px;color:var(--gold)}
+.daily-mission b{font-size:.82rem;margin:3px 0}.daily-mission span{font-size:.69rem;opacity:.72}
+.resume-card{width:100%;display:flex;align-items:center;gap:12px;padding:12px;border:0;border-radius:16px;background:var(--card);color:var(--txt);text-align:left}
+.resume-card>span{font-size:1.7rem}.resume-card div{flex:1}.resume-card b,.resume-card small{display:block}.resume-card small{font-size:.7rem;opacity:.7;margin-top:3px}.resume-card strong{font-size:1.5rem}
+body.theme-emma .home-xp{background:#694d8950}
+.control-drop{border:2px dashed var(--accent);border-radius:18px;padding:18px;text-align:center;background:rgba(128,128,255,.08)}
+.control-drop input{margin-top:10px}
+.control-record{border-radius:15px;padding:12px;background:var(--bg2);margin:8px 0}
+.control-score{font-size:2rem;font-weight:900;color:var(--accent)}
+.control-advice{border-left:4px solid var(--gold);padding:10px 12px;background:#ffcf6d20;border-radius:9px;margin:10px 0}
+.adventure-scene{position:relative;overflow:hidden;border-radius:24px;padding:18px;color:white;min-height:210px;box-shadow:0 12px 28px #0003}
+.scene-galaxy{background:radial-gradient(circle at 72% 35%,#d3e6ff 0 1%,#779fff 2%,transparent 18%),radial-gradient(circle at 20% 80%,#4565c8,transparent 35%),linear-gradient(140deg,#08152f,#182b68 65%,#513c92)}
+.scene-magic{background:radial-gradient(circle at 82% 24%,#fff6bd 0 3%,transparent 4%),radial-gradient(circle at 20% 90%,#8fe2c0,transparent 35%),linear-gradient(140deg,#e88db8,#b98bd8 60%,#8199d8)}
+.scene-art{font-size:5.3rem;position:absolute;right:12px;bottom:0;filter:drop-shadow(0 9px 9px #0004)}
+.scene-copy{position:relative;z-index:1;max-width:70%}.scene-copy h2{font-size:1.5rem;margin:8px 0}.scene-copy p{font-size:.8rem;line-height:1.4}
+.world-card{min-height:155px;border-radius:20px;padding:13px;color:#fff;position:relative;overflow:hidden;box-shadow:0 7px 17px #0002;border:1px solid #ffffff33}
+.world-card:after{content:"";position:absolute;width:115px;height:115px;border-radius:50%;right:-25px;bottom:-45px;background:#ffffff20}
+.world-card .world-emoji{font-size:2.4rem;display:block}.world-card b{display:block;margin-top:7px}.world-card small{display:block;margin-top:5px}
+.world-card.locked{filter:grayscale(.7);opacity:.62}
+.world-map-v8{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.avatar-display{display:flex;align-items:center;gap:15px;padding:14px;border-radius:20px;background:linear-gradient(135deg,#ffffff22,#ffffff08);border:1px solid #ffffff30}
+.avatar-token{width:86px;height:86px;border-radius:25px;display:grid;place-items:center;font-size:3.2rem;background:#ffffff25;box-shadow:inset 0 0 20px #ffffff20}
+@media(max-width:360px){.home-greeting h2{font-size:1.3rem}.hero-character{width:120px}.home-sky{padding-left:13px;padding-right:13px}}
+
 </style>
 </head>
 <body class="theme-gabriel">
@@ -187,6 +254,7 @@ body.theme-emma .adventure-hero{background:linear-gradient(135deg,#f6a8ca,#c5a0f
     <button data-tab="cours"><span class="ic">📖</span>Mes révisions</button>
     <button data-tab="jeux"><span class="ic">🎮</span>Mes jeux</button>
     <button data-tab="aventure"><span class="ic">🗺️</span>Mon aventure</button>
+    <button data-tab="controles"><span class="ic">📝</span>Mes contrôles</button>
     <button data-tab="tuteur"><span class="ic">🤖</span>Mon tuteur</button>
     <button data-tab="plus"><span class="ic">⚙️</span>Plus</button>
   </nav>
@@ -200,5 +268,7 @@ body.theme-emma .adventure-hero{background:linear-gradient(135deg,#f6a8ca,#c5a0f
 <script src="adventure.js"></script>
 <script src="tutor.js"></script>
 <script src="scan.js"></script>
+<script src="controls.js"></script>
+<script src="enhancements.js"></script>
 </body>
 </html>
