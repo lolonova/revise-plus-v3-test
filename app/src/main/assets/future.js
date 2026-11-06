@@ -54,7 +54,7 @@ function open(){
 function glyph(id){var paths={maths:'M5 4h14v16H5z M8 8h8 M8 12h8 M8 16h4',francais:'M6 3h12v18H6z M9 8h6 M9 12h6 M9 16h4',histoire:'M4 20h16 M6 20V8l6-4 6 4v12 M9 12h6',geo:'M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18 M3 12h18 M12 3c4 4 4 14 0 18 M12 3c-4 4-4 14 0 18',svt:'M9 3h6 M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3 M7 15h10',physique:'M12 3v18 M3 12h18 M5 5l14 14 M19 5L5 19',anglais:'M4 5h16v14H4z M8 9h8 M8 13h5',italien:'M4 5h16v14H4z M8 9h8 M8 13h5'};return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="'+(paths[id]||paths.maths)+'"/></svg>';}
 function setLevel(v){localStorage.setItem('reviseplus_niveau_'+profile(),v);open();fx('tap');}
 function openChapter(id){fx('tap');if(window.App&&App.openChapter)App.openChapter(id);}
-function toggleSound(){soundOn=!soundOn;localStorage.setItem(storeKey,soundOn?'on':'off');if(soundOn)fx('success');open();}
+function toggleSound(){soundOn=!soundOn;localStorage.setItem(storeKey,soundOn?'on':'off');if(soundOn)fx('success');var b=document.getElementById('fxGlobal');if(b)b.textContent=soundOn?'♫':'♪';var all=document.querySelectorAll('.fx-toggle');all.forEach(function(x){x.textContent=soundOn?'♫ SON':'♫ MUET';});}
 function goTab(t){if(t==='competences'){open();return;}oldGo(t);}
 var oldGo=App.goTab;
 App.goTab=goTab;window.goTab=goTab;
@@ -62,7 +62,7 @@ window.R2030={open:open,setLevel:setLevel,openChapter:openChapter,toggleSound:to
 document.addEventListener('DOMContentLoaded',function(){
  var nav=document.querySelector('#drawer nav');
  if(nav&&!document.getElementById('futureTab')){var b=document.createElement('button');b.id='futureTab';b.dataset.tab='competences';b.innerHTML='<span class="ic">✧</span>Mes compétences';b.onclick=function(){goTab('competences');};nav.insertBefore(b,nav.querySelector('[data-tab="controles"]'));}
- var logo=document.querySelector('.banner .logo');if(logo){logo.innerHTML='<span class="logo-star">✦</span>';logo.setAttribute('aria-label','Révise plus');}
+ var logo=document.querySelector('.banner .logo');if(logo){logo.innerHTML='<span class="logo-star">✦</span>';logo.setAttribute('aria-label','Révise plus');}var menu=document.getElementById('menuBtn');if(menu&&!document.getElementById('fxGlobal')){var sb=document.createElement('button');sb.id='fxGlobal';sb.className='fx-global';sb.type='button';sb.textContent=soundOn?'♫':'♪';sb.title='Effets sonores';sb.setAttribute('aria-label','Activer ou couper les sons');sb.onclick=toggleSound;menu.parentNode.insertBefore(sb,menu);}
  document.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;if(b.classList.contains('fx-toggle'))return;fx('tap');},{passive:true});
  document.addEventListener('click',function(e){var el=e.target.closest('.guardian-home');if(el){var msg=emma()?'Coucou Emma ! Je suis là pour t’aider. On avance tranquillement, une étape à la fois.':'Salut Gabriel ! Prêt pour une petite mission ? Chaque essai te rend plus fort.';speak(msg);}},{passive:true});
 });
