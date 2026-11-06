@@ -49,7 +49,7 @@
   function companions(){return profile()==='Emma'?companionsE:companionsG;}
   function profile(){return localStorage.getItem('reviseplus_currentProfile')||'Gabriel';}
   function key(){return 'reviseplus_adventure_'+profile();}
-  function data(){try{var d=JSON.parse(localStorage.getItem(key()))||{};if(!d.coins)d.coins=60;if(!d.owned)d.owned=['base'];if(!d.look)d.look='base';if(!d.pet)d.pet='';if(d.claimed==null)d.claimed=0;if(d.world==null)d.world=0;return d;}catch(e){return {coins:60,look:'base',pet:'',owned:['base'],claimed:0,world:0};}}
+  function data(){var emma=profile()==='Emma',starter=emma?'cat':'bot';try{var d=JSON.parse(localStorage.getItem(key()))||{};if(d.coins==null)d.coins=60;if(!d.owned)d.owned=['base'];if(!d.look)d.look='base';if(!d.pet)d.pet=starter;if(d.owned.indexOf(starter)<0)d.owned.push(starter);if(d.claimed==null)d.claimed=0;if(d.world==null)d.world=0;return d;}catch(e){return {coins:60,look:'base',pet:starter,owned:['base',starter],claimed:0,world:0};}}
   function save(d){localStorage.setItem(key(),JSON.stringify(d));}
   function prog(){try{return JSON.parse(localStorage.getItem('reviseplus_'+profile()))||{};}catch(e){return {};}}
   function xpTotal(p){return Math.max(0,(Math.max(1,p.niveau||1)-1)*100+(p.xp||0));}
@@ -66,7 +66,7 @@
     var next=list.filter(function(w){return xp<w.xp;})[0];
     var html='<div class="adventure-scene '+(emma?'scene-magic':'scene-galaxy')+'"><div class="scene-copy"><span class="season-pill">'+(emma?'MON ROYAUME MAGIQUE':'MA GALAXIE')+'</span><h2>Bienvenue, '+profile()+' !</h2><p>'+(emma?'Chaque découverte fait fleurir ton royaume.':'Chaque mission fait grandir ta galaxie.')+'</p><b>⭐ '+xp+' XP · 🪙 '+d.coins+' pièces</b></div><div class="scene-art">'+(emma?'🏰':'🪐')+'</div></div>';
     html+='<div class="home-section-head"><div><small>MON HÉROS</small><h3>Mon personnage</h3></div><span class="streak-pill">✨ À personnaliser</span></div>';
-    html+='<div class="card"><div class="avatar-display"><div class="avatar-token">'+(look.icon||hero)+'</div><div><b style="font-size:1.05rem">'+look.name+'</b><div style="font-size:.78rem;opacity:.75;margin-top:4px">'+(pet?'Compagnon : '+pet.icon+' '+pet.name:'Choisis un compagnon !')+'</div><div class="coin" style="margin-top:7px">🪙 '+d.coins+' pièces</div></div></div>';
+    html+='<div class="card hero-custom-card '+(emma?'hero-custom-emma':'hero-custom-space')+'"><div class="hero-stage"><div class="hero-orbit"></div><div class="hero-figure"><span class="hero-shadow"></span><span class="hero-head">'+(emma?'👧🏻':'🧑🏻‍🚀')+'</span><span class="hero-outfit">'+(look.icon||hero)+'</span></div>'+(pet?'<div class="hero-pet">'+pet.icon+'</div>':'')+'<span class="hero-spark spark-one">✦</span><span class="hero-spark spark-two">✧</span></div><div class="hero-meta"><small>MON AVATAR</small><b>'+look.name+'</b><span>'+(pet?'Avec '+pet.name:'Choisis un compagnon !')+'</span><div class="coin" style="margin-top:8px">🪙 '+d.coins+' pièces</div></div></div>
     html+='<h3 style="margin-top:16px">👕 Mes tenues</h3><div class="avatar-options">';
     looks.forEach(function(x){var own=d.owned.indexOf(x.id)>=0;html+='<button class="'+(d.look===x.id?'selected':'')+'" onclick="Adventure.outfit(\''+x.id+'\')">'+x.icon+(own?'':' '+x.cost+'🪙')+'</button>';});
     html+='</div><h3>🐾 Mes compagnons</h3><div class="avatar-options">';
