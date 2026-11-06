@@ -4,6 +4,8 @@
 var App = (function () {
   var state = { profile: null, niveau: '5e', mat: null, chap: null, tab: 'accueil' };
   var quiz = null;
+  var navHistory = [];
+  var restoringView = false;
   var MASCOT = { Gabriel: '🚀', Emma: '🐱' };
   var BADGES = [
     { id: 'premier', nom: 'Premier pas', ic: '🥇', test: function (p) { return p.xp >= 10; } },
@@ -80,7 +82,39 @@ var App = (function () {
     return REVISE_DATA.chapitres.filter(function (x) { return x.id === id; })[0];
   }
 
-  function render(html) { document.getElementById('view').innerHTML = html; window.scrollTo(0, 0); }
+  function saveCurrentView() {
+    var el = document.getElementById('view');
+    if (!el || !el.innerHTML || restoringView) return;
+    navHistory.push({ html: el.innerHTML, state: JSON.parse(JSON.stringify(state)), tab: state.tab, scroll: window.scrollY || 0 });
+    if (navHistory.length > 30) navHistory.shift();
+  }
+  function render(html) {
+    saveCurrentView();
+    document.getElementById('view').innerHTML = html;
+    window.scrollTo(0, 0);
+    updateBackButton();
+  }
+  function updateBackButton() {
+    var b = document.getElementById('backBtn');
+    if (b) b.classList.toggle('back-ready', navHistory.length > 0 || (state.tab && state.tab !== 'accueil'));
+  }
+  function handleBack() {
+    var drawer = document.getElementById('drawer');
+    if (drawer && drawer.classList.contains('open')) { closeDrawer(); return true; }
+    if (navHistory.length) {
+      var previous = navHistory.pop();
+      restoringView = true;
+      state = previous.state;
+      document.getElementById('view').innerHTML = previous.html;
+      setTab(previous.tab || 'accueil');
+      updateChip();
+      restoringView = false;
+      setTimeout(function(){ window.scrollTo(0, previous.scroll || 0); updateBackButton(); }, 0);
+      return true;
+    }
+    if (state.tab && state.tab !== 'accueil') { goTab('accueil'); return true; }
+    return false;
+  }
   function setTab(t) {
     state.tab = t;
     document.querySelectorAll('#drawer nav button').forEach(function (b) {
@@ -116,6 +150,7 @@ var App = (function () {
     }
   }
   function switchProfile() {
+    navHistory = [];
     closeDrawer();
     state.profile = null; state.mat = null; state.chap = null;
     localStorage.removeItem('reviseplus_currentProfile');
@@ -658,6 +693,7 @@ var App = (function () {
 
   // ================= NAVIGATION =================
   function chooseProfile(name) {
+    navHistory = [];
     state.profile = name;
     document.body.className = name === 'Emma' ? 'theme-emma' : 'theme-gabriel';
     document.querySelector('.logo').textContent = name === 'Emma' ? '🐱' : '🚀';
@@ -689,6 +725,7 @@ var App = (function () {
       b.onclick = function () { goTab(b.dataset.tab); };
     });
     document.getElementById('menuBtn').onclick = openDrawer;
+    var backBtn = document.getElementById('backBtn'); if (backBtn) backBtn.onclick = handleBack;
     document.getElementById('drawerClose').onclick = closeDrawer;
     document.getElementById('overlay').onclick = closeDrawer;
     document.getElementById('switchProfileBtn').onclick = switchProfile;
@@ -710,14 +747,14 @@ var App = (function () {
     backToSubjects: backToSubjects, backToChapters: backToChapters, askTutor: askTutor,
     saveGateway: saveGateway, resetProgress: resetProgress, readAloud: readAloud,
     pickImages: pickImages, onFiles: onFiles, makeFromScan: makeFromScan,
-    scanAnswer: scanAnswer, showFull: function () { document.getElementById('fullCard').classList.remove('hidden'); },
+    scanAnswer: scanAnswer, handleBack: handleBack, saveCurrentView: saveCurrentView, showFull: function () { document.getElementById('fullCard').classList.remove('hidden'); },
     doDaily: doDaily, showQuestion: showQuestion, quizMode: quizMode,
     viewProgres: viewProgres, viewScan: viewScan, viewPlus: viewPlus, init: init,
     switchProfile: switchProfile, closeDrawer: closeDrawer,
     obLevel: obLevel, toggleMatiere: toggleMatiere, finishOnboarding: finishOnboarding,
     quizFromList: quizFromList
   };
-  ['chooseProfile','setLevel','selectSubject','openChapter','startQuiz','answer','goTab',
+  ['chooseProfile','setLevel','selectSubject','openChapter','startQuiz','answer','goTab','handleBack',
    'backToSubjects','backToChapters','askTutor','saveGateway','resetProgress','readAloud',
    'showFull','pickImages','onFiles','makeFromScan','scanAnswer','doDaily','showQuestion',
    'quizMode','viewProgres','viewScan','viewPlus','switchProfile','obLevel','toggleMatiere',
