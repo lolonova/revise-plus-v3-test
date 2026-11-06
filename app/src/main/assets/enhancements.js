@@ -30,6 +30,9 @@
     document.querySelectorAll('#drawer nav button').forEach(function(b){b.classList.toggle('on',b.dataset.tab==='accueil');});
     window.scrollTo(0,0);
   }
+  function welcome(){
+    document.getElementById('view').innerHTML='<section class="welcome-v8"><div class="welcome-banner"><span class="season-pill">BIENVENUE DANS RÉVISE+</span><h2>Apprendre devient une aventure !</h2><p>Choisis ton héros, explore ton univers et gagne des découvertes à chaque petit effort.</p></div><div class="home-section-head"><div><small>CHOISIS TON UNIVERS</small><h3>Qui part à l’aventure ?</h3></div></div><div class="grid2"><button class="profile-pick gab" onclick="chooseProfile(\'Gabriel\')"><span class="pick-icon">🧑‍🚀</span><b>Gabriel</b><small>🚀 Galaxie, robots et planètes</small></button><button class="profile-pick em" onclick="chooseProfile(\'Emma\')"><span class="pick-icon">🐱</span><b>Emma</b><small>🦄 Magie, château et animaux</small></button></div><div class="control-advice">🌟 Ici, pas de mauvaise note ni de punition : chaque essai te fait progresser.</div></section>';
+  }
   function go(t){
     if(t==='accueil'){
       App.saveCurrentView(); App.setTab('accueil'); home(); return;
@@ -39,5 +42,5 @@
   App.goTab=go;window.goTab=go;window.ReviseHome=home;
   var oldFinish=App.finishOnboarding;
   if(oldFinish){App.finishOnboarding=function(){oldFinish();home();};window.finishOnboarding=App.finishOnboarding;}
-  document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){if((localStorage.getItem('reviseplus_currentProfile')||'')!=='')home();},80);});
+  document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){if((localStorage.getItem('reviseplus_currentProfile')||'')!=='')home();else welcome();},80);});
 })();
