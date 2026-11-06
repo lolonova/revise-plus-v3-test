@@ -35,6 +35,7 @@
   function worlds(){return profile()==='Emma'?em:gab;}
   function collectMilestones(d,p){var n=mastered(p),milestone=Math.floor(n/2);if(milestone>d.claimed){d.coins+=(milestone-d.claimed)*20;d.claimed=milestone;save(d);return (milestone-d.claimed+1)*20;}return 0;}
   function open(){
+    if(window.App && App.saveCurrentView) App.saveCurrentView();
     var p=progress(),d=data(),xp=totalXP(p),zones=worlds(),unlocked=zones.filter(function(w){return xp>=w.xp;}).length;
     var earned=collectMilestones(d,p);d=data();
     var emma=profile()==='Emma',hero=emma?'🐱':'🧑‍🚀';
