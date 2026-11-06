@@ -316,6 +316,55 @@ body.theme-gabriel .guardian-card{background:linear-gradient(135deg,#dff7ff,#a9c
 .guardian-face img{width:100%;height:100%;object-fit:cover;object-position:center 30%;display:block}
 @media(max-width:360px){.hero-character-wrap{width:108px;height:132px}.guardian-home-img{width:76px;height:92px}}
 
+
+/* RÉVISE+ 2030 — design system */
+:root{--future-glow:#70e7ff}
+.banner .logo{background:linear-gradient(145deg,#fff4b0,#ffbd57 48%,#ff8c70);color:#35204e;border:1px solid #fff9;box-shadow:0 0 0 4px #ffffff13,0 0 28px #7deaff65;font-size:1.35rem}
+.logo-star{font-size:1.7rem;text-shadow:0 0 14px #fff}
+.fx-toggle{border:1px solid #ffffff55;background:#ffffff18;color:inherit;border-radius:999px;padding:7px 10px;font-size:.66rem;font-weight:900;letter-spacing:.5px}
+.future-screen{padding-bottom:30px}
+.future-hero{position:relative;overflow:hidden;border-radius:27px;padding:17px;margin:4px 0 22px;color:#fff;box-shadow:0 18px 38px #0003;isolation:isolate}
+.future-gabriel{background:radial-gradient(circle at 82% 8%,#438cff88,transparent 36%),linear-gradient(135deg,#081735,#172c68 55%,#155a82)}
+.future-emma{background:radial-gradient(circle at 80% 0%,#fff7c688,transparent 38%),linear-gradient(135deg,#7c397e,#c66da9 53%,#f0a5bf)}
+.future-orbit{position:absolute;z-index:-1;width:230px;height:230px;border:1px solid #ffffff33;border-radius:50%;right:-80px;top:20px;box-shadow:0 0 0 22px #ffffff09,0 0 0 48px #ffffff08}
+.future-top{display:flex;justify-content:space-between;align-items:center;font-size:.62rem;letter-spacing:1.3px;font-weight:900;opacity:.9}
+.future-hero-row{display:flex;align-items:center;gap:8px;min-height:155px}
+.future-hero-row>div{flex:1;min-width:0}
+.future-hero-row small,.future-level-row small{font-size:.62rem;letter-spacing:1.3px;font-weight:900;opacity:.75}
+.future-hero-row h2{font-size:1.45rem;line-height:1.08;margin:8px 0}
+.future-hero-row p{font-size:.78rem;line-height:1.4;max-width:220px;opacity:.85;margin:0}
+.future-hero-row img{width:118px;height:148px;object-fit:cover;object-position:center 30%;border-radius:20px;border:2px solid #ffffff80;box-shadow:0 12px 24px #0004;transform:rotate(2deg)}
+.future-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.future-stats div{padding:10px 6px;border-radius:14px;background:#ffffff18;border:1px solid #ffffff24;text-align:center;backdrop-filter:blur(8px)}
+.future-stats b{display:block;font-size:1.3rem}.future-stats span{display:block;font-size:.61rem;opacity:.8;line-height:1.25}
+.future-level-row{display:flex;align-items:center;justify-content:space-between;margin:18px 2px 10px;gap:8px}
+.future-level-row h3{margin:3px 0;font-size:1.1rem}
+.future-levels{display:flex;gap:5px}
+.future-levels button{border:1px solid var(--accent);background:var(--card);color:var(--txt);border-radius:11px;padding:9px 11px;font-weight:900}
+.future-levels button.active{background:var(--accent);color:white;box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 20%,transparent)}
+.future-note{display:flex;align-items:center;gap:11px;padding:12px;border-radius:17px;background:linear-gradient(120deg,#f7d66b26,#9c7dff20);border:1px solid #ffffff25;margin:12px 0 18px}
+.future-note-icon{font-size:1.6rem;color:var(--gold)}.future-note b{font-size:.82rem}.future-note p{font-size:.72rem;line-height:1.35;margin:3px 0 0;opacity:.8}
+.skill-subject{background:var(--card);border:1px solid #ffffff20;border-radius:21px;padding:13px;margin:13px 0;box-shadow:0 9px 22px #00000012}
+.skill-subject-head{display:flex;align-items:center;gap:10px}
+.subject-glyph{width:43px;height:43px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(145deg,var(--accent),var(--violet));color:#fff;flex:0 0 43px;box-shadow:0 5px 13px #0002}
+.subject-glyph svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.skill-subject-head>div:nth-child(2){flex:1;min-width:0}
+.skill-subject-head h3{font-size:.94rem;margin:0 0 3px}.skill-subject-head small{font-size:.67rem;opacity:.7}
+.subject-percent{font-size:.85rem;font-weight:900;color:var(--accent)}
+.skill-track{height:6px;border-radius:99px;background:#8883;margin:12px 0;overflow:hidden}.skill-track i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--violet));transition:width .5s}
+.skill-list{display:grid;gap:7px}
+.skill-row{display:flex;align-items:center;gap:8px;text-align:left;width:100%;border:1px solid #8882;background:var(--bg2);color:var(--txt);border-radius:14px;padding:10px 8px;min-height:62px}
+.skill-index{font-size:.67rem;font-weight:900;opacity:.45;width:20px;text-align:center}
+.skill-copy{flex:1;min-width:0}.skill-copy b{display:block;font-size:.78rem}.skill-copy small{display:block;font-size:.63rem;opacity:.68;line-height:1.3;margin-top:3px}
+.skill-state{font-size:.54rem;font-weight:900;letter-spacing:.2px;white-space:nowrap;padding:5px 6px;border-radius:8px;background:#8882}
+.skill-state.acquis{background:#23b77b25;color:#29b982}.skill-state.en-cours{background:#f0b8492c;color:#c58c24}
+.skill-arrow{font-size:1.2rem;opacity:.5}
+.future-footer{text-align:center;font-size:.72rem;opacity:.7;padding:12px}
+#futureTab .ic{font-size:1.2rem;color:var(--accent)}
+body.theme-emma .skill-row{background:#fff8fb}
+@media(min-width:520px){.future-hero-row img{width:142px;height:165px}.future-hero-row h2{font-size:1.7rem}.skill-row{padding:12px}}
+@media(prefers-reduced-motion:reduce){.future-screen *{scroll-behavior:auto!important;transition:none!important}}
+
 </style>
 </head>
 <body class="theme-gabriel">
@@ -356,5 +405,6 @@ body.theme-gabriel .guardian-card{background:linear-gradient(135deg,#dff7ff,#a9c
 <script src="scan.js"></script>
 <script src="controls.js"></script>
 <script src="enhancements.js"></script>
+<script src="future.js"></script>
 </body>
 </html>
