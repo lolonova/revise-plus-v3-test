@@ -680,6 +680,7 @@ var App = (function () {
     if (t === 'accueil') { viewAccueil(); return; }
     if (t === 'cours') { state.mat = null; state.chap = null; viewCours(); return; }
     if (t === 'jeux') { viewJeux(); return; }
+    if (t === 'aventure') { if (window.Adventure) Adventure.open(); else viewAccueil(); return; }
     if (t === 'tuteur') { viewTuteur(); return; }
     if (t === 'plus') { viewPlus(); return; }
   }
