@@ -429,7 +429,7 @@ var App = (function () {
   function answer(idx) {
     var q = quiz.qs[quiz.i];
     var ok = idx === q.bon;
-    var fb = document.getElementById('fb');
+    if (AudioFX) AudioFX.fx(ok);\n    var fb = document.getElementById('fb');
     document.getElementById('ch' + q.bon).classList.add('right');
     if (!ok) document.getElementById('ch' + idx).classList.add('wrong');
     fb.classList.remove('hidden');
@@ -742,7 +742,7 @@ var App = (function () {
     var backBtn = document.getElementById('backBtn'); if (backBtn) backBtn.onclick = handleBack;
     document.getElementById('drawerClose').onclick = closeDrawer;
     document.getElementById('overlay').onclick = closeDrawer;
-    document.getElementById('switchProfileBtn').onclick = switchProfile;\n    AudioFX.init();
+    document.getElementById('switchProfileBtn').onclick = switchProfile;\n    AudioFX.init();\n    AudioFX.init();
     var cur = localStorage.getItem('reviseplus_currentProfile');
     if (cur === 'Gabriel' || cur === 'Emma') {
       state.niveau = localStorage.getItem('reviseplus_niveau_' + cur) || '5e';
