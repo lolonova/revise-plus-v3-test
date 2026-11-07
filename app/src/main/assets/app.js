@@ -797,7 +797,7 @@ var App = (function () {
   function gameSpeech(){
     var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
     if(!SR){alert('La dictée vocale n’est pas disponible sur cet appareil.');return;}
-    var rec=new SR(); rec.lang='fr-FR';rec.interimResults=false;rec.maxAlternatives=1;
+    var rec=new SR(); rec.lang=(quiz.c.mat==='anglais'?'en-GB':(quiz.c.mat==='italien'?'it-IT':'fr-FR'));rec.interimResults=false;rec.maxAlternatives=1;
     var b=document.getElementById('voiceAnswer');if(b)b.textContent='🎙️ J’écoute…';
     rec.onresult=function(e){var i=document.getElementById('writtenAnswer');if(i)i.value=e.results[0][0].transcript;if(b)b.textContent='🎙️ Dicter';};
     rec.onerror=function(){if(b)b.textContent='🎙️ Dicter';};
@@ -920,7 +920,9 @@ var App = (function () {
     viewProgres: viewProgres, viewScan: viewScan, viewPlus: viewPlus, init: init,
     switchProfile: switchProfile, closeDrawer: closeDrawer,
     obLevel: obLevel, toggleMatiere: toggleMatiere, finishOnboarding: finishOnboarding,
-    quizFromList: quizFromList
+    quizFromList: quizFromList, gamePickMode:gamePickMode, gamePickSubject:gamePickSubject,
+    gameStartChapter:gameStartChapter, gameAnswerText:gameAnswerText, gameSpeech:gameSpeech,
+    gameHangmanLetter:gameHangmanLetter, gameNext:gameNext, gameStartMega:gameStartMega
   };
   ['chooseProfile','setLevel','selectSubject','openChapter','startQuiz','answer','goTab','handleBack',
    'backToSubjects','backToChapters','askTutor','saveGateway','resetProgress','readAloud',
