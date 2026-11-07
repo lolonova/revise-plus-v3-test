@@ -718,7 +718,7 @@ var App = (function () {
   }
   var gameModeChosen = 1;
   function gamePickChapter(mode){
-    gameModeChosen=mode;
+    gameModeChosen=mode; window.gameModeChosen=mode;
     document.querySelectorAll('.game-mode').forEach(function(b){b.classList.remove('selected');});
     var buttons=document.querySelectorAll('.game-mode');
     if(buttons[mode-1])buttons[mode-1].classList.add('selected');
@@ -729,6 +729,11 @@ var App = (function () {
   }
   function gameStartChapter(id,mode){ state.chap=id; var c=chapById(id); if(!c)return; var qs=poolFor(c,mode===1?1:2); if(mode===3)qs=qs.slice(0,5); if(!qs.length){alert('Ce chapitre arrive bientôt dans les missions.');return;} quiz={c:c,mode:mode===1?1:2,qs:qs,i:0,score:0,streak:0,boss:mode===3};pushRecent(id);showQuestion(); }
   function doDailyPick(){ var mats=myMatieres().map(function(m){return m.id;});var pool=REVISE_DATA.chapitres.filter(function(c){return mats.indexOf(c.mat)!==-1&&c.niveau===state.niveau;});if(!pool.length)pool=REVISE_DATA.chapitres;var c=pool[Math.floor(Math.random()*pool.length)];doDaily(c.id); }
+  // Les cartes de l'arcade utilisent des onclick HTML : exposer leurs actions au WebView.
+  window.gamePickChapter=gamePickChapter;
+  window.gameStartChapter=gameStartChapter;
+  window.doDailyPick=doDailyPick;
+  window.gameModeChosen=gameModeChosen;
   function quizFromList(chapId) {
     state.chap = chapId;
     var c = chapById(chapId);
