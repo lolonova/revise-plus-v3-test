@@ -547,7 +547,8 @@ var App = (function () {
     else if (pct < 100) html += '<p>💡 Bien joué ! Passe en mode ⚡ Expert pour viser le sans-faute.</p>';
     else html += '<p>🏆 Sans faute, bravo !</p>';
     if(quiz.boss)html+='<div class="boss-reward">'+(bossWin?'🎉 Boss vaincu : +25 XP bonus et badge Chasseur de boss !':'💪 Tu as déjà appris beaucoup. Reviens défier le boss après une petite révision.')+'</div>';
-    if(quiz.gameType==='mega')p=addXP(50);\n    html += '<button class="btn" onclick="'+(quiz.gameType==='mega'?'gameStartMega()':'gameStartChapter(\''+quiz.c.id+'\')')+'">🔄 Rejouer</button> '
+    if(quiz.gameType==='mega')p=addXP(50);
+    html += '<button class="btn" onclick="'+(quiz.gameType==='mega'?'gameStartMega()':'gameStartChapter(\''+quiz.c.id+'\')')+'">🔄 Rejouer</button> '
       + '<button class="btn ghost" onclick="goTab(\'plus\');viewProgres()">📊 Mes progrès</button> '
       + '<button class="btn ghost" onclick="backToChapters()">📖 Retour au cours</button></div>';
     render(html);
@@ -740,6 +741,7 @@ var App = (function () {
   }
   function gamePickMode(mode){
     gameModeChosen=mode;
+    if(mode==='mega'){gameStartMega();return;}
     if(mode==='hangman' && gameSubjectChosen && ['anglais','italien','francais'].indexOf(gameSubjectChosen)<0)gameSubjectChosen=null;
     viewJeux();
   }
