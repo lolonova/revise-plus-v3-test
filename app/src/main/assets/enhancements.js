@@ -22,7 +22,7 @@
     html+='<button class="quest-card quest-test" onclick="goTab(\'controles\')"><span class="quest-art">📝</span><b>Mes contrôles</b><small>Notes & conseils</small><em>Analyser ›</em></button>';
     html+='<button class="quest-card quest-tutor" onclick="goTab(\'tuteur\')"><span class="quest-art">🤖</span><b>Mon tuteur</b><small>Un coup de main</small><em>Demander ›</em></button></div>';
     html+='<div class="home-section-head"><div><small>TA PROGRESSION</small><h3>Tu avances à ton rythme</h3></div></div><div class="progress-panel"><div class="progress-panel-top"><span>Chapitres travaillés</span><b>'+vals.length+'</b></div><div class="progress"><div style="width:'+pct+'%"></div></div><p>Chaque essai compte. Tu peux recommencer autant que tu veux 💛</p></div>';
-    html+='<div class="daily-mission"><div class="mission-icon">'+(emma?'🦋':'🛰️')+'</div><div><small>MISSION DU JOUR</small><b>5 minutes pour faire avancer ton monde</b><span>Un quiz ou une fiche, et c’est déjà une victoire.</span></div></div>';
+    html+='<button type="button" class="daily-mission" onclick="goTab(\'jeux\')"><div class="mission-icon">'+(emma?'🦋':'🛰️')+'</div><div><small>MISSION DU JOUR</small><b>5 minutes pour faire avancer ton monde</b><span>Un quiz ou une fiche, et c’est déjà une victoire.</span></div><strong>›</strong></button>';
     if(chapter)html+='<div class="home-section-head"><div><small>REPRENDRE</small><h3>Ton dernier chapitre</h3></div></div><button class="resume-card" onclick="openChapter(\''+chapter.id+'\')"><span>📘</span><div><b>'+chapter.titre+'</b><small>Reprendre là où tu en étais</small></div><strong>›</strong></button>';
     html+='</section>';
     document.getElementById('view').innerHTML=html;
