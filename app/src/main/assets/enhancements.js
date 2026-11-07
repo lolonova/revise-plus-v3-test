@@ -54,7 +54,7 @@
     if(t==='accueil'){
       var a=api(); if(a){if(a.saveCurrentView)a.saveCurrentView();if(a.setTab)a.setTab('accueil');home();} return;
     }
-    var a=api(); var fn=oldGo||(a&&a.goTab); if(typeof fn==='function')fn.call(a,t); setTimeout(ensureCompanionDock,50);
+    var a=api(); if(t==='jeux'&&a&&typeof a.openGames==='function'){a.openGames();setTimeout(ensureCompanionDock,50);return;} var fn=oldGo||(a&&a.goTab); if(typeof fn==='function')fn.call(a,t); setTimeout(ensureCompanionDock,50);
   }
   window.goTab=go;window.ReviseHome=home;
   var oldChoose=window.chooseProfile;
