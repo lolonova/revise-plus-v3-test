@@ -215,8 +215,9 @@ var App = (function () {
     var html = '';
     // ===== Mon espace (façon maquette) =====
     html += '<div class="hero espace">'
-      + '<div class="avatar">' + MASCOT[state.profile] + '</div>'
-      + '<div class="who"><div class="name">Mon espace — ' + state.profile + ' ' + st.ic + '</div>'
+      + '<div class="avatar"><img src="' + (state.profile === 'Emma' ? 'images/3d/lumi-fairy-3d.png' : 'images/3d/gabriel-explorer-3d.png') + '" alt=""></div>'
+      + '<div class="who"><div class="name">' + (state.profile === 'Emma' ? 'Bienvenue Emma ✨' : 'Prêt pour la mission, Gabriel 🚀') + '</div>'
+      + '<div class="cls">' + (state.profile === 'Emma' ? 'Lumi et son chaton sont avec toi !' : 'Nova, ton robot-guide, est prêt !') + '</div>'
       + '<div class="cls">Classe de ' + state.niveau + ' · ' + st.nom + ' · +' + p.xp + ' XP</div>'
       + '<div class="hero-bar"><div style="width:' + pct + '%"></div></div>'
       + '<div class="cls">' + pct + ' % de progression</div></div>'
@@ -688,7 +689,7 @@ var App = (function () {
     var emma = state.profile === 'Emma';
     var buddy = emma ? 'Lumi' : 'Nova';
     var html = '<section class="arcade-hero '+(emma?'arcade-emma':'arcade-gabriel')+'">'
-      + '<div class="arcade-orb">'+(emma?'✨':'🚀')+'</div><div class="arcade-kicker">ARCADE ÉDUCATIVE</div>'
+      + '<div class="arcade-orb">'+(emma?'<img src="images/3d/lumi-fairy-3d.png" alt="">':'<img src="images/3d/gabriel-explorer-3d.png" alt="">')+'</div><div class="arcade-kicker">TON UNIVERS • ARCADE ÉDUCATIVE</div>'
       + '<h2>Prêt pour la<br><span>mission du jour ?</span></h2>'
       + '<p>'+buddy+' a préparé des défis pour toi. Chaque bonne réponse fait avancer ton aventure !</p>'
       + '<div class="arcade-stats"><span>⚡ '+p.xp+' XP</span><span>🔥 '+(p.bestStreak||0)+' record</span><span>🏅 '+p.badges.length+' badges</span></div></section>';
