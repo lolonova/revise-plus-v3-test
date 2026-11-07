@@ -55,9 +55,12 @@ function glyph(id){var paths={maths:'M5 4h14v16H5z M8 8h8 M8 12h8 M8 16h4',franc
 function setLevel(v){localStorage.setItem('reviseplus_niveau_'+profile(),v);open();fx('tap');}
 function openChapter(id){fx('tap');if(window.App&&App.openChapter)App.openChapter(id);}
 function toggleSound(){soundOn=!soundOn;localStorage.setItem(storeKey,soundOn?'on':'off');if(soundOn)fx('success');var b=document.getElementById('fxGlobal');if(b)b.textContent=soundOn?'♫':'♪';var all=document.querySelectorAll('.fx-toggle');all.forEach(function(x){x.textContent=soundOn?'♫ SON':'♫ MUET';});}
-function goTab(t){if(t==='competences'){open();return;}oldGo(t);}
-var oldGo=App.goTab;
-App.goTab=goTab;window.goTab=goTab;
+function goTab(t){if(t==='competences'){open();return;}if(typeof oldGo==='function'){oldGo(t);}else if(window.App&&typeof window.App.goTab==='function'){window.App.goTab(t);}}
+// Ne jamais bloquer le démarrage si le moteur principal n'est pas encore disponible.
+var appApi=window.App||null;
+var oldGo=appApi&&typeof appApi.goTab==='function'?appApi.goTab:null;
+if(appApi){appApi.goTab=goTab;}
+window.goTab=goTab;
 window.R2030={open:open,setLevel:setLevel,openChapter:openChapter,toggleSound:toggleSound,speak:speak,fx:fx};
 document.addEventListener('DOMContentLoaded',function(){
  var nav=document.querySelector('#drawer nav');
