@@ -1,6 +1,7 @@
 /* Révise+ V8 — écran d'accueil scénarisé */
 (function(){
-  var oldGo=App.goTab;
+  var api=function(){return window.App||null;};
+  var oldGo=(api()&&typeof api().goTab==='function')?api().goTab:null;
   function art(emma){
     var src=emma?'images/3d/lumi-fairy-3d.png':'images/3d/gabriel-explorer-3d.png';
     var alt=emma?'Lumi, la fée gardienne':'Explorateur spatial de Gabriel';
@@ -51,14 +52,14 @@
   }
   function go(t){
     if(t==='accueil'){
-      App.saveCurrentView(); App.setTab('accueil'); home(); return;
+      var a=api(); if(a){if(a.saveCurrentView)a.saveCurrentView();if(a.setTab)a.setTab('accueil');home();} return;
     }
-    oldGo(t); setTimeout(ensureCompanionDock,50);
+    var a=api(); var fn=oldGo||(a&&a.goTab); if(typeof fn==='function')fn.call(a,t); setTimeout(ensureCompanionDock,50);
   }
-  App.goTab=go;window.goTab=go;window.ReviseHome=home;
+  var initialApi=api(); if(initialApi)initialApi.goTab=go; window.goTab=go;window.ReviseHome=home;
   var oldChoose=window.chooseProfile;
   if(oldChoose){window.chooseProfile=function(name){oldChoose(name);setTimeout(ensureCompanionDock,90);};}
-  var oldFinish=App.finishOnboarding;
-  if(oldFinish){App.finishOnboarding=function(){oldFinish();home();};window.finishOnboarding=App.finishOnboarding;}
-  document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){if((localStorage.getItem('reviseplus_currentProfile')||'')!=='')home();else welcome();ensureCompanionDock();},80);});
+  var initialApi2=api(); var oldFinish=initialApi2&&initialApi2.finishOnboarding;
+  if(oldFinish){initialApi2.finishOnboarding=function(){oldFinish();home();};window.finishOnboarding=initialApi2.finishOnboarding;}
+  document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){var a=api();if(!a){console.error('Moteur principal App indisponible : app.js ne s’est pas initialisé.');return;}if((localStorage.getItem('reviseplus_currentProfile')||'')!=='')home();else welcome();ensureCompanionDock();},80);});
 })();
