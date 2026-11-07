@@ -637,7 +637,7 @@ var App = (function () {
     myMatieres().forEach(function(m){
       var chs=chaptersFor(m.id,state.niveau); if(!chs.length)return;
       html+='<div class="game-subject"><h3>'+m.icon+' '+m.nom+'</h3><div class="game-chapters">';
-      chs.forEach(function(c){html+='<button class="game-chapter" onclick="gameStartChapter(\''+c.id+'\',1)">'+c.titre+' <span>▶</span></button>';});
+      chs.forEach(function(c){html+='<button class="game-chapter" onclick="gameStartChapter(\''+c.id+'\',gameModeChosen)">'+c.titre+' <span>▶</span></button>';});
       html+='</div></div>';
     });
     html+='</div><div class="card game-daily">'+dailyChallenge()+'</div>';
@@ -645,7 +645,7 @@ var App = (function () {
   }
   var gameModeChosen = 1;
   function gamePickChapter(mode){ gameModeChosen=mode; var el=document.querySelector('.game-chapter-card'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); }
-  function gameStartChapter(id,mode){ state.chap=id; quizFromList(id); if(mode===2){quiz.mode=2;quiz.qs=poolFor(quiz.c,2);} }
+  function gameStartChapter(id,mode){ state.chap=id; var c=chapById(id); var qs=poolFor(c,mode); if(mode===3)qs=qs.slice(0,5); quiz={c:c,mode:mode===1?1:2,qs:qs,i:0,score:0,streak:0};pushRecent(id);showQuestion(); }
   function doDailyPick(){ var mats=myMatieres().map(function(m){return m.id;});var pool=REVISE_DATA.chapitres.filter(function(c){return mats.indexOf(c.mat)!==-1&&c.niveau===state.niveau;});if(!pool.length)pool=REVISE_DATA.chapitres;var c=pool[Math.floor(Math.random()*pool.length)];doDaily(c.id); }
   function quizFromList(chapId) {
     state.chap = chapId;
