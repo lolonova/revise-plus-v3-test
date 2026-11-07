@@ -730,8 +730,9 @@ var App = (function () {
       +'<div class="arcade-kicker">TON UNIVERS • ARCADE ÉDUCATIVE</div><h2>À toi de jouer !</h2>'
       +'<p>'+buddy+' te propose 4 façons de progresser. Chaque niveau correspond à un chapitre de ton programme.</p>'
       +'<div class="arcade-stats"><span>⚡ '+p.xp+' XP</span><span>🔥 '+(p.bestStreak||0)+' record</span><span>👾 '+(p.bossWins||0)+' boss</span><span>🏅 '+p.badges.length+' badges</span></div></section>';
+    html+='<div class="section-title">① Choisis ton jeu</div><p class="game-intro arcade-step-hint">Puis sélectionne une matière, et enfin le chapitre à jouer. Tu suis toujours ces 3 étapes.</p>'; 
     html+=gameModesHtml();
-    html+='<div class="section-title">1 · Choisis ta matière</div><div class="card game-chapter-card"><p class="game-intro">On garde le même parcours dans tous les jeux : niveau 1 = chapitre 1, niveau 2 = chapitre 2… Termine un chapitre pour débloquer le suivant.</p><div class="grid2">';
+    html+='<div class="section-title">② Choisis ta matière</div><div class="card game-chapter-card"><p class="game-intro">Sélectionne la matière dans laquelle tu veux jouer. Les chapitres sont adaptés à ta classe ('+state.niveau+').</p><div class="grid2">';
     myMatieres().forEach(function(m){
       var chs=chaptersFor(m.id,state.niveau); if(!chs.length)return;
       var done=chs.filter(function(c){return (p.maitrise[c.id]||0)>=50;}).length;
@@ -754,7 +755,7 @@ var App = (function () {
     if(gameModeChosen==='hangman' && ['anglais','italien','francais'].indexOf(mat)<0){
       box.innerHTML='<div class="warn">🔤 Le jeu du mot mystère est réservé au français, à l’anglais et à l’italien. Choisis une de ces matières.</div>';return;
     }
-    var html='<h3 style="margin-top:16px">2 · '+m.icon+' '+m.nom+' — '+state.niveau+'</h3><p class="game-intro">Choisis ton niveau. Les chapitres suivants se débloquent dans l’ordre du programme.</p>';
+    var html='<div class="game-step-title">③ Choisis ton chapitre</div><div class="game-selected-summary">🎮 '+(gameModeChosen==='quiz'?'Quiz à choix':gameModeChosen==='written'?'Réponse écrite':'Mot mystère')+' <span>→</span> '+m.icon+' '+m.nom+' <span>→</span> '+state.niveau+'</div><p class="game-intro">Appuie sur un chapitre pour lancer la partie. Les suivants se débloquent au fil de ta progression.</p>';
     chs.forEach(function(c,i){
       var pct=p.maitrise[c.id]||0, unlocked=i===0||(p.maitrise[chs[i-1].id]||0)>=50;
       html+='<button class="game-chapter" '+(unlocked?'':'disabled style="opacity:.42;filter:grayscale(1)"')+' onclick="gameStartChapter(\''+c.id+'\')">'
