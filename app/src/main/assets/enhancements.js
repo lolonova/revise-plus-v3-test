@@ -7,6 +7,7 @@
     return '<div class="hero-character-wrap"><img class="hero-character-image" src="'+src+'" alt="'+alt+'"></div>';
   }
   function home(){
+    setTimeout(ensureCompanionDock,40);
     var profile=localStorage.getItem('reviseplus_currentProfile')||'Gabriel';
     var emma=profile==='Emma',p=App.load(),pct=0,vals=Object.keys(p.maitrise||{});
     if(vals.length)pct=Math.round(vals.reduce(function(a,k){return a+(p.maitrise[k]||0);},0)/vals.length);
@@ -35,14 +36,27 @@
   function welcome(){
     document.getElementById('view').innerHTML='<section class="profile-select"><div class="profile-select-head"><div class="eyebrow">BIENVENUE DANS RÉVISE+</div><h2>Apprendre devient une aventure !</h2><p>Choisis ton univers, rencontre ton compagnon et fais évoluer ton monde à chaque découverte.</p></div><button class="profile-choice gabriel" onclick="chooseProfile(\'Gabriel\')"><img class="profile-art" src="images/3d/gabriel-explorer-3d.png" alt=""><span class="profile-spark">✦</span><span class="profile-copy"><span class="profile-label">Exploration • Galaxie</span><span class="profile-name">Gabriel</span><span class="profile-desc">Robots, planètes et missions avec Nova.</span><span class="profile-enter">Entrer dans mon univers <b>↗</b></span></span></button><button class="profile-choice emma" onclick="chooseProfile(\'Emma\')"><img class="profile-art" src="images/3d/lumi-fairy-3d.png" alt=""><span class="profile-spark">✧</span><span class="profile-copy"><span class="profile-label">Magie • Jardin enchanté</span><span class="profile-name">Emma</span><span class="profile-desc">Fées, château et animaux avec Lumi.</span><span class="profile-enter">Entrer dans mon univers <b>↗</b></span></span></button><div class="profile-footnote">🌟 Ici, pas de punition : chaque essai te fait progresser.</div></section>';
   }
+  function ensureCompanionDock(){
+    var profile=localStorage.getItem('reviseplus_currentProfile')||'';
+    var dock=document.getElementById('companionDock');
+    if(!dock){
+      dock=document.createElement('button');dock.id='companionDock';dock.type='button';
+      dock.className='companion-dock';document.body.appendChild(dock);
+    }
+    if(!profile){dock.style.display='none';return;}
+    var emma=profile==='Emma';
+    dock.style.display='flex';
+    dock.innerHTML='<img src="'+(emma?'images/3d/lumi-fairy-3d.png':'images/3d/nova-robot-3d.png')+'" alt=""><span>'+(emma?'Lumi':'Nova')+'<small>Je suis là !</small></span><b>✦</b>';
+    dock.onclick=function(){go('aventure');setTimeout(function(){if(window.Adventure)Adventure.speak();},260);};
+  }
   function go(t){
     if(t==='accueil'){
       App.saveCurrentView(); App.setTab('accueil'); home(); return;
     }
-    oldGo(t);
+    oldGo(t); setTimeout(ensureCompanionDock,50);
   }
   App.goTab=go;window.goTab=go;window.ReviseHome=home;
   var oldFinish=App.finishOnboarding;
   if(oldFinish){App.finishOnboarding=function(){oldFinish();home();};window.finishOnboarding=App.finishOnboarding;}
-  document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){if((localStorage.getItem('reviseplus_currentProfile')||'')!=='')home();else welcome();},80);});
+  document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){if((localStorage.getItem('reviseplus_currentProfile')||'')!=='')home();else welcome();ensureCompanionDock();},80);});
 })();
