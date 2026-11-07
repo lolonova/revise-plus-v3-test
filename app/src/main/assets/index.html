@@ -671,6 +671,29 @@ input[type=text],textarea{min-height:48px;line-height:1.45}
 @media(max-width:390px){.home-greeting{min-height:165px}.home-greeting img{height:160px}.home-greeting h2{font-size:1.5rem}.quest-card{min-height:132px;padding:11px}.guardian-home-img{width:60px;flex-basis:60px}.feedback-actions .btn{min-width:100%;}.home-sky{padding:17px 14px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
 
+
+/* Sélecteur de difficulté par profil */
+.difficulty-home-card{display:flex;align-items:center;gap:12px;width:100%;margin:12px 0 18px;padding:13px 15px;border-radius:21px;border:1px solid #ffffff65;background:linear-gradient(110deg,#172d58,#315b87);color:#fff;text-align:left;box-shadow:0 10px 24px #0003}
+body.theme-emma .difficulty-home-card{background:linear-gradient(110deg,#fff0f8,#e9d7ff);color:#67436e;border-color:#f4cce6}
+.difficulty-home-icon{width:48px;height:48px;display:grid;place-items:center;border-radius:15px;background:#ffffff28;font-size:1.8rem}
+.difficulty-home-copy{display:flex;flex-direction:column;gap:3px;flex:1}
+.difficulty-home-copy small{font-size:.59rem;letter-spacing:.13em;font-weight:950;opacity:.7}
+.difficulty-home-copy b{font-size:.9rem;font-weight:950}
+.difficulty-home-copy em{font-size:.7rem;font-style:normal;opacity:.78}
+.difficulty-home-card>strong{font-size:1.6rem}
+.difficulty-picker{max-width:620px;margin:18px auto}
+.difficulty-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.difficulty-option{display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-height:142px;padding:13px;border-radius:19px;border:2px solid #ffffff50;background:#ffffff13;color:inherit;text-align:left}
+.difficulty-option>span{font-size:1.8rem}
+.difficulty-option b{font-size:1rem}
+.difficulty-option small{font-size:.72rem;line-height:1.4;opacity:.8}
+.difficulty-option em{font-size:.68rem;font-style:normal;font-weight:950;color:#ffe28a}
+body.theme-emma .difficulty-option{background:#fff5fb;border-color:#efd5e8;color:#65436e}
+body.theme-emma .difficulty-option em{color:#9b568d}
+.difficulty-option.selected{border-color:#ffe28a;background:#ffffff27;box-shadow:0 0 0 3px #ffe28a30}
+body.theme-emma .difficulty-option.selected{border-color:#c18bff;background:#f9eaff;box-shadow:0 0 0 3px #c18bff30}
+@media(max-width:380px){.difficulty-options{gap:7px}.difficulty-option{padding:10px;min-height:132px}}
+
 </style>
 </head>
 <body class="theme-gabriel">
