@@ -27,7 +27,8 @@ var App = (function () {
     { id: 'serie', nom: 'Série de 5', ic: '🔥', test: function (p) { return (p.bestStreak || 0) >= 5; } },
     { id: 'parfait', nom: 'Sans faute', ic: '✨', test: function (p) { return p.perfect >= 1; } },
     { id: 'explorateur', nom: 'Explorateur', ic: '🧭', test: function (p) { return Object.keys(p.maitrise || {}).length >= 5; } },
-    { id: 'maitre', nom: 'Maître du chapitre', ic: '🎓', test: function (p) { return Object.values(p.maitrise || {}).some(function (m) { return m >= 90; }); } }
+    { id: 'maitre', nom: 'Maître du chapitre', ic: '🎓', test: function (p) { return Object.values(p.maitrise || {}).some(function (m) { return m >= 90; }); } },
+    { id: 'chasseur', nom: 'Chasseur de boss', ic: '👾', test: function (p) { return (p.bossWins || 0) >= 1; } }
   ];
   var TIPS = [
     'Relis ta fiche express juste avant de dormir : le cerveau consolide la nuit !',
@@ -44,7 +45,7 @@ var App = (function () {
     catch (e) { return fresh(); }
   }
   function fresh() {
-    return { xp: 0, niveau: 1, streak: 0, bestStreak: 0, perfect: 0, dailyDate: '', dailyChap: '', badges: [], maitrise: {}, erreurs: {}, derniers: [] };
+    return { xp: 0, niveau: 1, streak: 0, bestStreak: 0, perfect: 0, bossWins: 0, dailyDate: '', dailyChap: '', badges: [], maitrise: {}, erreurs: {}, derniers: [] };
   }
   function save(p) { localStorage.setItem(key(), JSON.stringify(p)); }
 
@@ -457,14 +458,15 @@ var App = (function () {
 
   function showQuestion() {
     var q = quiz.qs[quiz.i];
-    var html = '<div class="card"><div class="quiz-guardian"><img src="' + (state.profile === 'Emma' ? 'images/3d/lumi-fairy-3d.png' : 'images/3d/gabriel-explorer-3d.png') + '" alt=""><div><b>' + (state.profile === 'Emma' ? 'Lumi te souffle un conseil ✨' : 'Nova est à tes côtés 🤖') + '</b><span>' + (state.profile === 'Emma' ? 'Prends ton temps. Tu as le droit de réfléchir, je reste avec toi !' : 'Analyse les indices. Une erreur est juste une étape vers la réussite !') + '</span></div></div><h3><span class="em">' + quiz.c.icon + '</span>' + quiz.c.titre
+    var progressPct=Math.round((quiz.i/quiz.qs.length)*100);
+    var html = '<div class="quiz-shell '+(quiz.boss?'quiz-boss':'')+'"><div class="quiz-progress-top"><span>'+(quiz.boss?'👾 COMBAT CONTRE LE BOSS':'MISSION EN COURS')+'</span><b>Question '+(quiz.i+1)+' / '+quiz.qs.length+'</b></div><div class="quiz-progress-track"><i style="width:'+progressPct+'%"></i></div><div class="card"><div class="quiz-guardian"><img src="' + (state.profile === 'Emma' ? 'images/3d/lumi-fairy-3d.png' : 'images/3d/gabriel-explorer-3d.png') + '" alt=""><div><b>' + (state.profile === 'Emma' ? 'Lumi te souffle un conseil ✨' : 'Nova est à tes côtés 🤖') + '</b><span>' + (state.profile === 'Emma' ? 'Prends ton temps. Tu as le droit de réfléchir, je reste avec toi !' : 'Analyse les indices. Une erreur est juste une étape vers la réussite !') + '</span></div></div><h3><span class="em">' + quiz.c.icon + '</span>' + quiz.c.titre
       + ' <span style="font-size:0.75rem;opacity:0.7">' + (quiz.i + 1) + '/' + quiz.qs.length + '</span>'
       + (quiz.mode === 1 ? ' <span class="demo-tag">DÉCOUVERTE</span>' : ' <span class="demo-tag">EXPERT</span>') + '</h3>';
     html += '<p style="font-weight:700">' + q.q + '</p>';
     q.choix.forEach(function (ch, idx) {
       html += '<button class="choice" id="ch' + idx + '" onclick="answer(' + idx + ')">' + ch + '</button>';
     });
-    html += '<p id="fb" class="hidden"></p></div>';
+    html += '<p id="fb" class="hidden"></p></div></div>';
     render(html);
   }
 
@@ -508,17 +510,20 @@ var App = (function () {
 
   function showResults() {
     var pct = Math.round(100 * quiz.score / quiz.qs.length);
+    var bossWin=!!(quiz.boss && pct>=60);
     var p = load();
+    if(bossWin){p.bossWins=(p.bossWins||0)+1;save(p);}
     if (pct === 100) { p.perfect = (p.perfect || 0) + 1; save(p); }
-    p = addXP(20 + Math.round(pct / 5));
+    p = addXP(20 + Math.round(pct / 5) + (bossWin?25:0));
     if (quiz.daily) grantDaily(quiz.c.id);
-    var html = '<div class="card stat"><h3><span class="em">🏁</span>Résultat — ' + quiz.c.titre + '</h3>'
+    var html = '<div class="card stat result-card '+(bossWin?'boss-victory':'')+'"><div class="result-hero">'+(bossWin?'👑':'🏁')+'</div><h3>'+(quiz.boss?(bossWin?'Boss vaincu !':'Le boss résiste encore…'):'Mission terminée')+' — ' + quiz.c.titre + '</h3>'
       + '<span class="n">' + pct + ' %</span>'
       + '<p>' + quiz.score + ' / ' + quiz.qs.length + ' bonnes réponses</p>'
       + '<p>XP total : <b>' + p.xp + '</b> — Niveau ' + p.niveau + '</p>';
     if (pct < 50) html += '<p>💡 Relis la fiche express, puis retente : les questions ratées reviendront !</p>';
     else if (pct < 100) html += '<p>💡 Bien joué ! Passe en mode ⚡ Expert pour viser le sans-faute.</p>';
     else html += '<p>🏆 Sans faute, bravo !</p>';
+    if(quiz.boss)html+='<div class="boss-reward">'+(bossWin?'🎉 Boss vaincu : +25 XP bonus et badge Chasseur de boss !':'💪 Tu as déjà appris beaucoup. Reviens défier le boss après une petite révision.')+'</div>';
     html += '<button class="btn" onclick="startQuiz(quizMode())">🔄 Rejouer</button> '
       + '<button class="btn ghost" onclick="goTab(\'plus\');viewProgres()">📊 Mes progrès</button> '
       + '<button class="btn ghost" onclick="backToChapters()">📖 Retour au cours</button></div>';
@@ -719,7 +724,7 @@ var App = (function () {
     if(el)el.textContent=(mode===1?'🧭 ':mode===2?'⚡ ':'👾 ')+(names[mode]||'Mission sélectionnée')+'. Choisis ta matière pour commencer.';
     var card=document.querySelector('.game-chapter-card'); if(card)card.scrollIntoView({behavior:'smooth',block:'start'});
   }
-  function gameStartChapter(id,mode){ state.chap=id; var c=chapById(id); var qs=poolFor(c,mode===1?1:2); if(mode===3)qs=qs.slice(0,5); quiz={c:c,mode:mode===1?1:2,qs:qs,i:0,score:0,streak:0};pushRecent(id);showQuestion(); }
+  function gameStartChapter(id,mode){ state.chap=id; var c=chapById(id); if(!c)return; var qs=poolFor(c,mode===1?1:2); if(mode===3)qs=qs.slice(0,5); if(!qs.length){alert('Ce chapitre arrive bientôt dans les missions.');return;} quiz={c:c,mode:mode===1?1:2,qs:qs,i:0,score:0,streak:0,boss:mode===3};pushRecent(id);showQuestion(); }
   function doDailyPick(){ var mats=myMatieres().map(function(m){return m.id;});var pool=REVISE_DATA.chapitres.filter(function(c){return mats.indexOf(c.mat)!==-1&&c.niveau===state.niveau;});if(!pool.length)pool=REVISE_DATA.chapitres;var c=pool[Math.floor(Math.random()*pool.length)];doDaily(c.id); }
   function quizFromList(chapId) {
     state.chap = chapId;
