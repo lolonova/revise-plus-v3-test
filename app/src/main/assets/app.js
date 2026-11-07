@@ -537,17 +537,17 @@ var App = (function () {
     var p = load();
     if(bossWin){p.bossWins=(p.bossWins||0)+1;save(p);}
     if (pct === 100) { p.perfect = (p.perfect || 0) + 1; save(p); }
-    p = addXP(20 + Math.round(pct / 5) + (bossWin?25:0));
+    p = addXP(20 + Math.round(pct / 5) + (bossWin?25:0) + (quiz.gameType==='mega'?50:0));
     if (quiz.daily) grantDaily(quiz.c.id);
-    var html = '<div class="card stat result-card '+(bossWin?'boss-victory':'')+'"><div class="result-hero">'+(bossWin?'👑':'🏁')+'</div><h3>'+(quiz.boss?(bossWin?'Boss vaincu !':'Le boss résiste encore…'):'Mission terminée')+' — ' + quiz.c.titre + '</h3>'
+    var html = '<div class="card stat result-card '+(bossWin?'boss-victory':'')+'"><div class="result-hero">'+(quiz.gameType==='mega'?'🌟':(bossWin?'👑':'🏁'))+'</div><h3>'+(quiz.gameType==='mega'?'Méga-quiz terminé !':(quiz.boss?(bossWin?'Boss vaincu !':'Le boss résiste encore…'):'Mission terminée'))+' — ' + (quiz.gameType==='mega'?'toutes les matières':quiz.c.titre) + '</h3>'
       + '<span class="n">' + pct + ' %</span>'
       + '<p>' + quiz.score + ' / ' + quiz.qs.length + ' bonnes réponses</p>'
       + '<p>XP total : <b>' + p.xp + '</b> — Niveau ' + p.niveau + '</p>';
     if (pct < 50) html += '<p>💡 Relis la fiche express, puis retente : les questions ratées reviendront !</p>';
     else if (pct < 100) html += '<p>💡 Bien joué ! Passe en mode ⚡ Expert pour viser le sans-faute.</p>';
     else html += '<p>🏆 Sans faute, bravo !</p>';
+    if(quiz.gameType==='mega')html+='<p>🌟 Bonus Méga-quiz inclus : +50 XP !</p>';
     if(quiz.boss)html+='<div class="boss-reward">'+(bossWin?'🎉 Boss vaincu : +25 XP bonus et badge Chasseur de boss !':'💪 Tu as déjà appris beaucoup. Reviens défier le boss après une petite révision.')+'</div>';
-    if(quiz.gameType==='mega')p=addXP(50);
     html += '<button class="btn" onclick="'+(quiz.gameType==='mega'?'gameStartMega()':'gameStartChapter(\''+quiz.c.id+'\')')+'">🔄 Rejouer</button> '
       + '<button class="btn ghost" onclick="goTab(\'plus\');viewProgres()">📊 Mes progrès</button> '
       + '<button class="btn ghost" onclick="backToChapters()">📖 Retour au cours</button></div>';
@@ -765,7 +765,7 @@ var App = (function () {
     var chs=chaptersFor(c.mat,c.niveau), idx=chs.map(function(x){return x.id;}).indexOf(id), p=load();
     if(idx>0&&(p.maitrise[chs[idx-1].id]||0)<50){alert('Termine d’abord le niveau précédent pour débloquer ce chapitre.');return;}
     if(gameModeChosen==='hangman'&&['anglais','italien','francais'].indexOf(c.mat)<0){alert('Le mot mystère est réservé aux langues.');return;}
-    var all=c.quiz.concat(c.vf.map(function(v){return {q:v.q,choix:['Vrai','Faux'],bon:v.v?0:1,exp:v.exp};}));
+    var all=gameModeChosen==='hangman'?c.quiz.slice():c.quiz.concat(c.vf.map(function(v){return {q:v.q,choix:['Vrai','Faux'],bon:v.v?0:1,exp:v.exp};}));
     if(!all.length){alert('Les questions de ce chapitre arrivent bientôt.');return;}
     quiz={c:c,mode:1,qs:shuffle(all),i:0,score:0,streak:0,boss:false,gameType:gameModeChosen,chapterLevel:idx+1};
     if(gameModeChosen==='hangman')quiz.qs=quiz.qs.filter(function(q){return q.choix&&q.choix[q.bon]&&/[a-zà-ÿ]/i.test(q.choix[q.bon]);});
