@@ -539,6 +539,15 @@ body.theme-emma .quiz-guardian span{color:#775477}
 .hero-pet{z-index:2}
 .guardian-face img{object-fit:contain!important;background:#ffffff18;padding:4px}
 @media(max-width:390px){.hero-character-wrap{width:124px;height:154px;flex-basis:124px}.scene-art{width:42%}.hero-3d-image{height:190px}}
+
+.companion-dock{position:fixed;z-index:24;right:12px;bottom:14px;display:none;align-items:center;gap:7px;padding:6px 12px 6px 6px;min-height:66px;border:1px solid #ffffff88;border-radius:999px;background:linear-gradient(115deg,#10234beF,#2e5795ef);color:#fff;box-shadow:0 10px 28px #0005;backdrop-filter:blur(14px);cursor:pointer;animation:dockIn .35s ease-out}
+.companion-dock img{width:54px;height:54px;object-fit:contain;filter:drop-shadow(0 4px 6px #0005)}
+.companion-dock span{font-size:.78rem;font-weight:950;text-align:left;line-height:1.15}
+.companion-dock small{display:block;font-size:.62rem;font-weight:650;opacity:.82;margin-top:3px}
+.companion-dock>b{font-size:.9rem;color:#ffe28a;margin-left:2px}
+body.theme-emma .companion-dock{background:linear-gradient(115deg,#a4559aef,#df8bbbfa);color:#fff}
+@keyframes dockIn{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+@media(max-width:380px){.companion-dock{right:8px;bottom:9px;min-height:58px}.companion-dock img{width:46px;height:46px}}
 </style>
 </head>
 <body class="theme-gabriel">
