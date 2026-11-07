@@ -831,12 +831,45 @@ var App = (function () {
     setTab('tuteur');
     if (needProfile()) return;
     var html = '<div class="card"><h3><span class="em">🤖</span>Mon tuteur ' + (Tutor.mode() === 'IA' ? '' : '<span class="demo-tag">MODE DÉMONSTRATION</span>') + '</h3>';
-    if (Tutor.mode() !== 'IA') html += '<p style="font-size:0.8rem;opacity:0.8">En mode démo, je réponds sur quelques notions (fractions, Pythagore, atome, équations, Révolution...). Ce n\'est pas une IA : un parent peut activer le mode IA (voir Réglages).</p>';
-    html += '<div id="chatlog"></div>'
+    html += '<p style="font-size:.84rem;opacity:.82">Une notion manque ? Demande une nouvelle fiche : elle sera ajoutée à tes cours sur cet appareil.</p>';
+    html += '<label style="display:block;margin:8px 0 4px">Matière</label><select id="lessonSubject" style="width:100%;padding:11px;border-radius:10px;background:var(--bg2);color:var(--txt);border:1px solid var(--accent)">';
+    REVISE_DATA.matieres.forEach(function(m){html+='<option value="'+m.id+'">'+m.nom+'</option>';});
+    html += '</select><input type="text" id="lessonInput" placeholder="Ex. les verbes irréguliers anglais" style="width:100%;padding:12px;margin-top:8px;border-radius:10px" onkeydown="if(event.key===\'Enter\')askLesson()">';
+    html += '<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" onclick="askLesson()">✨ Créer ma fiche</button><button class="btn ghost" onclick="startLessonVoice()">🎙️ Dicter</button></div><div id="lessonStatus" style="font-size:.82rem;margin:8px 0"></div>';
+    if (Tutor.mode() !== 'IA') html += '<div class="control-advice">📚 Les nouvelles fiches déjà intégrées sont disponibles immédiatement. Pour générer et enregistrer une leçon absente, un parent doit configurer le service IA dans Réglages et mettre à jour son Worker avec la version du projet.</div>';
+    html += '<hr style="opacity:.2;margin:16px 0"><h3>💬 Poser une question</h3><div id="chatlog"></div>'
       + '<input type="text" id="chatInput" placeholder="Pose ta question de cours..." onkeydown="if(event.key===\'Enter\')askTutor()">'
       + '<button class="btn" onclick="askTutor()">Envoyer</button></div>';
     render(html);
     Tutor.history.forEach(function (m) { appendMsg(m.role, m.text); });
+  }
+  function askLesson() {
+    var input=document.getElementById('lessonInput'), topic=input&&input.value.trim();
+    if(!topic)return;
+    var subject=document.getElementById('lessonSubject');
+    var status=document.getElementById('lessonStatus');
+    if(Tutor.mode()!=='IA'){status.textContent='Cette demande est enregistrée dans l’interface, mais la création automatique nécessite le Worker IA configuré par un parent.';return;}
+    status.textContent='⏳ Préparation de ta fiche…';
+    Tutor.requestLesson(topic,state.niveau,subject?subject.value:'',function(lesson,error){
+      if(error||!lesson){status.textContent='⚠️ '+(error||'Impossible de créer la fiche.');return;}
+      var mat=subject?subject.value:'maths';
+      var id='custom-'+Date.now();
+      var saved={id:id,mat:mat,niveau:state.niveau,titre:lesson.titre,express:lesson.express,complet:lesson.complet,quiz:lesson.quiz||[],vf:lesson.vf||[]};
+      var list=[];try{list=JSON.parse(localStorage.getItem('reviseplus_custom_lessons')||'[]');}catch(e){}
+      list.push(saved);localStorage.setItem('reviseplus_custom_lessons',JSON.stringify(list));
+      REVISE_DATA.chapitres.push(saved);
+      status.innerHTML='✅ Fiche « '+String(lesson.titre).replace(/</g,'&lt;')+' » ajoutée à '+state.niveau+'. <button class="btn" onclick="openChapter(\''+id+'\')">Ouvrir la leçon</button>';
+      if(input)input.value='';
+    });
+  }
+  function startLessonVoice() {
+    var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(!SR){var s=document.getElementById('lessonStatus');if(s)s.textContent='La dictée vocale n’est pas disponible sur cet appareil. Tu peux écrire ta demande.';return;}
+    var rec=new SR();rec.lang='fr-FR';rec.interimResults=false;rec.maxAlternatives=1;
+    var s=document.getElementById('lessonStatus');if(s)s.textContent='🎙️ Je t’écoute…';
+    rec.onresult=function(e){var input=document.getElementById('lessonInput');if(input)input.value=e.results[0][0].transcript;if(s)s.textContent='Demande reconnue. Tu peux lancer la création.';};
+    rec.onerror=function(){if(s)s.textContent='Je n’ai pas réussi à reconnaître la demande. Réessaie ou écris-la.';};
+    rec.start();
   }
   function appendMsg(role, text) {
     var log = document.getElementById('chatlog');
@@ -933,7 +966,7 @@ var App = (function () {
   var pub = {
     chooseProfile: chooseProfile, setLevel: setLevel, selectSubject: selectSubject,
     openChapter: openChapter, startQuiz: startQuiz, answer: answer, goTab: goTab,
-    backToSubjects: backToSubjects, backToChapters: backToChapters, askTutor: askTutor,
+    backToSubjects: backToSubjects, backToChapters: backToChapters, askTutor: askTutor, askLesson: askLesson, startLessonVoice: startLessonVoice,
     saveGateway: saveGateway, resetProgress: resetProgress, readAloud: readAloud,
     pickImages: pickImages, onFiles: onFiles, makeFromScan: makeFromScan,
     scanAnswer: scanAnswer, handleBack: handleBack, saveCurrentView: saveCurrentView, render: render, setTab: setTab, load: load, addXP: addXP, showFull: function () { document.getElementById('fullCard').classList.remove('hidden'); },
@@ -946,7 +979,7 @@ var App = (function () {
     gameHangmanLetter:gameHangmanLetter, gameNext:gameNext, gameStartMega:gameStartMega
   };
   ['chooseProfile','setLevel','selectSubject','openChapter','startQuiz','answer','goTab','handleBack',
-   'backToSubjects','backToChapters','askTutor','saveGateway','resetProgress','readAloud',
+   'backToSubjects','backToChapters','askTutor','askLesson','startLessonVoice','saveGateway','resetProgress','readAloud',
    'showFull','pickImages','onFiles','makeFromScan','scanAnswer','doDaily','showQuestion',
    'quizMode','viewProgres','viewScan','viewPlus','switchProfile','obLevel','toggleMatiere',
    'finishOnboarding','gamePickMode','gamePickSubject','gameStartChapter','openGames','gameAnswerText','gameSpeech','gameHangmanLetter','gameNext','gameStartMega'].forEach(function (f) { window[f] = pub[f]; });
