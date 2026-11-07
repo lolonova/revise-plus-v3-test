@@ -365,21 +365,61 @@ var App = (function () {
     render(html);
   }
 
+  // Lecture pédagogique : texte nettoyé, voix française naturelle si disponible,
+  // débit ralenti et ponctuation qui laisse respirer les explications.
+  var speechRun = 0;
+  function cleanForSpeech(html) {
+    var box = document.createElement('div');
+    box.innerHTML = html || '';
+    var txt = (box.innerText || box.textContent || '').replace(/[→←↑↓↗↘▶►◆★✦✧]/g, ' ');
+    return txt
+      .replace(/\b(\d+)\s*%/g, '$1 pour cent')
+      .replace(/\s+/g, ' ')
+      .replace(/\s*([:;])\s*/g, '$1 ')
+      .replace(/\s*([.!?])\s*/g, '$1 ')
+      .trim();
+  }
+  function preferredFrenchVoice() {
+    if (!window.speechSynthesis) return null;
+    var voices = speechSynthesis.getVoices() || [];
+    var french = voices.filter(function(v) { return /^fr([-_]|$)/i.test(v.lang || ''); });
+    if (!french.length) return null;
+    var preferred = french.filter(function(v) {
+      return /google|natural|premium|enhanced|neural/i.test(v.name || '');
+    });
+    return (preferred[0] || french.filter(function(v) {
+      return /fr[-_]FR/i.test(v.lang || '');
+    })[0] || french[0]);
+  }
   function readAloud() {
     var c = chapById(state.chap);
-    var txt = c.titre + '. ' + c.express.replace(/<li>/g, ' ').replace(/<\/li>/g, '. ');
+    if (!c) return;
     stopSpeech();
-    if (window.NativeBridge) { window.NativeBridge.speak(txt); }
-    else if (window.speechSynthesis) {
-      var u = new SpeechSynthesisUtterance(txt); u.lang = 'fr-FR';
-      speechSynthesis.speak(u);
-    } else { alert('La lecture audio n\'est pas disponible.'); }
+    var txt = cleanForSpeech(c.titre) + '. Petite fiche. ' + cleanForSpeech(c.express);
     var b = document.getElementById('ttsBtn');
-    if (b) { b.textContent = '⏹ Stop'; b.onclick = stopSpeech; }
+    if (window.speechSynthesis && window.SpeechSynthesisUtterance) {
+      var run = ++speechRun;
+      var u = new SpeechSynthesisUtterance(txt);
+      u.lang = 'fr-FR';
+      u.rate = 0.84;
+      u.pitch = 1.02;
+      u.volume = 1;
+      var voice = preferredFrenchVoice();
+      if (voice) u.voice = voice;
+      u.onend = function() { if (run === speechRun && b) { b.textContent = '🔊 Écouter'; b.onclick = readAloud; } };
+      u.onerror = function() { if (run === speechRun && window.NativeBridge) window.NativeBridge.speak(txt); };
+      speechSynthesis.speak(u);
+    } else if (window.NativeBridge) {
+      window.NativeBridge.speak(txt);
+    } else {
+      alert('La lecture audio n\'est pas disponible sur cet appareil.');
+    }
+    if (b) { b.textContent = '⏹ Arrêter'; b.onclick = stopSpeech; }
   }
   function stopSpeech() {
-    if (window.NativeBridge) window.NativeBridge.stopSpeak();
+    speechRun++;
     if (window.speechSynthesis) speechSynthesis.cancel();
+    if (window.NativeBridge && window.NativeBridge.stopSpeak) window.NativeBridge.stopSpeak();
     var b = document.getElementById('ttsBtn');
     if (b) { b.textContent = '🔊 Écouter'; b.onclick = readAloud; }
   }
