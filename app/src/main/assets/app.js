@@ -434,7 +434,7 @@ var App = (function () {
     document.getElementById('ch' + q.bon).classList.add('right');
     if (!ok) document.getElementById('ch' + idx).classList.add('wrong');
     fb.classList.remove('hidden');
-    fb.innerHTML = ok ? '✅ Bravo ! ' + (q.exp || '') : '❌ ' + (q.exp || 'Réponse : ' + q.choix[q.bon]);
+    fb.innerHTML = '<div class="answer-feedback '+(ok?'feedback-good':'feedback-wrong')+'">'+(ok?'✨ Bien joué !':'💡 On apprend aussi en se trompant !')+'<div class="feedback-explain">'+(q.exp || ('La bonne réponse est : '+q.choix[q.bon]))+'</div><div class="feedback-actions"><button class="btn ghost small" onclick="quizAskWhy()">🤔 Je veux comprendre</button><button class="btn small" onclick="quizNext()">J’ai compris · Suivant →</button></div></div>';
     for (var k = 0; k < q.choix.length; k++) document.getElementById('ch' + k).onclick = null;
     var p = load();
     if (ok) {
@@ -450,10 +450,19 @@ var App = (function () {
       setMaitrise(quiz.c.id, quiz.mode === 1 ? -8 : -12);
       recordError(quiz.c.id, q.q);
     }
-    setTimeout(function () {
-      quiz.i++;
-      if (quiz.i < quiz.qs.length) showQuestion(); else showResults();
-    }, 1500);
+    // Le feedback reste affiché jusqu'à ce que l'enfant décide de continuer.
+    quiz.waitingNext = true;
+  }
+  function quizNext(){
+    if(!quiz || !quiz.waitingNext)return;
+    quiz.waitingNext=false; quiz.i++;
+    if(quiz.i<quiz.qs.length)showQuestion();else showResults();
+  }
+  function quizAskWhy(){
+    var q=quiz.qs[quiz.i], txt='Peux-tu m’expliquer simplement cette question : '+q.q+' La correction est : '+(q.exp||q.choix[q.bon]);
+    goTab('tuteur');
+    setTimeout(function(){var inp=document.getElementById('chatInput');if(inp){inp.value=txt;inp.focus();}},120);
+  }
   }
 
   function showResults() {
