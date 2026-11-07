@@ -2342,3 +2342,13 @@ var REVISE_DATA = {
     ['« Je veux le voir » :',['Voglio lo vedere','Voglio vederlo','Lo voglio vedere seulement interdit'],1,'Le pronom peut s’attacher à l’infinitif.']
   ],[['« La vedo » signifie « je la vois ».',true,'La est le pronom direct féminin.'],['« Gli » remplace toujours un complément direct féminin.',false,'Gli est généralement indirect masculin singulier.']]);
 })();
+
+/* Recharge les fiches personnelles créées par le tuteur sur cet appareil. */
+try {
+  var rpSavedLessons = JSON.parse(localStorage.getItem('reviseplus_custom_lessons') || '[]');
+  rpSavedLessons.forEach(function (lesson) {
+    if (lesson && lesson.id && lesson.titre && !REVISE_DATA.chapitres.some(function (x) { return x.id === lesson.id; })) {
+      REVISE_DATA.chapitres.push(lesson);
+    }
+  });
+} catch (e) { console.warn('Fiches personnelles non rechargeables', e); }
