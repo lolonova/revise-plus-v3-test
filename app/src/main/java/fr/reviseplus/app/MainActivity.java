@@ -19,7 +19,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+import java.util.Locale;\nimport org.json.JSONObject;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
@@ -50,6 +50,22 @@ public class MainActivity extends AppCompatActivity {
         webView.addJavascriptInterface(new NativeBridge(), "NativeBridge");
         webView.setWebViewClient(new WebViewClient());
         webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onConsoleMessage(android.webkit.ConsoleMessage message) {
+                final String detail = message.message() + " (ligne " + message.lineNumber()
+                        + ", " + message.sourceId() + ")";
+                runOnUiThread(() -> webView.evaluateJavascript(
+                        "(function(){var d=document.getElementById('rp-native-diagnostic');"
+                        + "if(!d){d=document.createElement('div');d.id='rp-native-diagnostic';"
+                        + "d.style.cssText='position:fixed;z-index:1000000;left:10px;right:10px;bottom:10px;"
+                        + "max-height:42vh;overflow:auto;padding:14px;border-radius:14px;"
+                        + "background:#211b35;color:#fff;font:13px/1.45 sans-serif;white-space:pre-wrap';"
+                        + "document.body.appendChild(d);}"
+                        + "d.textContent='DIAGNOSTIC WEBVIEW\\n'+"
+                        + JSONObject.quote(detail) + ";})()", null));
+                return true;
+            }
+
             @Override
             public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> callback,
                                              FileChooserParams params) {
