@@ -19,7 +19,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;\nimport org.json.JSONObject;
+import java.util.Locale;
+import org.json.JSONObject;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
