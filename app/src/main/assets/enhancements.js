@@ -56,7 +56,7 @@
     }
     var a=api(); var fn=oldGo||(a&&a.goTab); if(typeof fn==='function')fn.call(a,t); setTimeout(ensureCompanionDock,50);
   }
-  var initialApi=api(); if(initialApi)initialApi.goTab=go; window.goTab=go;window.ReviseHome=home;
+  window.goTab=go;window.ReviseHome=home;
   var oldChoose=window.chooseProfile;
   if(oldChoose){window.chooseProfile=function(name){oldChoose(name);setTimeout(ensureCompanionDock,90);};}
   var initialApi2=api(); var oldFinish=initialApi2&&initialApi2.finishOnboarding;
