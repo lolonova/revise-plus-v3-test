@@ -366,6 +366,37 @@ body.theme-emma .skill-row{background:#fff8fb}
 @media(prefers-reduced-motion:reduce){.future-screen *{scroll-behavior:auto!important;transition:none!important}}
 
 .fx-global{width:38px;height:38px;border-radius:13px;border:1px solid #ffffff55;background:#ffffff1b;color:inherit;font-size:1.15rem;font-weight:900;margin-left:auto;box-shadow:0 0 15px #7deaff28}
+
+/* Révise+ premium visual system — profile-first */
+:root{--radius-xl:28px;--glass:rgba(255,255,255,.08)}
+body{background-attachment:fixed;letter-spacing:.08px}
+.card{border-radius:24px;padding:17px;transition:transform .2s,box-shadow .2s}
+.banner{padding:12px 16px;min-height:76px}
+.logo{border-radius:15px;background:linear-gradient(145deg,#fff1a8,#ffb64d);color:#25305e;box-shadow:0 8px 20px #0003}
+.btn,.big-cta{border-radius:16px;min-height:46px}
+.profile-select{position:relative;overflow:hidden;border-radius:30px;padding:0;margin:18px 0;background:#101936;border:1px solid #ffffff26;box-shadow:0 18px 42px #0004}
+.profile-select-head{padding:22px 20px 14px;color:white;background:radial-gradient(circle at 90% 0%,#8daaff66,transparent 42%),linear-gradient(145deg,#111a3d,#243c83)}
+.profile-select-head .eyebrow{font-size:.72rem;letter-spacing:2px;text-transform:uppercase;font-weight:900;opacity:.8}
+.profile-select-head h2{font-size:1.55rem;margin:8px 0 6px;line-height:1.12}
+.profile-select-head p{margin:0;opacity:.82;font-size:.9rem;line-height:1.45}
+.profile-choice{display:block;width:calc(100% - 24px);margin:12px;border:1px solid #ffffff28;border-radius:24px;overflow:hidden;position:relative;text-align:left;padding:0;color:white;min-height:190px;background:#18244b;box-shadow:0 10px 24px #0003;cursor:pointer}
+.profile-choice:active{transform:scale(.985)}
+.profile-choice .profile-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 24%;opacity:.82;transition:transform .4s}
+.profile-choice:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,13,32,.94) 0%,rgba(7,13,32,.66) 48%,rgba(7,13,32,.08) 100%),linear-gradient(0deg,#07102088,transparent 65%)}
+.profile-choice .profile-copy{position:relative;z-index:1;display:flex;flex-direction:column;align-items:flex-start;padding:20px;min-height:190px;justify-content:flex-end}
+.profile-choice .profile-label{font-size:.68rem;letter-spacing:1.8px;text-transform:uppercase;font-weight:900;opacity:.82}
+.profile-choice .profile-name{font-size:1.65rem;font-weight:950;line-height:1.1;margin:5px 0}
+.profile-choice .profile-desc{font-size:.82rem;max-width:70%;line-height:1.35;opacity:.92}
+.profile-choice .profile-enter{margin-top:12px;display:inline-flex;align-items:center;gap:8px;padding:9px 13px;border-radius:999px;background:#ffffff20;border:1px solid #ffffff60;font-size:.8rem;font-weight:800;backdrop-filter:blur(8px)}
+.profile-choice.gabriel{background:linear-gradient(135deg,#11214e,#17658a)}
+.profile-choice.emma{background:linear-gradient(135deg,#78447f,#d47eaf)}
+.profile-choice.emma:after{background:linear-gradient(90deg,rgba(55,25,73,.88),rgba(55,25,73,.45) 48%,rgba(55,25,73,.04)),linear-gradient(0deg,#4b235b55,transparent 65%)}
+.profile-choice .profile-spark{position:absolute;z-index:1;right:17px;top:14px;font-size:1.2rem;text-shadow:0 0 18px #fff}
+.profile-footnote{padding:2px 20px 18px;text-align:center;color:#ffffff9b;font-size:.76rem}
+body.theme-emma .profile-select{background:#fff;border-color:#ffcde2;box-shadow:0 16px 38px #b75c9b18}
+body.theme-emma .profile-select-head{background:radial-gradient(circle at 90% 0%,#fff7c8,transparent 42%),linear-gradient(145deg,#a96dc1,#e69ac5);color:#fff}
+body.theme-emma .profile-footnote{color:#8e6c91}
+@media(min-width:520px){.profile-choice{min-height:230px}.profile-choice .profile-copy{min-height:230px;padding:24px}.profile-choice .profile-name{font-size:1.9rem}}
 </style>
 </head>
 <body class="theme-gabriel">
