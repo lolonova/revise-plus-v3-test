@@ -457,7 +457,7 @@ var App = (function () {
 
   function showQuestion() {
     var q = quiz.qs[quiz.i];
-    var html = '<div class="card"><h3><span class="em">' + quiz.c.icon + '</span>' + quiz.c.titre
+    var html = '<div class="card"><div class="quiz-guardian"><img src="' + (state.profile === 'Emma' ? 'images/3d/lumi-fairy-3d.png' : 'images/3d/gabriel-explorer-3d.png') + '" alt=""><div><b>' + (state.profile === 'Emma' ? 'Lumi te souffle un conseil ✨' : 'Nova est à tes côtés 🤖') + '</b><span>' + (state.profile === 'Emma' ? 'Prends ton temps. Tu as le droit de réfléchir, je reste avec toi !' : 'Analyse les indices. Une erreur est juste une étape vers la réussite !') + '</span></div></div><h3><span class="em">' + quiz.c.icon + '</span>' + quiz.c.titre
       + ' <span style="font-size:0.75rem;opacity:0.7">' + (quiz.i + 1) + '/' + quiz.qs.length + '</span>'
       + (quiz.mode === 1 ? ' <span class="demo-tag">DÉCOUVERTE</span>' : ' <span class="demo-tag">EXPERT</span>') + '</h3>';
     html += '<p style="font-weight:700">' + q.q + '</p>';
@@ -698,7 +698,7 @@ var App = (function () {
       + '<button class="game-mode mode-speed" onclick="gamePickChapter(2)"><span class="game-art">⚡</span><b>Défi éclair</b><small>Enchaîne les bonnes réponses · XP bonus</small><span class="game-launch">Jouer ↗</span></button>'
       + '<button class="game-mode mode-boss" onclick="gamePickChapter(3)"><span class="game-art">👾</span><b>Boss du savoir</b><small>5 questions pour vaincre le boss</small><span class="game-launch">Jouer ↗</span></button>'
       + '<button class="game-mode mode-daily" onclick="doDailyPick()"><span class="game-art">🎯</span><b>Défi quotidien</b><small>Une mission spéciale, chaque jour</small><span class="game-launch">+30 XP ↗</span></button></div>';
-    html += '<div class="section-title">Choisis ta planète de connaissances</div><div class="card game-chapter-card"><p class="game-intro">Sélectionne une matière puis un chapitre : le jeu démarre directement.</p>';
+    html += '<div class="section-title">Choisis ta planète de connaissances</div><div class="card game-chapter-card"><div id="gameModeStatus" class="game-mode-status">🧭 Mode sélectionné : Mission découverte — choisis une matière pour commencer.</div><p class="game-intro">Chaque matière est une planète. Choisis ton parcours, puis lance ta mission.</p>';
     myMatieres().forEach(function(m){
       var chs=chaptersFor(m.id,state.niveau); if(!chs.length)return;
       html+='<div class="game-subject"><h3>'+m.icon+' '+m.nom+'</h3><div class="game-chapters">';
@@ -709,7 +709,16 @@ var App = (function () {
     render(html); updateChip();
   }
   var gameModeChosen = 1;
-  function gamePickChapter(mode){ gameModeChosen=mode; var el=document.querySelector('.game-chapter-card'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); }
+  function gamePickChapter(mode){
+    gameModeChosen=mode;
+    document.querySelectorAll('.game-mode').forEach(function(b){b.classList.remove('selected');});
+    var buttons=document.querySelectorAll('.game-mode');
+    if(buttons[mode-1])buttons[mode-1].classList.add('selected');
+    var names={1:'Mission découverte — apprendre sans pression',2:'Défi éclair — répondre avec énergie',3:'Boss du savoir — cinq questions pour le boss'};
+    var el=document.getElementById('gameModeStatus');
+    if(el)el.textContent=(mode===1?'🧭 ':mode===2?'⚡ ':'👾 ')+(names[mode]||'Mission sélectionnée')+'. Choisis ta matière pour commencer.';
+    var card=document.querySelector('.game-chapter-card'); if(card)card.scrollIntoView({behavior:'smooth',block:'start'});
+  }
   function gameStartChapter(id,mode){ state.chap=id; var c=chapById(id); var qs=poolFor(c,mode===1?1:2); if(mode===3)qs=qs.slice(0,5); quiz={c:c,mode:mode===1?1:2,qs:qs,i:0,score:0,streak:0};pushRecent(id);showQuestion(); }
   function doDailyPick(){ var mats=myMatieres().map(function(m){return m.id;});var pool=REVISE_DATA.chapitres.filter(function(c){return mats.indexOf(c.mat)!==-1&&c.niveau===state.niveau;});if(!pool.length)pool=REVISE_DATA.chapitres;var c=pool[Math.floor(Math.random()*pool.length)];doDaily(c.id); }
   function quizFromList(chapId) {
