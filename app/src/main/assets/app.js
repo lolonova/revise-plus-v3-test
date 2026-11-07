@@ -695,7 +695,7 @@ var App = (function () {
     html += '<div class="game-mode-grid">'
       + '<button class="game-mode mode-quest" onclick="gamePickChapter(1)"><span class="game-art">🗺️</span><b>Mission découverte</b><small>Apprendre sans pression · questions courtes</small><span class="game-launch">Jouer ↗</span></button>'
       + '<button class="game-mode mode-speed" onclick="gamePickChapter(2)"><span class="game-art">⚡</span><b>Défi éclair</b><small>Enchaîne les bonnes réponses · XP bonus</small><span class="game-launch">Jouer ↗</span></button>'
-      + '<button class="game-mode mode-boss" onclick="gamePickChapter(2)"><span class="game-art">👾</span><b>Boss du savoir</b><small>5 questions pour vaincre le boss</small><span class="game-launch">Jouer ↗</span></button>'
+      + '<button class="game-mode mode-boss" onclick="gamePickChapter(3)"><span class="game-art">👾</span><b>Boss du savoir</b><small>5 questions pour vaincre le boss</small><span class="game-launch">Jouer ↗</span></button>'
       + '<button class="game-mode mode-daily" onclick="doDailyPick()"><span class="game-art">🎯</span><b>Défi quotidien</b><small>Une mission spéciale, chaque jour</small><span class="game-launch">+30 XP ↗</span></button></div>';
     html += '<div class="section-title">Choisis ta planète de connaissances</div><div class="card game-chapter-card"><p class="game-intro">Sélectionne une matière puis un chapitre : le jeu démarre directement.</p>';
     myMatieres().forEach(function(m){
