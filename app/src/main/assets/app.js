@@ -398,7 +398,10 @@ var App = (function () {
     stopSpeech();
     var txt = cleanForSpeech(c.titre) + '. Petite fiche. ' + cleanForSpeech(c.express);
     var b = document.getElementById('ttsBtn');
-    if (window.speechSynthesis && window.SpeechSynthesisUtterance) {
+    if (window.NativeBridge) {
+      // Sur Android, utiliser le moteur natif réglé sur une voix française plus posée.
+      window.NativeBridge.speak(txt);
+    } else if (window.speechSynthesis && window.SpeechSynthesisUtterance) {
       var run = ++speechRun;
       var u = new SpeechSynthesisUtterance(txt);
       u.lang = 'fr-FR';
@@ -408,10 +411,7 @@ var App = (function () {
       var voice = preferredFrenchVoice();
       if (voice) u.voice = voice;
       u.onend = function() { if (run === speechRun && b) { b.textContent = '🔊 Écouter'; b.onclick = readAloud; } };
-      u.onerror = function() { if (run === speechRun && window.NativeBridge) window.NativeBridge.speak(txt); };
       speechSynthesis.speak(u);
-    } else if (window.NativeBridge) {
-      window.NativeBridge.speak(txt);
     } else {
       alert('La lecture audio n\'est pas disponible sur cet appareil.');
     }
