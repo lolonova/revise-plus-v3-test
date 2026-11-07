@@ -1,3 +1,5 @@
+/* Diagnostic ciblé : capturer toute exception pendant la construction du moteur App. */
+try {
 /* Révise+ V6 — Logique applicative (design "dashboard" inspiré des maquettes)
    Progression par profil dans localStorage (reviseplus_<profil>). */
 
@@ -951,3 +953,13 @@ var App = (function () {
 })();
 
 document.addEventListener('DOMContentLoaded', App.init);
+
+} catch (e) {
+  var detail = (e && (e.stack || e.message)) ? (e.stack || e.message) : String(e);
+  window.__RP_APP_BOOT_ERROR__ = detail;
+  console.error('ERREUR FATALE app.js : ' + detail);
+  var panel = document.getElementById('rp-diagnostic');
+  if (!panel) { panel = document.createElement('div'); panel.id = 'rp-diagnostic'; panel.style.cssText = 'position:fixed;z-index:999999;inset:150px 10px auto;padding:16px;border-radius:14px;background:#fff1f0;color:#641b16;font:13px/1.45 monospace;max-height:70vh;overflow:auto'; document.body.appendChild(panel); }
+  panel.innerHTML = '<b>Erreur précise dans app.js</b><br><pre style="white-space:pre-wrap;overflow-wrap:anywhere"></pre>';
+  panel.querySelector('pre').textContent = detail;
+}
