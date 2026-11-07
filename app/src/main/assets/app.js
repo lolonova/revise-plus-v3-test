@@ -645,7 +645,7 @@ var App = (function () {
   }
   var gameModeChosen = 1;
   function gamePickChapter(mode){ gameModeChosen=mode; var el=document.querySelector('.game-chapter-card'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); }
-  function gameStartChapter(id,mode){ state.chap=id; var c=chapById(id); var qs=poolFor(c,mode); if(mode===3)qs=qs.slice(0,5); quiz={c:c,mode:mode===1?1:2,qs:qs,i:0,score:0,streak:0};pushRecent(id);showQuestion(); }
+  function gameStartChapter(id,mode){ state.chap=id; var c=chapById(id); var qs=poolFor(c,mode===1?1:2); if(mode===3)qs=qs.slice(0,5); quiz={c:c,mode:mode===1?1:2,qs:qs,i:0,score:0,streak:0};pushRecent(id);showQuestion(); }
   function doDailyPick(){ var mats=myMatieres().map(function(m){return m.id;});var pool=REVISE_DATA.chapitres.filter(function(c){return mats.indexOf(c.mat)!==-1&&c.niveau===state.niveau;});if(!pool.length)pool=REVISE_DATA.chapitres;var c=pool[Math.floor(Math.random()*pool.length)];doDaily(c.id); }
   function quizFromList(chapId) {
     state.chap = chapId;
