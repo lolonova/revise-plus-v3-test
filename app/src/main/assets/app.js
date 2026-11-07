@@ -2,6 +2,20 @@
    Progression par profil dans localStorage (reviseplus_<profil>). */
 
 var App = (function () {
+  // Audio Révise+ : petits sons synthétiques + ambiance musicale facultative
+  var AudioFX=(function(){
+    var ctx=null, musicOn=localStorage.getItem('rp_music')==='1', timer=null, step=0;
+    function audio(){if(!ctx){var C=window.AudioContext||window.webkitAudioContext;if(C)ctx=new C();}if(ctx&&ctx.state==='suspended')ctx.resume();return ctx;}
+    function tone(freq,dur,type,vol,delay){var c=audio();if(!c)return;var o=c.createOscillator(),g=c.createGain();o.type=type||'sine';o.frequency.value=freq;g.gain.setValueAtTime(.0001,c.currentTime+(delay||0));g.gain.exponentialRampToValueAtTime(vol||.04,c.currentTime+(delay||0)+.025);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+(delay||0)+dur);o.connect(g);g.connect(c.destination);o.start(c.currentTime+(delay||0));o.stop(c.currentTime+(delay||0)+dur+.04);}
+    function fx(ok){if(ok){tone(660,.16,'sine',.07);tone(880,.22,'sine',.045,.11);tone(1046,.3,'sine',.035,.22);}else{tone(240,.2,'triangle',.045);tone(190,.25,'triangle',.03,.13);}}
+    var notes=[392,494,587,494,440,523,659,523,349,440,523,440];
+    function tick(){if(!musicOn)return;var n=notes[step++%notes.length];tone(n,.85,'sine',.012);tone(n/2,.95,'triangle',.008,.02);timer=setTimeout(tick,1250);}
+    function set(on){musicOn=!!on;localStorage.setItem('rp_music',musicOn?'1':'0');var b=document.getElementById('musicToggle');if(b){b.textContent=musicOn?'♫':'♪';b.classList.toggle('music-on',musicOn);b.setAttribute('aria-label',musicOn?'Couper la musique':'Activer la musique');}if(timer){clearTimeout(timer);timer=null;}if(musicOn){audio();tick();}}
+    function toggle(){set(!musicOn);}
+    function init(){var b=document.getElementById('musicToggle');if(b)b.onclick=toggle;set(musicOn);}
+    return {fx:fx,init:init,toggle:toggle};
+  })();
+
   var state = { profile: null, niveau: '5e', mat: null, chap: null, tab: 'accueil' };
   var quiz = null;
   var navHistory = [];
@@ -728,7 +742,7 @@ var App = (function () {
     var backBtn = document.getElementById('backBtn'); if (backBtn) backBtn.onclick = handleBack;
     document.getElementById('drawerClose').onclick = closeDrawer;
     document.getElementById('overlay').onclick = closeDrawer;
-    document.getElementById('switchProfileBtn').onclick = switchProfile;
+    document.getElementById('switchProfileBtn').onclick = switchProfile;\n    AudioFX.init();
     var cur = localStorage.getItem('reviseplus_currentProfile');
     if (cur === 'Gabriel' || cur === 'Emma') {
       state.niveau = localStorage.getItem('reviseplus_niveau_' + cur) || '5e';
