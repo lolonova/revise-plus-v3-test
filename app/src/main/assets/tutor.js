@@ -84,5 +84,21 @@ var Tutor = (function () {
       });
   }
 
-  return { mode: mode, setGateway: setGateway, send: send, history: history };
+
+  function requestLesson(topic, niveau, matiere, cb) {
+    if (isDemo || !gatewayURL) {
+      cb(null, "La création automatique d’une nouvelle fiche nécessite le service IA configuré par un parent. Les fiches déjà présentes restent accessibles hors connexion.");
+      return;
+    }
+    fetch(gatewayURL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'lesson', question: topic, niveau: niveau || '4e', matiere: matiere || 'matière scolaire' })
+    }).then(function (r) { return r.json(); }).then(function (d) {
+      if (!d.lesson) { cb(null, d.error || "La fiche n’a pas pu être créée."); return; }
+      cb(d.lesson, null);
+    }).catch(function () { cb(null, "Impossible de joindre le service. Vérifie la connexion et l’adresse du Worker."); });
+  }
+
+  return { mode: mode, setGateway: setGateway, send: send, requestLesson: requestLesson, history: history };
 })();
