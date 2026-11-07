@@ -215,6 +215,15 @@ var App = (function () {
     viewAccueil();
   }
 
+
+  // Difficulté commune à tous les jeux, mémorisée séparément pour chaque profil.
+  var GAME_DIFFICULTIES={beginner:{name:'Débutant',icon:'🌱',desc:'Questions les plus accessibles.',ratio:.68},normal:{name:'Normal',icon:'🎯',desc:'Difficulté attendue pour la classe.',ratio:.82},advanced:{name:'Avancé',icon:'⚡',desc:'Questions plus exigeantes.',ratio:.72},expert:{name:'Expert',icon:'🔥',desc:'Questions les plus difficiles disponibles.',ratio:.58}};
+  function getGameDifficulty(){var v=state.profile?localStorage.getItem('reviseplus_game_difficulty_'+state.profile):null;return GAME_DIFFICULTIES[v]?v:'normal';}
+  function setGameDifficulty(v){if(!GAME_DIFFICULTIES[v]||!state.profile)return;localStorage.setItem('reviseplus_game_difficulty_'+state.profile,v);viewAccueil();}
+  function openDifficultyPicker(){var current=getGameDifficulty(),html='<div class="card difficulty-picker"><h3>🎚️ Choisis ton défi</h3><p>Ce réglage s’applique à tous les jeux de ce profil.</p><div class="difficulty-options">';Object.keys(GAME_DIFFICULTIES).forEach(function(k){var d=GAME_DIFFICULTIES[k];html+='<button class="difficulty-option '+(k===current?'selected':'')+'" onclick="setGameDifficulty(\''+k+'\')"><span>'+d.icon+'</span><b>'+d.name+'</b><small>'+d.desc+'</small>'+(k===current?'<em>✓ Sélectionné</em>':'')+'</button>';});html+='</div><button class="btn ghost" onclick="viewAccueil()">Fermer</button></div>';render(html);}
+  function questionComplexity(q){var t=String(q.q||''),a=String((q.choix||[])[q.bon]||''),e=String(q.exp||''),n=Math.min(10,t.length/34)+Math.min(5,a.length/12)+Math.min(4,e.length/70);if(/[0-9].*[+−×÷=²√]|[+−×÷=²√].*[0-9]/.test(t))n+=2;if(/pourquoi|justifier|démontrer|explique|calculer|déduire|comparer|conclure/i.test(t))n+=2;if((q.choix||[]).length>=4)n+=1;return n;}
+  function questionsForDifficulty(list){var d=getGameDifficulty(),cfg=GAME_DIFFICULTIES[d],ranked=list.slice().sort(function(a,b){return questionComplexity(a)-questionComplexity(b);});if(d==='normal')return shuffle(ranked);var count=Math.max(3,Math.ceil(ranked.length*cfg.ratio)),chosen=d==='beginner'?ranked.slice(0,count):ranked.slice(Math.max(0,ranked.length-count));return shuffle(chosen.length>=3?chosen:ranked);}
+
   // ================= ACCUEIL =================
   function viewAccueil() {
     setTab('accueil');
@@ -233,6 +242,8 @@ var App = (function () {
       + '<div class="cls">' + pct + ' % de progression</div></div>'
       + '<div class="ring" style="--p:' + pct + '%"><span>' + pct + '%</span></div></div>';
     html += '<button class="big-cta" onclick="goTab(\'cours\')">Reprendre mes révisions ➜</button>';
+    var diff=getGameDifficulty(), diffNames={beginner:'Débutant',normal:'Normal',advanced:'Avancé',expert:'Expert'};
+    html += '<button class="difficulty-home-card" onclick="openDifficultyPicker()"><span class="difficulty-home-icon">🎚️</span><span class="difficulty-home-copy"><small>RÉGLAGE DES JEUX</small><b>Difficulté : '+diffNames[diff]+'</b><em>Choisir le niveau des questions</em></span><strong>›</strong></button>';
     // Derniers chapitres
     html += '<div class="card"><h3><span class="em">🕐</span>Mes derniers chapitres</h3>';
     if (p.derniers && p.derniers.length) {
@@ -766,6 +777,7 @@ var App = (function () {
     if(idx>0&&(p.maitrise[chs[idx-1].id]||0)<50){alert('Termine d’abord le niveau précédent pour débloquer ce chapitre.');return;}
     if(gameModeChosen==='hangman'&&['anglais','italien','francais'].indexOf(c.mat)<0){alert('Le mot mystère est réservé aux langues.');return;}
     var all=gameModeChosen==='hangman'?c.quiz.slice():c.quiz.concat(c.vf.map(function(v){return {q:v.q,choix:['Vrai','Faux'],bon:v.v?0:1,exp:v.exp};}));
+    all=questionsForDifficulty(all);
     if(!all.length){alert('Les questions de ce chapitre arrivent bientôt.');return;}
     quiz={c:c,mode:1,qs:shuffle(all),i:0,score:0,streak:0,boss:false,gameType:gameModeChosen,chapterLevel:idx+1};
     if(gameModeChosen==='hangman')quiz.qs=quiz.qs.filter(function(q){return q.choix&&q.choix[q.bon]&&/[a-zà-ÿ]/i.test(q.choix[q.bon]);});
@@ -782,6 +794,7 @@ var App = (function () {
     });
     var pool=[];
     unlocked.forEach(function(c){c.quiz.forEach(function(q){pool.push(Object.assign({},q,{_chapter:c}));});});
+    pool=questionsForDifficulty(pool);
     if(pool.length<3){alert('Débloque quelques chapitres pour lancer le Méga-quiz !');return;}
     var first=unlocked[0]; quiz={c:first,mode:2,qs:shuffle(pool).slice(0,12),i:0,score:0,streak:0,boss:false,gameType:'mega',mega:true};
     showQuestion();
@@ -920,7 +933,7 @@ var App = (function () {
     viewProgres: viewProgres, viewScan: viewScan, viewPlus: viewPlus, init: init,
     switchProfile: switchProfile, closeDrawer: closeDrawer,
     obLevel: obLevel, toggleMatiere: toggleMatiere, finishOnboarding: finishOnboarding,
-    quizFromList: quizFromList, gamePickMode:gamePickMode, gamePickSubject:gamePickSubject,
+    quizFromList: quizFromList, gamePickMode:gamePickMode, gamePickSubject:gamePickSubject, setGameDifficulty:setGameDifficulty, openDifficultyPicker:openDifficultyPicker,
     gameStartChapter:gameStartChapter, gameAnswerText:gameAnswerText, gameSpeech:gameSpeech,
     gameHangmanLetter:gameHangmanLetter, gameNext:gameNext, gameStartMega:gameStartMega
   };
@@ -928,7 +941,7 @@ var App = (function () {
    'backToSubjects','backToChapters','askTutor','saveGateway','resetProgress','readAloud',
    'showFull','pickImages','onFiles','makeFromScan','scanAnswer','doDaily','showQuestion',
    'quizMode','viewProgres','viewScan','viewPlus','switchProfile','obLevel','toggleMatiere',
-   'finishOnboarding','quizFromList','gamePickMode','gamePickSubject','gameStartChapter','gameAnswerText','gameSpeech','gameHangmanLetter','gameNext','gameStartMega'].forEach(function (f) { window[f] = pub[f]; });
+   'finishOnboarding','quizFromList','gamePickMode','gamePickSubject','setGameDifficulty','openDifficultyPicker','gameStartChapter','gameAnswerText','gameSpeech','gameHangmanLetter','gameNext','gameStartMega'].forEach(function (f) { window[f] = pub[f]; });
   return pub;
 })();
 
