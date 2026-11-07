@@ -888,24 +888,42 @@ var App = (function () {
     if (t === 'plus') { viewPlus(); return; }
   }
   function init() {
-    document.querySelectorAll('#drawer nav button').forEach(function (b) {
-      b.onclick = function () { goTab(b.dataset.tab); };
-    });
-    document.getElementById('menuBtn').onclick = openDrawer;
-    var backBtn = document.getElementById('backBtn'); if (backBtn) backBtn.onclick = handleBack;
-    document.getElementById('drawerClose').onclick = closeDrawer;
-    document.getElementById('overlay').onclick = closeDrawer;
-    document.getElementById('switchProfileBtn').onclick = switchProfile;
-    AudioFX.init();
-    var cur = localStorage.getItem('reviseplus_currentProfile');
-    if (cur === 'Gabriel' || cur === 'Emma') {
-      state.niveau = localStorage.getItem('reviseplus_niveau_' + cur) || '5e';
-      state.profile = cur;
-      document.body.className = cur === 'Emma' ? 'theme-emma' : 'theme-gabriel';
-      document.querySelector('.logo').textContent = cur === 'Emma' ? '🐱' : '🚀';
-      viewAccueil();
-    } else {
-      viewWelcome();
+    try {
+      document.querySelectorAll('#drawer nav button').forEach(function (b) {
+        b.onclick = function () { goTab(b.dataset.tab); };
+      });
+      var menu=document.getElementById('menuBtn'); if(menu) menu.onclick = openDrawer;
+      var backBtn = document.getElementById('backBtn'); if (backBtn) backBtn.onclick = handleBack;
+      var dc=document.getElementById('drawerClose'); if(dc) dc.onclick = closeDrawer;
+      var ov=document.getElementById('overlay'); if(ov) ov.onclick = closeDrawer;
+      var sw=document.getElementById('switchProfileBtn'); if(sw) sw.onclick = switchProfile;
+      try { AudioFX.init(); } catch(audioError) { console.warn('Audio désactivé au démarrage', audioError); }
+      var cur = localStorage.getItem('reviseplus_currentProfile');
+      if (cur === 'Gabriel' || cur === 'Emma') {
+        state.niveau = localStorage.getItem('reviseplus_niveau_' + cur) || '5e';
+        state.profile = cur;
+        document.body.className = cur === 'Emma' ? 'theme-emma' : 'theme-gabriel';
+        var logo=document.querySelector('.logo'); if(logo) logo.textContent = cur === 'Emma' ? '🐱' : '🚀';
+        try { viewAccueil(); } catch(homeError) {
+          console.error('Erreur accueil Révise+', homeError);
+          state.profile = null;
+          viewWelcome();
+          var note=document.createElement('div');
+          note.className='card'; note.style.cssText='margin:12px;padding:14px;background:#fff3cd;color:#624b00';
+          note.textContent='Un élément de ton ancien écran d’accueil pose problème. Tes progrès sont conservés. Choisis ton profil pour continuer.';
+          var view=document.getElementById('view'); if(view) view.insertBefore(note,view.firstChild);
+        }
+      } else {
+        viewWelcome();
+      }
+    } catch (bootError) {
+      console.error('Erreur démarrage Révise+', bootError);
+      var view=document.getElementById('view');
+      if(view) {
+        view.innerHTML='<section style="padding:20px;color:#fff"><h2>On relance Révise+ 🚀</h2><p>Le démarrage a rencontré un petit souci. Tes progrès ne sont pas effacés.</p><button id="rpRetry" style="padding:14px;border:0;border-radius:12px;background:#58c7f5;color:#08203c;font-weight:bold">Réessayer</button><button id="rpProfiles" style="padding:14px;margin:8px 0;border:0;border-radius:12px;background:#ffd36b;color:#332400;font-weight:bold">Choisir un profil</button></section>';
+        var retry=document.getElementById('rpRetry'); if(retry) retry.onclick=function(){location.reload();};
+        var profiles=document.getElementById('rpProfiles'); if(profiles) profiles.onclick=function(){try{state.profile=null;localStorage.removeItem('reviseplus_currentProfile');viewWelcome();}catch(e){location.reload();}};
+      }
     }
   }
 
