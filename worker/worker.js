@@ -53,7 +53,7 @@ export default {
       if (!answer) return json({ error: 'réponse IA vide' }, 502);
       if (isLesson) {
         try {
-          const clean = answer.replace(/^```(?:json)?\\s*/i, '').replace(/\\s*```$/, '');
+          const clean = answer.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '');
           const lesson = JSON.parse(clean);
           if (!lesson.titre || !lesson.complet || !Array.isArray(lesson.quiz)) throw new Error('structure incomplète');
           return json({ lesson: lesson });
