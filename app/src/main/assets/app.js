@@ -700,7 +700,7 @@ var App = (function () {
       + '<div class="arcade-orb">'+(emma?'<img src="images/3d/lumi-fairy-3d.png" alt="">':'<img src="images/3d/gabriel-explorer-3d.png" alt="">')+'</div><div class="arcade-kicker">TON UNIVERS • ARCADE ÉDUCATIVE</div>'
       + '<h2>Prêt pour la<br><span>mission du jour ?</span></h2>'
       + '<p>'+buddy+' a préparé des défis pour toi. Chaque bonne réponse fait avancer ton aventure !</p>'
-      + '<div class="arcade-stats"><span>⚡ '+p.xp+' XP</span><span>🔥 '+(p.bestStreak||0)+' record</span><span>🏅 '+p.badges.length+' badges</span></div></section>';
+      + '<div class="arcade-stats"><span>⚡ '+p.xp+' XP</span><span>🔥 '+(p.bestStreak||0)+' record</span><span>👾 '+(p.bossWins||0)+' boss</span><span>🏅 '+p.badges.length+' badges</span></div></section>';
     html += '<div class="game-mode-grid">'
       + '<button class="game-mode mode-quest" onclick="gamePickChapter(1)"><span class="game-art">🗺️</span><b>Mission découverte</b><small>Apprendre sans pression · questions courtes</small><span class="game-launch">Jouer ↗</span></button>'
       + '<button class="game-mode mode-speed" onclick="gamePickChapter(2)"><span class="game-art">⚡</span><b>Défi éclair</b><small>Enchaîne les bonnes réponses · XP bonus</small><span class="game-launch">Jouer ↗</span></button>'
