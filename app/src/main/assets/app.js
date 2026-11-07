@@ -621,32 +621,32 @@ var App = (function () {
     setTab('jeux');
     if (needProfile()) return;
     var p = load();
-    var html = '<div class="card"><h3><span class="em">🎮</span>Mes jeux</h3>'
-      + '<p style="font-size:0.9rem">Choisis un chapitre dans <b>Mes révisions</b>, puis lance :</p>'
-      + '<ul><li><b>🧭 Découverte</b> : la moitié des questions, pour apprendre en douceur.</li>'
-      + '<li><b>⚡ Expert</b> : toutes les questions, XP doublés, maîtrise qui grimpe plus vite.</li>'
-      + '<li>Les questions ratées reviennent te challenger : c\'est l\'entraînement espacé !</li></ul>'
-      + '<div class="grid3">'
-      + '<div class="stat"><span class="n">' + p.xp + '</span>XP</div>'
-      + '<div class="stat"><span class="n">' + (p.bestStreak || 0) + '</span>record</div>'
-      + '<div class="stat"><span class="n">' + p.badges.length + '</span>badges</div>'
-      + '</div></div>';
-    html += '<div class="card"><h3><span class="em">🎯</span>Défi du jour</h3>' + dailyChallenge() + '</div>';
-    // Choix direct d'un chapitre à jouer
-    html += '<div class="card"><h3><span class="em">🎯</span>Jouer avec un chapitre</h3>'
-      + '<p style="font-size:0.85rem;opacity:0.8">Tes matières — classe de ' + state.niveau + ' :</p>';
-    myMatieres().forEach(function (m) {
-      var chs = chaptersFor(m.id, state.niveau);
-      if (!chs.length) return;
-      html += '<p style="margin:10px 0 4px;font-weight:800">' + m.icon + ' ' + m.nom + '</p>';
-      chs.forEach(function (c) {
-        html += '<button class="choice" onclick="quizFromList(\'' + c.id + '\')">' + c.titre + '</button>';
-      });
+    var emma = state.profile === 'Emma';
+    var buddy = emma ? 'Lumi' : 'Nova';
+    var html = '<section class="arcade-hero '+(emma?'arcade-emma':'arcade-gabriel')+'">'
+      + '<div class="arcade-orb">'+(emma?'✨':'🚀')+'</div><div class="arcade-kicker">ARCADE ÉDUCATIVE</div>'
+      + '<h2>Prêt pour la<br><span>mission du jour ?</span></h2>'
+      + '<p>'+buddy+' a préparé des défis pour toi. Chaque bonne réponse fait avancer ton aventure !</p>'
+      + '<div class="arcade-stats"><span>⚡ '+p.xp+' XP</span><span>🔥 '+(p.bestStreak||0)+' record</span><span>🏅 '+p.badges.length+' badges</span></div></section>';
+    html += '<div class="game-mode-grid">'
+      + '<button class="game-mode mode-quest" onclick="gamePickChapter(1)"><span class="game-art">🗺️</span><b>Mission découverte</b><small>Apprendre sans pression · questions courtes</small><span class="game-launch">Jouer ↗</span></button>'
+      + '<button class="game-mode mode-speed" onclick="gamePickChapter(2)"><span class="game-art">⚡</span><b>Défi éclair</b><small>Enchaîne les bonnes réponses · XP bonus</small><span class="game-launch">Jouer ↗</span></button>'
+      + '<button class="game-mode mode-boss" onclick="gamePickChapter(2)"><span class="game-art">👾</span><b>Boss du savoir</b><small>5 questions pour vaincre le boss</small><span class="game-launch">Jouer ↗</span></button>'
+      + '<button class="game-mode mode-daily" onclick="doDailyPick()"><span class="game-art">🎯</span><b>Défi quotidien</b><small>Une mission spéciale, chaque jour</small><span class="game-launch">+30 XP ↗</span></button></div>';
+    html += '<div class="section-title">Choisis ta planète de connaissances</div><div class="card game-chapter-card"><p class="game-intro">Sélectionne une matière puis un chapitre : le jeu démarre directement.</p>';
+    myMatieres().forEach(function(m){
+      var chs=chaptersFor(m.id,state.niveau); if(!chs.length)return;
+      html+='<div class="game-subject"><h3>'+m.icon+' '+m.nom+'</h3><div class="game-chapters">';
+      chs.forEach(function(c){html+='<button class="game-chapter" onclick="gameStartChapter(\''+c.id+'\',1)">'+c.titre+' <span>▶</span></button>';});
+      html+='</div></div>';
     });
-    html += '</div>';
-    render(html);
-    updateChip();
+    html+='</div><div class="card game-daily">'+dailyChallenge()+'</div>';
+    render(html); updateChip();
   }
+  var gameModeChosen = 1;
+  function gamePickChapter(mode){ gameModeChosen=mode; var el=document.querySelector('.game-chapter-card'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); }
+  function gameStartChapter(id,mode){ state.chap=id; quizFromList(id); if(mode===2){quiz.mode=2;quiz.qs=poolFor(quiz.c,2);} }
+  function doDailyPick(){ var mats=myMatieres().map(function(m){return m.id;});var pool=REVISE_DATA.chapitres.filter(function(c){return mats.indexOf(c.mat)!==-1&&c.niveau===state.niveau;});if(!pool.length)pool=REVISE_DATA.chapitres;var c=pool[Math.floor(Math.random()*pool.length)];doDaily(c.id); }
   function quizFromList(chapId) {
     state.chap = chapId;
     var c = chapById(chapId);
