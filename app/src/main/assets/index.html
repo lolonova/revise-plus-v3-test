@@ -733,13 +733,40 @@ input[type=text],textarea{min-height:48px;line-height:1.45}
     <button id="switchProfileBtn"><span class="ic">🔄</span>Changer de profil</button>
   </div>
 </aside>
-<script src="data.js"></script>
-<script src="app.js"></script>
-<script src="adventure.js"></script>
-<script src="tutor.js"></script>
-<script src="scan.js"></script>
-<script src="controls.js"></script>
-<script src="enhancements.js"></script>
-<script src="future.js"></script>
+<script>
+/* Diagnostic de chargement des modules : indique précisément quel fichier manque ou échoue. */
+window.__RP_LOADS__ = {};
+window.__rpMark = function(name, ok) {
+  window.__RP_LOADS__[name] = ok ? 'chargé' : 'ÉCHEC';
+  if (name === 'app.js') {
+    window.__RP_LOADS__.appGlobal = typeof window.App;
+    window.__RP_LOADS__.dataGlobal = typeof window.REVISE_DATA;
+  }
+};
+window.__rpShowLoadReport = function() {
+  var box = document.getElementById('rp-diagnostic');
+  if (!box) {
+    box = document.createElement('div'); box.id='rp-diagnostic';
+    box.style.cssText='position:fixed;z-index:999999;inset:145px 10px auto;padding:16px;border-radius:14px;background:#fff1f0;color:#641b16;font:13px/1.45 monospace;max-height:72vh;overflow:auto';
+    document.body.appendChild(box);
+  }
+  var rows = Object.keys(window.__RP_LOADS__).map(function(k){return k+' : '+window.__RP_LOADS__[k];});
+  box.innerHTML='<b>Diagnostic technique Révise+</b><br><pre style="white-space:pre-wrap;overflow-wrap:anywhere"></pre>';
+  box.querySelector('pre').textContent=rows.join('\n')+'\nApp global : '+typeof window.App+'\nDonnées : '+typeof window.REVISE_DATA;
+};
+</script>
+<script src="data.js" onload="__rpMark('data.js',true)" onerror="__rpMark('data.js',false)"></script>
+<script src="app.js" onload="__rpMark('app.js',true)" onerror="__rpMark('app.js',false)"></script>
+<script src="adventure.js" onload="__rpMark('adventure.js',true)" onerror="__rpMark('adventure.js',false)"></script>
+<script src="tutor.js" onload="__rpMark('tutor.js',true)" onerror="__rpMark('tutor.js',false)"></script>
+<script src="scan.js" onload="__rpMark('scan.js',true)" onerror="__rpMark('scan.js',false)"></script>
+<script src="controls.js" onload="__rpMark('controls.js',true)" onerror="__rpMark('controls.js',false)"></script>
+<script src="enhancements.js" onload="__rpMark('enhancements.js',true)" onerror="__rpMark('enhancements.js',false)"></script>
+<script src="future.js" onload="__rpMark('future.js',true)" onerror="__rpMark('future.js',false)"></script>
+<script>
+window.addEventListener('DOMContentLoaded',function(){setTimeout(function(){
+  if(typeof window.App==='undefined' || !window.App) window.__rpShowLoadReport();
+},700);});
+</script>
 </body>
 </html>
