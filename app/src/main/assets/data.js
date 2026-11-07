@@ -2044,3 +2044,301 @@ var REVISE_DATA = {
     },
   ]
 };
+
+
+/* Compléments pédagogiques V7 — catalogue enrichi cycle 4.
+   Les contenus sont des fiches autonomes avec rappel, cours, quiz et vrai/faux.
+   Les repères sont indicatifs : la progression exacte peut varier selon les enseignants. */
+(function () {
+  function add(id, mat, niveau, titre, points, quiz, vf) {
+    var express = points.slice(0, 4).map(function (p) { return '<li>' + p[0] + '</li>'; }).join('');
+    var complet = points.map(function (p, i) { return '<h3>' + (i + 1) + '. ' + p[0] + '</h3><p>' + p[1] + '</p>'; }).join('');
+    REVISE_DATA.chapitres.push({
+      id: id, mat: mat, niveau: niveau, titre: titre,
+      express: express, complet: complet,
+      quiz: quiz.map(function (q) { return { q: q[0], choix: q[1], bon: q[2], exp: q[3] }; }),
+      vf: vf.map(function (q) { return { q: q[0], v: q[1], exp: q[2] }; })
+    });
+  }
+  // ANGLAIS — grammaire et verbes : les verbes irréguliers sont présents aux trois niveaux.
+  add('en5-irregular-verbs','anglais','5e','Les verbes irréguliers essentiels',[
+    ['À quoi servent-ils ?','Au prétérit et au participe passé, certains verbes ne prennent pas simplement -ed. Il faut mémoriser leurs formes : go → went → gone ; see → saw → seen.'],
+    ['Les premiers verbes à connaître','be → was/were → been ; have → had → had ; do → did → done ; go → went → gone ; come → came → come ; get → got → got ; make → made → made ; take → took → taken.'],
+    ['Les verbes fréquents','say → said → said ; see → saw → seen ; eat → ate → eaten ; drink → drank → drunk ; write → wrote → written ; read → read → read (prononcé « red » au passé).'],
+    ['Comment les apprendre','Apprends-les par petits groupes, cache la colonne du passé, puis vérifie. Utilise une phrase : Yesterday I went to school.']
+  ],[
+    ['Le prétérit de go est…',['goed','went','gone'],1,'Go est irrégulier : go → went → gone.'],
+    ['Le participe passé de see est…',['saw','seen','seed'],1,'See → saw → seen.'],
+    ['Quel est le prétérit de have ?',['had','haved','has'],0,'Have → had → had.']
+  ],[['« eat – ate – eaten » est correct.',true,'Les trois formes sont bien eat, ate, eaten.'],['On ajoute toujours -ed aux verbes anglais au passé.',false,'Les verbes irréguliers ont une forme particulière.']]);
+  add('en4-irregular-verbs','anglais','4e','Verbes irréguliers : prétérit et participe passé',[
+    ['Les trois colonnes','Base verbale, prétérit, participe passé : write – wrote – written. Le prétérit raconte un événement passé terminé ; le participe passé sert notamment avec have/has.'],
+    ['Liste à maîtriser','begin–began–begun ; break–broke–broken ; bring–brought–brought ; buy–bought–bought ; catch–caught–caught ; choose–chose–chosen ; find–found–found ; give–gave–given ; know–knew–known ; leave–left–left ; lose–lost–lost ; meet–met–met.'],
+    ['Les verbes en -ought / -aught','buy → bought, bring → brought, think → thought, teach → taught, catch → caught. Regroupe-les pour mieux les mémoriser.'],
+    ['Prétérit ou present perfect ?','Yesterday I wrote a letter : prétérit avec date passée terminée. I have written three letters : present perfect, bilan lié au présent.']
+  ],[
+    ['Le prétérit de choose est…',['choosed','chose','chosen'],1,'Choose → chose → chosen.'],
+    ['Le participe passé de write est…',['wrote','written','writed'],1,'Write → wrote → written.'],
+    ['Complète : I have ___ my keys.',['lost','lose','losing'],0,'Present perfect : have + participe passé, lost.']
+  ],[['« teach – taught – taught » est correct.',true,'Teach est irrégulier.'],['« I have went » est correct.',false,'On dit I have gone : have + participe passé.']]);
+  add('en3-irregular-verbs','anglais','3e','Maîtriser les verbes irréguliers',[
+    ['Réviser les formes','Connaître base verbale, prétérit et participe passé permet de raconter, comparer des expériences et comprendre des textes.'],
+    ['Liste complémentaire','become–became–become ; build–built–built ; feel–felt–felt ; hear–heard–heard ; hold–held–held ; keep–kept–kept ; pay–paid–paid ; send–sent–sent ; speak–spoke–spoken ; spend–spent–spent ; swim–swam–swum ; win–won–won.'],
+    ['Les pièges fréquents','lie (s’allonger) → lay → lain ; lay (poser) → laid → laid ; fall → fell → fallen ; rise → rose → risen. Attention au sens et à la forme.'],
+    ['Les utiliser dans des phrases','She has spoken to him. They won the match last Saturday. He had already left when I arrived. Repère le marqueur temporel pour choisir le temps.']
+  ],[
+    ['Le participe passé de speak est…',['spoke','spoken','speaked'],1,'Speak → spoke → spoken.'],
+    ['Le prétérit de win est…',['won','winned','winneded'],0,'Win → won → won.'],
+    ['Complète : They have ___ the match.',['win','won','winned'],1,'Have + participe passé : won.']
+  ],[['« fall – fell – fallen » est correct.',true,'C’est la série correcte.'],['Le prétérit de build est « builded ».',false,'Build → built → built.']]);
+  add('en5-present-simple','anglais','5e','Présent simple : habitudes et vérités',[
+    ['Formation','À I/you/we/they, utilise la base verbale. À he/she/it, ajoute généralement -s : I play, she plays.'],
+    ['Négation','Utilise do not (don’t) ou does not (doesn’t) + base verbale : He doesn’t play. Après does, pas de -s au verbe.'],
+    ['Question','Do you like music ? Does she live here ? Réponse courte : Yes, I do / No, she doesn’t.'],
+    ['Marqueurs','Always, often, usually, sometimes, never indiquent la fréquence. Ils se placent généralement avant le verbe, mais après be.']
+  ],[
+    ['She ___ football every week.',['play','plays','playing'],1,'À la 3e personne du singulier, on ajoute -s.'],
+    ['He ___ like tea.',['don’t','doesn’t','isn’t'],1,'Doesn’t + base verbale.'],
+    ['___ you speak English ?',['Does','Do','Are'],1,'Do accompagne you.']
+  ],[['À he, on ajoute généralement -s au présent simple.',true,'He works, she plays.'],['Après doesn’t, le verbe garde son -s.',false,'On dit doesn’t play, sans -s.']]);
+  add('en4-past-continuous','anglais','4e','Prétérit simple et prétérit en -ing',[
+    ['Prétérit simple','Il exprime une action passée terminée : I watched a film yesterday. Verbe régulier en -ed ou forme irrégulière.'],
+    ['Prétérit continu','Was/were + verbe-ing décrit une action en cours à un moment du passé : I was reading at 8 pm.'],
+    ['Deux actions','Une action longue en cours peut être interrompue par une action brève : I was sleeping when the phone rang.'],
+    ['When et while','When introduit souvent l’événement bref ; while accompagne souvent l’action en cours. Ce sont des repères, pas des règles absolues.']
+  ],[
+    ['« She ___ when I arrived. »',['was sleeping','slept','sleep'],0,'Action en cours interrompue : was + sleeping.'],
+    ['Le prétérit de buy est…',['buyed','bought','brought'],1,'Buy → bought.'],
+    ['Quelle forme est correcte ?',['They was playing','They were playing','They playing'],1,'Avec they, on utilise were.']
+  ],[['Le prétérit continu se forme avec was/were + -ing.',true,'Exemple : we were watching.'],['Le prétérit simple décrit toujours une action longue.',false,'Il présente souvent un événement terminé.']]);
+  add('en3-modals-passive','anglais','3e','Modaux et voix passive',[
+    ['Les modaux','Can exprime la capacité ou la permission ; must l’obligation ; should le conseil ; might la possibilité. Le modal est suivi de la base verbale sans to.'],
+    ['Négation et question','Mustn’t = interdiction ; don’t have to = absence d’obligation. Can you help ? Should I call ?'],
+    ['Voix passive','Be conjugué + participe passé : The book was written in 1990. On insiste sur ce qui subit l’action.'],
+    ['Choisir la forme','Présent passif : is/are + participe passé. Passé passif : was/were + participe passé. Le complément d’agent avec by est facultatif.']
+  ],[
+    ['Après « should », on écrit…',['to go','go','going'],1,'Un modal est suivi de la base verbale.'],
+    ['« The film was directed… » est…',['une voix passive','un futur','un impératif'],0,'Was + participe passé : voix passive au passé.'],
+    ['« You mustn’t smoke » signifie…',['tu n’es pas obligé','tu ne dois pas fumer','tu peux fumer'],1,'Mustn’t exprime l’interdiction.']
+  ],[['« She can to swim » est correct.',false,'On dit she can swim.'],['Le passif utilise une forme de be et un participe passé.',true,'Exemple : The window was broken.']]);
+
+  // MATHÉMATIQUES — notions complémentaires et automatismes.
+  add('m5-proportionalite','maths','5e','Proportionnalité et pourcentages',[
+    ['Reconnaître une situation','Deux grandeurs sont proportionnelles si on passe de l’une à l’autre en multipliant toujours par le même nombre : le coefficient de proportionnalité.'],
+    ['Tableau','Si 3 cahiers coûtent 6 €, un cahier coûte 2 € ; 5 cahiers coûtent 10 €. On multiplie chaque valeur par le même coefficient.'],
+    ['Pourcentage','10 % signifie 10 pour 100, donc 10/100 = 0,10. Pour calculer 20 % de 50 : 0,20 × 50 = 10.'],
+    ['Méthodes','Passage à l’unité, coefficient ou produit en croix selon les données. Vérifie toujours si le résultat est cohérent.']
+  ],[
+    ['4 stylos coûtent 8 €. 1 stylo coûte…',['2 €','4 €','8 €'],0,'8 ÷ 4 = 2 €.'],
+    ['25 % de 80 vaut…',['15','20','25'],1,'0,25 × 80 = 20.'],
+    ['Le coefficient de 3 vers 12 est…',['3','4','9'],1,'12 ÷ 3 = 4.']
+  ],[['Dans une situation de proportionnalité, le coefficient est constant.',true,'C’est la définition.'],['20 % signifie 20 pour 10.',false,'20 % signifie 20 pour 100.']]);
+  add('m4-puissances','maths','4e','Puissances et écriture scientifique',[
+    ['Puissance','aⁿ signifie que l’on multiplie a par lui-même n fois : 2⁴ = 2×2×2×2 = 16.'],
+    ['Règles','Pour une même base : aᵐ × aⁿ = aᵐ⁺ⁿ ; aᵐ ÷ aⁿ = aᵐ⁻ⁿ si a ≠ 0. (aᵐ)ⁿ = aᵐⁿ.'],
+    ['Puissances de 10','10³ = 1 000 ; 10⁻² = 0,01. Multiplier par 10 décale la virgule d’un rang vers la droite.'],
+    ['Écriture scientifique','Un nombre s’écrit a × 10ⁿ avec 1 ≤ a < 10. Exemple : 45 000 = 4,5 × 10⁴.']
+  ],[
+    ['2³ vaut…',['6','8','9'],1,'2 × 2 × 2 = 8.'],
+    ['10⁻² vaut…',['100','0,1','0,01'],2,'10 puissance -2 = 1/100.'],
+    ['3,2 × 10⁴ vaut…',['320','3 200','32 000'],2,'On décale la virgule de quatre rangs.']
+  ],[['10⁰ = 1.',true,'Toute base non nulle à la puissance zéro vaut 1.'],['2³ × 2² = 2⁶.',false,'On additionne les exposants : 2⁵.']]);
+  add('m3-thales','maths','3e','Théorème de Thalès',[
+    ['Configuration','Dans un triangle ABC, si M appartient à [AB], N à [AC] et (MN) est parallèle à (BC), les longueurs sont proportionnelles.'],
+    ['Égalité','AM/AB = AN/AC = MN/BC. Respecte l’ordre des points et associe les côtés correspondants.'],
+    ['Calculer une longueur','Remplace les longueurs connues puis utilise le produit en croix. Écris les unités et une phrase de conclusion.'],
+    ['Réciproque','Si les points sont alignés dans le même ordre et que les rapports de longueurs correspondantes sont égaux, alors les droites sont parallèles.']
+  ],[
+    ['Thalès s’utilise notamment avec…',['des droites parallèles','un cercle uniquement','un angle droit obligatoire'],0,'La configuration comporte des droites parallèles.'],
+    ['Si AM/AB = 2/5 et AB = 10, AM vaut…',['2','4','5'],1,'AM = 2/5 × 10 = 4.'],
+    ['La réciproque sert à prouver…',['un parallélisme','une égalité d’angles droits','une aire'],0,'Elle permet de démontrer que deux droites sont parallèles.']
+  ],[['Le théorème de Thalès relie des longueurs proportionnelles.',true,'C’est son principe.'],['On peut appliquer Thalès sans vérifier l’alignement.',false,'Il faut vérifier la configuration et les alignements.']]);
+
+  // FRANÇAIS — langue, lecture et écriture.
+  add('fr5-classes-grammaticales','francais','5e','Classes grammaticales et fonctions',[
+    ['La nature','La classe grammaticale indique ce qu’est un mot : nom, déterminant, adjectif, pronom, verbe, adverbe, préposition, conjonction, interjection.'],
+    ['La fonction','La fonction indique le rôle dans la phrase : sujet, COD, COI, attribut du sujet, complément circonstanciel, épithète, complément du nom.'],
+    ['Identifier le sujet','Qui est-ce qui + verbe ? Le sujet commande généralement l’accord du verbe.'],
+    ['COD et COI','Le COD répond à qui ? quoi ? sans préposition ; le COI à à qui ? de quoi ? avec une préposition.']
+  ],[
+    ['Dans « le petit chat dort », « petit » est…',['un adjectif','un verbe','un pronom'],0,'Petit qualifie le nom chat : adjectif.'],
+    ['Dans « Léa mange une pomme », « une pomme » est…',['sujet','COD','COI'],1,'Mange quoi ? une pomme : COD.'],
+    ['La nature d’un mot indique…',['son rôle dans la phrase','sa classe grammaticale','sa place uniquement'],1,'Nature = classe grammaticale.']
+  ],[['Un même mot peut avoir des fonctions différentes selon la phrase.',true,'Exemple : sujet ou COD selon son emploi.'],['Un adjectif est toujours un complément circonstanciel.',false,'Il peut être épithète ou attribut.']]);
+  add('fr4-subordonnees','francais','4e','Propositions principales et subordonnées',[
+    ['Proposition','Une proposition contient généralement un verbe conjugué. Une phrase peut en comporter plusieurs.'],
+    ['Juxtaposition et coordination','Les propositions sont juxtaposées par une virgule ou un point-virgule ; coordonnées par mais, ou, et, donc, or, ni, car.'],
+    ['Subordonnée relative','Introduite par qui, que, dont, où, lequel… Elle complète un nom appelé antécédent : Le livre que je lis.'],
+    ['Subordonnée conjonctive','Introduite notamment par que, quand, parce que, si. Elle peut être complétive ou circonstancielle et précise le sens de la principale.']
+  ],[
+    ['Dans « le film que je regarde », que introduit…',['une relative','une indépendante','une principale'],0,'Que reprend l’antécédent film.'],
+    ['« Je pars car il est tard » contient une coordination par…',['mais','car','où'],1,'Car est une conjonction de coordination.'],
+    ['Une proposition contient généralement…',['un verbe conjugué','un adjectif seulement','aucun verbe'],0,'Le verbe conjugué est le noyau de la proposition.']
+  ],[['Une proposition relative complète un nom.',true,'Ce nom est son antécédent.'],['Une phrase complexe ne contient qu’un seul verbe conjugué.',false,'Elle comporte plusieurs propositions.']]);
+  add('fr3-accords','francais','3e','Accords complexes et participe passé',[
+    ['Avec être','Le participe passé employé avec être s’accorde généralement avec le sujet : Elles sont parties.'],
+    ['Avec avoir','Avec avoir, il ne s’accorde pas avec le sujet. Il s’accorde avec le COD si celui-ci est placé avant : Les lettres que j’ai écrites.'],
+    ['Verbes pronominaux','L’accord dépend de la fonction du pronom et du COD. Il faut identifier le complément avant de décider.'],
+    ['Méthode','Repère l’auxiliaire, cherche le COD, vérifie sa position, puis accorde. Relis la phrase pour vérifier le sens.']
+  ],[
+    ['« Elles sont ___ »',['parti','parties','partis'],1,'Avec être, accord avec le sujet féminin pluriel.'],
+    ['« Les pommes que j’ai ___ »',['mangé','mangées','mangés'],1,'COD les pommes placé avant avoir : accord féminin pluriel.'],
+    ['Avec avoir, le participe passé s’accorde avec…',['le sujet toujours','le COD placé avant','le verbe'],1,'Règle générale : COD antéposé.']
+  ],[['« Ils sont arrivés » est correctement accordé.',true,'Être : accord avec ils.'],['Avec avoir, on accorde toujours avec le sujet.',false,'Pas d’accord avec le sujet ; COD antéposé uniquement.']]);
+
+  // HISTOIRE-GÉOGRAPHIE — repères des trois niveaux.
+  add('h5-islam-christianetes','histoire','5e','Chrétientés et islam au Moyen Âge',[
+    ['Byzance','L’Empire byzantin est l’héritier de l’Empire romain d’Orient. Constantinople est sa capitale ; le christianisme orthodoxe y joue un rôle central.'],
+    ['L’empire carolingien','Charlemagne est couronné empereur en 800. Son pouvoir s’appuie sur des comtes, des missi dominici et l’Église.'],
+    ['Naissance de l’islam','Au VIIe siècle, l’islam naît en Arabie autour de la prédication de Muhammad. L’Hégire (622) marque le début du calendrier musulman.'],
+    ['Des mondes en contact','Commerces, guerres, pèlerinages et échanges savants relient les mondes byzantin, latin et musulman.']
+  ],[
+    ['Charlemagne est couronné empereur en…',['622','800','1095'],1,'Couronnement à Rome en 800.'],
+    ['La capitale de l’Empire byzantin est…',['Rome','Constantinople','Bagdad'],1,'Constantinople, aujourd’hui Istanbul.'],
+    ['L’Hégire date de…',['476','622','1492'],1,'622 marque le départ de Muhammad de La Mecque vers Médine.']
+  ],[['L’Empire byzantin est l’Empire romain d’Orient.',true,'Il perdure après la chute de Rome en Occident.'],['L’islam naît au XVe siècle.',false,'Il naît au VIIe siècle en Arabie.']]);
+  add('h4-lumieres-revolutions','histoire','4e','Lumières et révolutions au XVIIIe siècle',[
+    ['Les Lumières','Des philosophes comme Voltaire, Montesquieu et Rousseau défendent la raison, la liberté et la critique de l’absolutisme.'],
+    ['Révolution américaine','Les colonies anglaises d’Amérique déclarent leur indépendance en 1776 ; les États-Unis adoptent une Constitution en 1787.'],
+    ['Révolution française','En 1789, États généraux, prise de la Bastille le 14 juillet et Déclaration des droits de l’homme et du citoyen bouleversent l’ordre politique.'],
+    ['Transformations','La monarchie constitutionnelle est suivie de la République en 1792. La période révolutionnaire transforme durablement la citoyenneté et les institutions.']
+  ],[
+    ['La Déclaration des droits de l’homme date de…',['1689','1789','1848'],1,'26 août 1789.'],
+    ['Qui est associé à l’Esprit des lois ?',['Montesquieu','Napoléon','Louis XIV'],0,'Montesquieu réfléchit à la séparation des pouvoirs.'],
+    ['La République est proclamée en France en…',['1776','1792','1804'],1,'La Première République est proclamée en septembre 1792.']
+  ],[['Les philosophes des Lumières défendent l’usage de la raison.',true,'La raison et l’esprit critique sont centraux.'],['La prise de la Bastille a lieu en 1799.',false,'Elle a lieu le 14 juillet 1789.']]);
+  add('h3-guerres-totales','histoire','3e','Les guerres totales au XXe siècle',[
+    ['Première Guerre mondiale','De 1914 à 1918, une guerre de masse mobilise soldats, civils, économies et propagande. Les tranchées caractérisent une partie du front occidental.'],
+    ['Violence de masse','Verdun (1916), les bombardements, les blessures et les conditions de vie des soldats illustrent la violence du conflit. Le génocide des Arméniens commence en 1915.'],
+    ['Seconde Guerre mondiale','De 1939 à 1945, le conflit oppose notamment les Alliés et les puissances de l’Axe. La guerre est mondiale et idéologique.'],
+    ['Génocides et bilan','La Shoah est l’extermination systématique des Juifs d’Europe par l’Allemagne nazie et ses complices. Les crimes de masse et les destructions marquent durablement le monde.']
+  ],[
+    ['La Première Guerre mondiale se termine en…',['1916','1918','1939'],1,'Armistice du 11 novembre 1918.'],
+    ['Verdun est une bataille de…',['1916','1940','1944'],0,'La bataille de Verdun se déroule en 1916.'],
+    ['La Shoah désigne…',['la reconstruction','le génocide des Juifs d’Europe','une bataille navale'],1,'Génocide perpétré par les nazis et leurs complices.']
+  ],[['La Seconde Guerre mondiale se déroule de 1939 à 1945.',true,'Dates du conflit mondial.'],['Les civils ne sont pas touchés par les guerres totales.',false,'Les civils sont mobilisés et victimes des violences.']]);
+  add('g5-ressources','geo','5e','Ressources et développement durable',[
+    ['Ressources','L’eau douce, les sols, les forêts, les minerais et les énergies sont des ressources inégalement réparties.'],
+    ['Besoins et inégalités','La croissance démographique et l’augmentation des consommations accroissent les besoins, mais les accès aux ressources restent inégaux.'],
+    ['Gestion durable','Économiser l’eau, protéger les sols, développer les énergies renouvelables et limiter le gaspillage contribuent à une gestion durable.'],
+    ['Étude de cas','Pour analyser un territoire, repère la ressource, les acteurs, les usages, les conflits éventuels et les solutions proposées.']
+  ],[
+    ['Une ressource renouvelable est…',['le soleil','le pétrole','le charbon'],0,'Le rayonnement solaire est renouvelable à l’échelle humaine.'],
+    ['L’eau douce est…',['illimitée et partout accessible','inégalement disponible','toujours potable'],1,'Sa disponibilité et son accès sont très inégaux.'],
+    ['Le développement durable associe…',['environnement, économie, société','uniquement l’économie','uniquement la technologie'],0,'Il cherche à concilier les trois dimensions.']
+  ],[['Les ressources sont réparties de façon inégale.',true,'Les contraintes naturelles et les moyens techniques varient.'],['Le pétrole est une énergie renouvelable.',false,'C’est une énergie fossile non renouvelable à l’échelle humaine.']]);
+  add('g4-mobilites','geo','4e','Les mobilités humaines dans le monde',[
+    ['Migrations','Une migration est un changement durable de lieu de résidence. Les causes peuvent être économiques, politiques, familiales ou environnementales.'],
+    ['Migrations et réfugiés','Un migrant quitte son lieu de vie ; un réfugié fuit des persécutions ou des conflits et bénéficie d’une protection prévue par le droit international.'],
+    ['Tourisme','Le tourisme est une mobilité temporaire. Il transforme les territoires, crée des emplois mais peut aussi exercer une pression sur les milieux.'],
+    ['Lire une carte','Repère les espaces de départ, d’arrivée, les flux, les frontières et les facteurs d’attractivité ou de répulsion.']
+  ],[
+    ['Une migration correspond à…',['un déplacement quotidien','un changement de résidence','un voyage scolaire'],1,'La migration implique un changement de résidence.'],
+    ['Un réfugié fuit notamment…',['des persécutions','des vacances','un loisir'],0,'Il recherche une protection face à un danger ou des persécutions.'],
+    ['Le tourisme est généralement une mobilité…',['temporaire','définitive','sans déplacement'],0,'Le séjour est temporaire.']
+  ],[['Les mobilités peuvent avoir plusieurs causes.',true,'Elles peuvent être économiques, politiques, familiales ou environnementales.'],['Tous les migrants sont des réfugiés.',false,'Le statut de réfugié répond à des critères juridiques précis.']]);
+  add('g3-france-ue-monde','geo','3e','La France et l’Union européenne dans le monde',[
+    ['Territoire français','La France comprend un territoire européen et des territoires ultramarins présents dans plusieurs océans.'],
+    ['Métropolisation','Les grandes villes concentrent populations, emplois qualifiés, services et fonctions de commandement.'],
+    ['Union européenne','L’Union européenne est un espace de coopération politique et économique composé d’États membres ; elle ne se confond pas avec le continent européen.'],
+    ['Insertion mondiale','Ports, aéroports, métropoles, réseaux numériques et entreprises relient les territoires français aux échanges mondiaux.']
+  ],[
+    ['La France possède des territoires…',['uniquement en Europe','en Europe et outre-mer','uniquement en Afrique'],1,'La France est présente dans plusieurs régions du monde.'],
+    ['La métropolisation concentre…',['les fonctions dans les grandes villes','uniquement les activités agricoles','les frontières'],0,'Les métropoles concentrent population et fonctions de commandement.'],
+    ['L’Union européenne est…',['tous les pays d’Europe','une organisation d’États membres','un continent'],1,'Elle regroupe des États membres selon des traités.']
+  ],[['L’Union européenne et l’Europe désignent exactement la même chose.',false,'L’Europe est un continent ; l’UE est une organisation politique.'],['Les territoires ultramarins contribuent à la présence mondiale de la France.',true,'Ils sont situés dans plusieurs océans.']]);
+
+  // SVT et PHYSIQUE-CHIMIE.
+  add('svt5-alimentation-digestion','svt','5e','Alimentation, digestion et besoins du corps',[
+    ['Nutriments','La digestion transforme les aliments en nutriments utilisables par l’organisme. Certains nutriments sont absorbés au niveau de l’intestin grêle.'],
+    ['Appareil digestif','Bouche, œsophage, estomac, intestin grêle et gros intestin assurent le trajet et la transformation des aliments.'],
+    ['Besoins','Les besoins énergétiques varient selon l’âge, l’activité et l’état de santé. Une alimentation variée apporte glucides, lipides, protéines, vitamines, sels minéraux et eau.'],
+    ['Hygiène','Une bonne hydratation, une alimentation diversifiée et une activité physique régulière participent au fonctionnement de l’organisme.']
+  ],[
+    ['L’absorption des nutriments se fait principalement dans…',['l’estomac','l’intestin grêle','la bouche'],1,'Les nutriments traversent la paroi de l’intestin grêle.'],
+    ['La digestion transforme les aliments en…',['nutriments','oxygène','globules rouges'],0,'Les nutriments sont absorbables par l’organisme.'],
+    ['Les besoins énergétiques dépendent notamment…',['de l’activité','de la couleur des yeux','du prénom'],0,'L’activité et l’âge influencent les besoins.']
+  ],[['L’intestin grêle joue un rôle majeur dans l’absorption.',true,'Les nutriments passent dans le sang.'],['L’eau n’est pas nécessaire au fonctionnement du corps.',false,'L’eau est indispensable.']]);
+  add('svt4-reproduction','svt','4e','Reproduction humaine et puberté',[
+    ['Puberté','La puberté correspond à des transformations physiques et psychologiques liées à la maturation du système reproducteur. Le rythme varie selon les personnes.'],
+    ['Appareils reproducteurs','Les appareils reproducteurs deviennent fonctionnels. Les ovaires produisent des ovules ; les testicules produisent des spermatozoïdes.'],
+    ['Fécondation','La fécondation est la rencontre d’un spermatozoïde et d’un ovule. Elle forme une cellule-œuf qui se divise et se développe.'],
+    ['Prévention et respect','Connaître son corps, respecter le consentement et accéder à des informations fiables sont essentiels. Les questions de santé peuvent être discutées avec un professionnel.']
+  ],[
+    ['La puberté est…',['identique en âge pour tous','une période de maturation','une maladie'],1,'Le rythme de la puberté varie.'],
+    ['Les spermatozoïdes sont produits par…',['les ovaires','les testicules','l’utérus'],1,'Les testicules produisent les spermatozoïdes.'],
+    ['La fécondation forme…',['une cellule-œuf','un neurone','un globule rouge'],0,'La fusion des gamètes forme la cellule-œuf.']
+  ],[['La puberté se déroule exactement au même âge pour tout le monde.',false,'Il existe une grande variabilité individuelle.'],['Le consentement et le respect sont essentiels.',true,'Ils font partie de l’éducation à la vie affective et relationnelle.']]);
+  add('svt3-immunite','svt','3e','Système immunitaire et vaccination',[
+    ['Micro-organismes','Bactéries, virus et champignons sont des micro-organismes. Certains sont pathogènes, d’autres sont utiles ou inoffensifs.'],
+    ['Immunité innée','La peau et les muqueuses forment des barrières. La réaction inflammatoire et certaines cellules interviennent rapidement.'],
+    ['Immunité adaptative','Les lymphocytes B produisent des anticorps ; les lymphocytes T participent à la destruction des cellules infectées. Des cellules mémoire persistent.'],
+    ['Vaccination','Un vaccin prépare le système immunitaire à reconnaître un agent infectieux et favorise une réponse plus rapide lors d’une exposition ultérieure.']
+  ],[
+    ['Les anticorps sont produits par…',['certains lymphocytes B','les os','les globules rouges'],0,'Les lymphocytes B se différencient en cellules productrices d’anticorps.'],
+    ['La vaccination permet…',['de préparer la réponse immunitaire','de remplacer tous les médicaments','de supprimer toutes les bactéries'],0,'Elle entraîne une mémoire immunitaire.'],
+    ['La peau constitue…',['une barrière de l’immunité innée','un anticorps','un vaccin'],0,'La peau empêche l’entrée de nombreux agents.']
+  ],[['La mémoire immunitaire peut rendre une réponse ultérieure plus rapide.',true,'C’est un principe de la vaccination.'],['Tous les micro-organismes sont dangereux.',false,'Beaucoup sont utiles ou inoffensifs.']]);
+  add('pc5-melanges','physique','5e','Mélanges, dissolution et séparation',[
+    ['Corps pur et mélange','Un corps pur contient une seule espèce chimique. Un mélange contient plusieurs constituants. Il peut être homogène ou hétérogène.'],
+    ['Dissolution','Lorsqu’un solide se dissout, il forme une solution. Le soluté est dissous dans le solvant : le sel dans l’eau salée.'],
+    ['Séparer','La filtration sépare un solide non dissous d’un liquide. La décantation utilise la différence de densité ; l’évaporation peut récupérer un solide dissous.'],
+    ['Conservation','Lors d’une dissolution, la masse totale se conserve si rien n’est perdu : masse solution = masse solvant + masse soluté.']
+  ],[
+    ['L’eau salée est…',['un corps pur','un mélange homogène','un mélange hétérogène'],1,'Le sel dissous n’est plus visible : solution homogène.'],
+    ['Pour séparer du sable et de l’eau, on peut utiliser…',['la filtration','un aimant toujours','la congélation uniquement'],0,'Le filtre retient le sable.'],
+    ['Le constituant dissous est le…',['solvant','soluté','filtre'],1,'Le sel est le soluté ; l’eau est le solvant.']
+  ],[['Une solution est un mélange homogène.',true,'On ne distingue pas ses constituants à l’œil nu.'],['La dissolution fait disparaître la matière.',false,'La matière est toujours présente dans la solution.']]);
+  add('pc4-vitesse','physique','4e','Mouvement, vitesse et trajectoire',[
+    ['Trajectoire','La trajectoire est l’ensemble des positions successives d’un objet. Elle peut être rectiligne, circulaire ou curviligne.'],
+    ['Vitesse moyenne','v = distance / durée. Si la distance est en kilomètres et la durée en heures, la vitesse est en km/h.'],
+    ['Conversions','Pour passer de m/s à km/h, on multiplie par 3,6. Pour passer de km/h à m/s, on divise par 3,6.'],
+    ['Relativité du mouvement','Un mouvement se décrit par rapport à un référentiel. Un passager assis est immobile par rapport au train mais en mouvement par rapport au sol.']
+  ],[
+    ['Un véhicule parcourt 100 km en 2 h. Sa vitesse moyenne est…',['50 km/h','100 km/h','200 km/h'],0,'v = 100 ÷ 2 = 50 km/h.'],
+    ['Une trajectoire en cercle est…',['rectiligne','circulaire','immobile'],1,'Le mobile suit un cercle.'],
+    ['10 m/s correspond à…',['3,6 km/h','36 km/h','360 km/h'],1,'10 × 3,6 = 36 km/h.']
+  ],[['La description du mouvement dépend du référentiel.',true,'Le mouvement est relatif au référentiel choisi.'],['La vitesse moyenne est distance multipliée par durée.',false,'On divise la distance par la durée.']]);
+  add('pc3-energie','physique','3e','Énergie, puissance et conversions',[
+    ['Formes d’énergie','Énergie cinétique liée au mouvement, potentielle liée à la position, thermique, chimique, électrique, lumineuse et nucléaire.'],
+    ['Conversions','Une chaîne énergétique décrit le convertisseur, l’énergie reçue, l’énergie utile et les pertes souvent dissipées sous forme thermique.'],
+    ['Puissance','La puissance mesure l’énergie transférée par unité de temps : P = E/t. Le watt (W) est l’unité de puissance.'],
+    ['Économies','Rendement, isolation, appareils efficaces et réduction des pertes permettent de limiter la consommation d’énergie.']
+  ],[
+    ['L’unité de puissance est…',['le joule','le watt','le volt'],1,'Le watt (W) mesure la puissance.'],
+    ['L’énergie cinétique est liée…',['au mouvement','à la couleur','à la masse uniquement'],0,'Elle dépend notamment de la masse et de la vitesse.'],
+    ['La puissance est…',['E × t','E / t','t / E'],1,'P = E/t.']
+  ],[['Une conversion énergétique peut comporter des pertes thermiques.',true,'Une partie de l’énergie est dissipée.'],['Le watt est une unité d’énergie.',false,'Le watt est une unité de puissance ; le joule est une unité d’énergie.']]);
+
+  // ITALIEN — compléments linguistiques.
+  add('it5-articoli-preposizioni','italien','5e','Articles et prépositions simples',[
+    ['Articles définis','il (masculin), lo (devant z, s + consonne…), l’ (voyelle), la (féminin), i, gli, le au pluriel.'],
+    ['Articles indéfinis','un, uno, una, un’ : le choix dépend du genre et du son initial du nom. Exemples : un libro, uno studente, un’amica.'],
+    ['Prépositions','a = à, di = de, in = dans/en, con = avec, su = sur, per = pour/par. Elles servent à préciser les relations.'],
+    ['Prépositions articulées','di + il = del ; a + il = al ; in + la = nella. Certaines combinaisons changent selon l’article.']
+  ],[
+    ['« le livre » se dit…',['la libro','il libro','lo libro'],1,'Libro est masculin singulier : il libro.'],
+    ['« une amie » se dit…',['un’amica','uno amica','il amica'],0,'Amica est féminin devant voyelle : un’amica.'],
+    ['« avec » se traduit par…',['per','con','di'],1,'Con signifie avec.']
+  ],[['« gli studenti » est un pluriel masculin correct.',true,'Gli est utilisé devant s + consonne.'],['« la libro » est correct.',false,'Libro est masculin : il libro.']]);
+  add('it4-passato-prossimo','italien','4e','Passato prossimo',[
+    ['Formation','Passato prossimo = auxiliaire essere ou avere au présent + participe passé : ho mangiato, sono partito.'],
+    ['Avec avere','La plupart des verbes transitifs utilisent avere : ho visto un film, abbiamo comprato il pane.'],
+    ['Avec essere','Les verbes de déplacement et de changement d’état fréquents utilisent essere : sono andato/a, è arrivata. Accord du participe avec le sujet.'],
+    ['Participes passés','-are → -ato ; -ere → souvent -uto ; -ire → -ito. Irréguliers fréquents : fatto, detto, scritto, letto, visto, preso.']
+  ],[
+    ['« J’ai mangé » :',['sono mangiato','ho mangiato','hai mangiare'],1,'Avere au présent + mangiato.'],
+    ['« Je suis allé » (garçon) :',['sono andato','ho andato','sono andare'],0,'Andare utilise essere ; accord masculin singulier.'],
+    ['Le participe passé de fare est…',['facito','fatto','fare'],1,'Fare → fatto.']
+  ],[['Le passato prossimo utilise essere ou avere.',true,'Auxiliaire au présent + participe passé.'],['« Ho andato » est la forme standard de « je suis allé ».',false,'On dit sono andato.']]);
+  add('it3-pronomi-combinati','italien','3e','Pronoms directs et indirects',[
+    ['Pronoms directs','mi, ti, lo/la, ci, vi, li/le remplacent un complément direct : Vedo Marco → Lo vedo.'],
+    ['Pronoms indirects','mi, ti, gli/le, ci, vi, gli remplacent un complément introduit par a : Telefono a Luca → Gli telefono.'],
+    ['Place','Le pronom se place généralement avant le verbe conjugué : La conosco. Avec infinitif, il peut s’attacher à la fin : voglio vederlo.'],
+    ['Attention','Lo et la s’élident devant une voyelle dans certains cas : l’ho visto. Au passé composé, le participe peut s’accorder avec un COD placé avant.']
+  ],[
+    ['« Je le vois » :',['Lo vedo','Gli vedo','Vedo lo'],0,'Lo remplace un complément direct masculin.'],
+    ['« Je téléphone à Luca » :',['Lo telefono','Gli telefono','La telefono'],1,'A Luca est un complément indirect : gli.'],
+    ['« Je veux le voir » :',['Voglio lo vedere','Voglio vederlo','Lo voglio vedere seulement interdit'],1,'Le pronom peut s’attacher à l’infinitif.']
+  ],[['« La vedo » signifie « je la vois ».',true,'La est le pronom direct féminin.'],['« Gli » remplace toujours un complément direct féminin.',false,'Gli est généralement indirect masculin singulier.']]);
+})();
