@@ -245,12 +245,11 @@ var App = (function () {
   }
 
   function viewWelcome() {
-    var html = '<div class="card"><h3><span class="em">👋</span>Bienvenue sur Révise+ !</h3>'
-      + '<p>Réussir pas à pas, du collège au lycée. Choisis ton profil :</p>'
-      + '<div class="grid2">'
-      + '<div class="item" onclick="chooseProfile(\'Gabriel\')"><span class="ic">🚀</span><span class="nm">Gabriel</span><div class="sub">Univers galaxie</div></div>'
-      + '<div class="item" onclick="chooseProfile(\'Emma\')"><span class="ic">🐱</span><span class="nm">Emma</span><div class="sub">Univers kawaii</div></div>'
-      + '</div></div>'
+    var html = '<section class="profile-select">'
+      + '<div class="profile-select-head"><div class="eyebrow">Ton aventure commence ici</div><h2>Qui part à la découverte ?</h2><p>Choisis ton univers. Ton compagnon t’attend pour apprendre, jouer et progresser.</p></div>'
+      + '<button class="profile-choice gabriel" onclick="chooseProfile(\'Gabriel\')"><img class="profile-art" src="images/3d/gabriel-explorer-3d.png" alt=""><span class="profile-spark">✦</span><span class="profile-copy"><span class="profile-label">Exploration • Galaxie</span><span class="profile-name">Gabriel</span><span class="profile-desc">Cap sur les étoiles avec Nova, ton robot-guide.</span><span class="profile-enter">Entrer dans mon univers <b>↗</b></span></span></button>'
+      + '<button class="profile-choice emma" onclick="chooseProfile(\'Emma\')"><img class="profile-art" src="images/3d/lumi-fairy-3d.png" alt=""><span class="profile-spark">✧</span><span class="profile-copy"><span class="profile-label">Magie • Jardin enchanté</span><span class="profile-name">Emma</span><span class="profile-desc">Un monde doux et coloré avec Lumi, ta fée complice.</span><span class="profile-enter">Entrer dans mon univers <b>↗</b></span></span></button>'
+      + '<div class="profile-footnote">✨ Deux univers, une aventure à ton rythme</div></section>'
       + '<div class="card"><h3><span class="em">✨</span>Comment ça marche ?</h3><ul>'
       + '<li>Choisis ta classe et révise avec des fiches (express et complètes).</li>'
       + '<li>Écoute-les avec le bouton 🔊 si tu préfères.</li>'
