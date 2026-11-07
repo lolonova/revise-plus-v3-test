@@ -752,7 +752,7 @@ window.__rpShowLoadReport = function() {
   }
   var rows = Object.keys(window.__RP_LOADS__).map(function(k){return k+' : '+window.__RP_LOADS__[k];});
   box.innerHTML='<b>Diagnostic technique Révise+</b><br><pre style="white-space:pre-wrap;overflow-wrap:anywhere"></pre>';
-  box.querySelector('pre').textContent=rows.join('\n')+'\nApp global : '+typeof window.App+'\nDonnées : '+typeof window.REVISE_DATA;
+  box.querySelector('pre').textContent=rows.join('\n')+'\nApp global : '+typeof window.App+'\nDonnées : '+typeof window.REVISE_DATA+'\nErreur capturée dans app.js : '+(window.__RP_APP_BOOT_ERROR__||'aucune exception capturée');
 };
 </script>
 <script src="data.js" onload="__rpMark('data.js',true)" onerror="__rpMark('data.js',false)"></script>
