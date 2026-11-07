@@ -201,6 +201,7 @@ var App = (function () {
   }
   function finishOnboarding() {
     if (!onboardingMats().length) return;
+    localStorage.setItem('reviseplus_setup_'+state.profile,'1');
     viewAccueil();
   }
 
@@ -706,14 +707,13 @@ var App = (function () {
 
   // ================= NAVIGATION =================
   function chooseProfile(name) {
-    navHistory = [];
-    state.profile = name;
+    navHistory = []; state.profile = name;
     document.body.className = name === 'Emma' ? 'theme-emma' : 'theme-gabriel';
     document.querySelector('.logo').textContent = name === 'Emma' ? '🐱' : '🚀';
     localStorage.setItem('reviseplus_currentProfile', name);
     state.niveau = localStorage.getItem('reviseplus_niveau_' + name) || '5e';
     state.mat = null; state.chap = null;
-    viewNiveau();
+    if(localStorage.getItem('reviseplus_setup_'+name)==='1') viewAccueil(); else viewNiveau();
   }
   function setLevel(n) {
     state.niveau = n;
