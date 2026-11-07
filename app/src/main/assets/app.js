@@ -8,8 +8,17 @@ var App = (function () {
     function audio(){if(!ctx){var C=window.AudioContext||window.webkitAudioContext;if(C)ctx=new C();}if(ctx&&ctx.state==='suspended')ctx.resume();return ctx;}
     function tone(freq,dur,type,vol,delay){var c=audio();if(!c)return;var o=c.createOscillator(),g=c.createGain();o.type=type||'sine';o.frequency.value=freq;g.gain.setValueAtTime(.0001,c.currentTime+(delay||0));g.gain.exponentialRampToValueAtTime(vol||.04,c.currentTime+(delay||0)+.025);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+(delay||0)+dur);o.connect(g);g.connect(c.destination);o.start(c.currentTime+(delay||0));o.stop(c.currentTime+(delay||0)+dur+.04);}
     function fx(ok){if(ok){tone(660,.16,'sine',.07);tone(880,.22,'sine',.045,.11);tone(1046,.3,'sine',.035,.22);}else{tone(240,.2,'triangle',.045);tone(190,.25,'triangle',.03,.13);}}
-    var notes=[392,494,587,494,440,523,659,523,349,440,523,440];
-    function tick(){if(!musicOn)return;var n=notes[step++%notes.length];tone(n,.85,'sine',.012);tone(n/2,.95,'triangle',.008,.02);timer=setTimeout(tick,1250);}
+    // Ambiance plus solaire : arpèges majeurs, basse légère et petite mélodie ascendante.
+    var chords=[[261.63,329.63,392.00],[220.00,261.63,329.63],[174.61,220.00,261.63],[196.00,246.94,293.66]];
+    var melody=[523.25,659.25,783.99,659.25,587.33,698.46,880,698.46,523.25,659.25,783.99,1046.5,783.99,659.25,587.33,523.25];
+    function tick(){
+      if(!musicOn)return;
+      var beat=step++, chord=chords[Math.floor(beat/4)%chords.length], note=melody[beat%melody.length];
+      tone(chord[beat%3],.24,'triangle',.018);
+      if(beat%4===0)tone(chord[0]/2,.42,'sine',.026,.01);
+      tone(note,.20,'sine',.014,.04);
+      timer=setTimeout(tick,310);
+    }
     function set(on){musicOn=!!on;localStorage.setItem('rp_music',musicOn?'1':'0');var b=document.getElementById('musicToggle');if(b){b.textContent=musicOn?'♫':'♪';b.classList.toggle('music-on',musicOn);b.setAttribute('aria-label',musicOn?'Couper la musique':'Activer la musique');}if(timer){clearTimeout(timer);timer=null;}if(musicOn){audio();tick();}}
     function toggle(){set(!musicOn);}
     function init(){var b=document.getElementById('musicToggle');if(b)b.onclick=toggle;set(musicOn);}
@@ -460,42 +469,53 @@ var App = (function () {
   }
 
   function showQuestion() {
-    var q = quiz.qs[quiz.i];
-    var progressPct=Math.round((quiz.i/quiz.qs.length)*100);
-    var html = '<div class="quiz-shell '+(quiz.boss?'quiz-boss':'')+'"><div class="quiz-progress-top"><span>'+(quiz.boss?'👾 COMBAT CONTRE LE BOSS':'MISSION EN COURS')+'</span><b>Question '+(quiz.i+1)+' / '+quiz.qs.length+'</b></div><div class="quiz-progress-track"><i style="width:'+progressPct+'%"></i></div><div class="card"><div class="quiz-guardian"><img src="' + (state.profile === 'Emma' ? 'images/3d/lumi-fairy-3d.png' : 'images/3d/gabriel-explorer-3d.png') + '" alt=""><div><b>' + (state.profile === 'Emma' ? 'Lumi te souffle un conseil ✨' : 'Nova est à tes côtés 🤖') + '</b><span>' + (state.profile === 'Emma' ? 'Prends ton temps. Tu as le droit de réfléchir, je reste avec toi !' : 'Analyse les indices. Une erreur est juste une étape vers la réussite !') + '</span></div></div><h3><span class="em">' + quiz.c.icon + '</span>' + quiz.c.titre
-      + ' <span style="font-size:0.75rem;opacity:0.7">' + (quiz.i + 1) + '/' + quiz.qs.length + '</span>'
-      + (quiz.mode === 1 ? ' <span class="demo-tag">DÉCOUVERTE</span>' : ' <span class="demo-tag">EXPERT</span>') + '</h3>';
-    html += '<p style="font-weight:700">' + q.q + '</p>';
-    q.choix.forEach(function (ch, idx) {
-      html += '<button class="choice" id="ch' + idx + '" onclick="answer(' + idx + ')">' + ch + '</button>';
-    });
-    html += '<p id="fb" class="hidden"></p></div></div>';
-    render(html);
+    var q=quiz.qs[quiz.i], pct=Math.round((quiz.i/quiz.qs.length)*100), type=quiz.gameType||'quiz';
+    var title=q._chapter?q._chapter.titre:quiz.c.titre;
+    var html='<div class="quiz-shell"><div class="quiz-progress-top"><span>'+(type==='mega'?'🌟 MÉGA-QUIZ MULTIMATIÈRES':'MISSION · NIVEAU '+(quiz.chapterLevel||1))+'</span><b>Question '+(quiz.i+1)+' / '+quiz.qs.length+'</b></div>'
+      +'<div class="quiz-progress-track"><i style="width:'+pct+'%"></i></div><div class="card"><div class="quiz-guardian"><img src="'+(state.profile==='Emma'?'images/3d/lumi-fairy-3d.png':'images/3d/gabriel-explorer-3d.png')+'" alt=""><div><b>'+(state.profile==='Emma'?'Lumi est avec toi ✨':'Nova est à tes côtés 🤖')+'</b><span>Une question à la fois. Tu peux prendre ton temps !</span></div></div>'
+      +'<h3>'+title+'</h3><p style="font-weight:700">'+(type==='hangman'?'🔎 Indice : ':'')+q.q+'</p>';
+    if(type==='written'){
+      html+='<input id="writtenAnswer" type="text" autocomplete="off" placeholder="Écris ta réponse…" onkeydown="if(event.key===\'Enter\')gameAnswerText()">'
+        +'<button class="btn" onclick="gameAnswerText()">Valider</button> <button class="btn ghost" id="voiceAnswer" onclick="gameSpeech()">🎙️ Dicter</button>';
+    }else if(type==='hangman'){
+      var word=String(q.choix[q.bon]), clean=word.toLocaleLowerCase('fr-FR').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z ]/g,'');
+      quiz.guessed=quiz.guessed||[];quiz.misses=quiz.misses||0;
+      html+='<div style="font-size:1.65rem;letter-spacing:5px;text-align:center;padding:16px 4px;font-weight:900">'+clean.split('').map(function(ch){return ch===' '?'　':(quiz.guessed.indexOf(ch)>=0?ch.toUpperCase():'＿');}).join(' ')+'</div>'
+        +'<p style="text-align:center">Erreurs : '+quiz.misses+' / 7</p><div class="grid3">';
+      'abcdefghijklmnopqrstuvwxyz'.split('').forEach(function(ch){html+='<button class="btn small" '+(quiz.guessed.indexOf(ch)>=0?'disabled':'')+' onclick="gameHangmanLetter(\''+ch+'\')">'+ch.toUpperCase()+'</button>';});
+      html+='</div>';
+      if(quiz.misses>=7){html+='<p>Le mot était : <b>'+word+'</b></p><button class="btn" onclick="answer(-1)">Voir la correction</button>';}
+    }else{
+      q.choix.forEach(function(ch,idx){html+='<button class="choice" id="ch'+idx+'" onclick="answer('+idx+')">'+ch+'</button>';});
+    }
+    html+='<p id="fb" class="hidden"></p></div></div>';render(html);
   }
 
   function answer(idx) {
     var q = quiz.qs[quiz.i];
+    if(idx<0)idx=q.bon===0?1:0;
     var ok = idx === q.bon;
     if (AudioFX) AudioFX.fx(ok);
     var fb = document.getElementById('fb');
-    document.getElementById('ch' + q.bon).classList.add('right');
-    if (!ok) document.getElementById('ch' + idx).classList.add('wrong');
+    var correctBtn=document.getElementById('ch'+q.bon), wrongBtn=document.getElementById('ch'+idx);
+    if(correctBtn)correctBtn.classList.add('right');
+    if(!ok&&wrongBtn)wrongBtn.classList.add('wrong');
     fb.classList.remove('hidden');
-    fb.innerHTML = '<div class="answer-feedback '+(ok?'feedback-good':'feedback-wrong')+'">'+(ok?'✨ Bien joué !':'💡 On apprend aussi en se trompant !')+'<div class="feedback-explain">'+(q.exp || ('La bonne réponse est : '+q.choix[q.bon]))+'</div><div class="feedback-actions"><button class="btn ghost small" onclick="quizAskWhy()">🤔 Je veux comprendre</button><button class="btn small" onclick="quizNext()">J’ai compris · Suivant →</button></div></div>';
-    for (var k = 0; k < q.choix.length; k++) document.getElementById('ch' + k).onclick = null;
+    fb.innerHTML = '<div class="answer-feedback '+(ok?'feedback-good':'feedback-wrong')+'">'+(ok?'✨ Bien joué !':'💡 On apprend aussi en se trompant !')+'<div class="feedback-explain">'+(q.exp || ('La bonne réponse est : '+q.choix[q.bon]))+'</div><div class="feedback-actions"><button class="btn ghost small" onclick="quizAskWhy()">🤔 Je veux comprendre</button><button class="btn small" onclick="gameNext()">J’ai compris · Suivant →</button></div></div>';
+    for (var k = 0; k < q.choix.length; k++){var choiceBtn=document.getElementById('ch'+k);if(choiceBtn)choiceBtn.onclick=null;}
     var p = load();
     if (ok) {
       quiz.score++; quiz.streak++;
       p.streak = Math.max(p.streak || 0, quiz.streak);
       p.bestStreak = Math.max(p.bestStreak || 0, quiz.streak);
-      setMaitrise(quiz.c.id, quiz.mode === 1 ? 8 : 12);
-      clearError(quiz.c.id, q.q);
+      setMaitrise((q._chapter||quiz.c).id, quiz.mode === 1 ? 8 : 12);
+      clearError((q._chapter||quiz.c).id, q.q);
       addXP(quiz.mode === 1 ? 5 : 10);
     } else {
       quiz.streak = 0;
       p.streak = 0; save(p);
-      setMaitrise(quiz.c.id, quiz.mode === 1 ? -8 : -12);
-      recordError(quiz.c.id, q.q);
+      setMaitrise((q._chapter||quiz.c).id, quiz.mode === 1 ? -8 : -12);
+      recordError((q._chapter||quiz.c).id, q.q);
     }
     // Le feedback reste affiché jusqu'à ce que l'enfant décide de continuer.
     quiz.waitingNext = true;
@@ -527,7 +547,7 @@ var App = (function () {
     else if (pct < 100) html += '<p>💡 Bien joué ! Passe en mode ⚡ Expert pour viser le sans-faute.</p>';
     else html += '<p>🏆 Sans faute, bravo !</p>';
     if(quiz.boss)html+='<div class="boss-reward">'+(bossWin?'🎉 Boss vaincu : +25 XP bonus et badge Chasseur de boss !':'💪 Tu as déjà appris beaucoup. Reviens défier le boss après une petite révision.')+'</div>';
-    html += '<button class="btn" onclick="startQuiz(quizMode())">🔄 Rejouer</button> '
+    if(quiz.gameType==='mega')p=addXP(50);\n    html += '<button class="btn" onclick="'+(quiz.gameType==='mega'?'gameStartMega()':'gameStartChapter(\''+quiz.c.id+'\')')+'">🔄 Rejouer</button> '
       + '<button class="btn ghost" onclick="goTab(\'plus\');viewProgres()">📊 Mes progrès</button> '
       + '<button class="btn ghost" onclick="backToChapters()">📖 Retour au cours</button></div>';
     render(html);
@@ -689,59 +709,118 @@ var App = (function () {
     viewProgres();
   }
 
-  // ================= JEUX =================
+  // ================= ARCADE : PARCOURS PAR MATIÈRE ET CHAPITRE =================
+  var gameModeChosen = 'quiz', gameSubjectChosen = null;
+  function gameModesHtml(){
+    return '<div class="game-mode-grid">'
+      + '<button class="game-mode mode-quest '+(gameModeChosen==='quiz'?'selected':'')+'" onclick="gamePickMode(\'quiz\')"><span class="game-art">🧠</span><b>Quiz à choix</b><small>Choisis la bonne réponse</small><span class="game-launch">Jouer ↗</span></button>'
+      + '<button class="game-mode mode-speed '+(gameModeChosen==='written'?'selected':'')+'" onclick="gamePickMode(\'written\')"><span class="game-art">✍️</span><b>Réponse écrite</b><small>Écris ou dicte ta réponse</small><span class="game-launch">Jouer ↗</span></button>'
+      + '<button class="game-mode mode-boss '+(gameModeChosen==='hangman'?'selected':'')+'" onclick="gamePickMode(\'hangman\')"><span class="game-art">🔤</span><b>Le mot mystère</b><small>Pendu pédagogique pour les langues</small><span class="game-launch">Jouer ↗</span></button>'
+      + '<button class="game-mode mode-daily '+(gameModeChosen==='mega'?'selected':'')+'" onclick="gamePickMode(\'mega\')"><span class="game-art">🌟</span><b>Méga-quiz</b><small>Toutes les matières · gros bonus XP</small><span class="game-launch">+50 XP ↗</span></button></div>';
+  }
   function viewJeux() {
     setTab('jeux');
     if (needProfile()) return;
-    var p = load();
-    var emma = state.profile === 'Emma';
-    var buddy = emma ? 'Lumi' : 'Nova';
-    var html = '<section class="arcade-hero '+(emma?'arcade-emma':'arcade-gabriel')+'">'
-      + '<div class="arcade-orb">'+(emma?'<img src="images/3d/lumi-fairy-3d.png" alt="">':'<img src="images/3d/gabriel-explorer-3d.png" alt="">')+'</div><div class="arcade-kicker">TON UNIVERS • ARCADE ÉDUCATIVE</div>'
-      + '<h2>Prêt pour la<br><span>mission du jour ?</span></h2>'
-      + '<p>'+buddy+' a préparé des défis pour toi. Chaque bonne réponse fait avancer ton aventure !</p>'
-      + '<div class="arcade-stats"><span>⚡ '+p.xp+' XP</span><span>🔥 '+(p.bestStreak||0)+' record</span><span>👾 '+(p.bossWins||0)+' boss</span><span>🏅 '+p.badges.length+' badges</span></div></section>';
-    html += '<div class="game-mode-grid">'
-      + '<button class="game-mode mode-quest" onclick="gamePickChapter(1)"><span class="game-art">🗺️</span><b>Mission découverte</b><small>Apprendre sans pression · questions courtes</small><span class="game-launch">Jouer ↗</span></button>'
-      + '<button class="game-mode mode-speed" onclick="gamePickChapter(2)"><span class="game-art">⚡</span><b>Défi éclair</b><small>Enchaîne les bonnes réponses · XP bonus</small><span class="game-launch">Jouer ↗</span></button>'
-      + '<button class="game-mode mode-boss" onclick="gamePickChapter(3)"><span class="game-art">👾</span><b>Boss du savoir</b><small>5 questions pour vaincre le boss</small><span class="game-launch">Jouer ↗</span></button>'
-      + '<button class="game-mode mode-daily" onclick="doDailyPick()"><span class="game-art">🎯</span><b>Défi quotidien</b><small>Une mission spéciale, chaque jour</small><span class="game-launch">+30 XP ↗</span></button></div>';
-    html += '<div class="section-title">Choisis ta planète de connaissances</div><div class="card game-chapter-card"><div id="gameModeStatus" class="game-mode-status">🧭 Mode sélectionné : Mission découverte — choisis une matière pour commencer.</div><p class="game-intro">Chaque matière est une planète. Choisis ton parcours, puis lance ta mission.</p>';
+    var p=load(), emma=state.profile==='Emma', buddy=emma?'Lumi':'Nova';
+    var html='<section class="arcade-hero '+(emma?'arcade-emma':'arcade-gabriel')+'">'
+      +'<div class="arcade-orb">'+(emma?'<img src="images/3d/lumi-fairy-3d.png" alt="">':'<img src="images/3d/gabriel-explorer-3d.png" alt="">')+'</div>'
+      +'<div class="arcade-kicker">TON UNIVERS • ARCADE ÉDUCATIVE</div><h2>À toi de jouer !</h2>'
+      +'<p>'+buddy+' te propose 4 façons de progresser. Chaque niveau correspond à un chapitre de ton programme.</p>'
+      +'<div class="arcade-stats"><span>⚡ '+p.xp+' XP</span><span>🔥 '+(p.bestStreak||0)+' record</span><span>👾 '+(p.bossWins||0)+' boss</span><span>🏅 '+p.badges.length+' badges</span></div></section>';
+    html+=gameModesHtml();
+    html+='<div class="section-title">1 · Choisis ta matière</div><div class="card game-chapter-card"><p class="game-intro">On garde le même parcours dans tous les jeux : niveau 1 = chapitre 1, niveau 2 = chapitre 2… Termine un chapitre pour débloquer le suivant.</p><div class="grid2">';
     myMatieres().forEach(function(m){
       var chs=chaptersFor(m.id,state.niveau); if(!chs.length)return;
-      html+='<div class="game-subject"><h3>'+m.icon+' '+m.nom+'</h3><div class="game-chapters">';
-      chs.forEach(function(c){html+='<button class="game-chapter" onclick="gameStartChapter(\''+c.id+'\',gameModeChosen)">'+c.titre+' <span>▶</span></button>';});
-      html+='</div></div>';
+      var done=chs.filter(function(c){return (p.maitrise[c.id]||0)>=50;}).length;
+      html+='<button class="item" style="color:var(--txt);border:2px solid '+(gameSubjectChosen===m.id?'var(--gold)':'transparent')+'" onclick="gamePickSubject(\''+m.id+'\')"><span class="ic">'+m.icon+'</span><span class="nm">'+m.nom+'</span><div class="sub">'+done+'/'+chs.length+' chapitres validés</div></button>';
     });
-    html+='</div><div class="card game-daily">'+dailyChallenge()+'</div>';
+    html+='</div><div id="gameChapterList"></div></div>';
     render(html); updateChip();
+    if(gameSubjectChosen)gamePickSubject(gameSubjectChosen);
   }
-  var gameModeChosen = 1;
-  function gamePickChapter(mode){
-    gameModeChosen=mode; window.gameModeChosen=mode;
-    document.querySelectorAll('.game-mode').forEach(function(b){b.classList.remove('selected');});
-    var buttons=document.querySelectorAll('.game-mode');
-    if(buttons[mode-1])buttons[mode-1].classList.add('selected');
-    var names={1:'Mission découverte — apprendre sans pression',2:'Défi éclair — répondre avec énergie',3:'Boss du savoir — cinq questions pour le boss'};
-    var el=document.getElementById('gameModeStatus');
-    if(el)el.textContent=(mode===1?'🧭 ':mode===2?'⚡ ':'👾 ')+(names[mode]||'Mission sélectionnée')+'. Choisis ta matière pour commencer.';
-    var card=document.querySelector('.game-chapter-card'); if(card)card.scrollIntoView({behavior:'smooth',block:'start'});
+  function gamePickMode(mode){
+    gameModeChosen=mode;
+    if(mode==='hangman' && gameSubjectChosen && ['anglais','italien','francais'].indexOf(gameSubjectChosen)<0)gameSubjectChosen=null;
+    viewJeux();
   }
-  function gameStartChapter(id,mode){ state.chap=id; var c=chapById(id); if(!c)return; var qs=poolFor(c,mode===1?1:2); if(mode===3)qs=qs.slice(0,5); if(!qs.length){alert('Ce chapitre arrive bientôt dans les missions.');return;} quiz={c:c,mode:mode===1?1:2,qs:qs,i:0,score:0,streak:0,boss:mode===3};pushRecent(id);showQuestion(); }
-  function doDailyPick(){ var mats=myMatieres().map(function(m){return m.id;});var pool=REVISE_DATA.chapitres.filter(function(c){return mats.indexOf(c.mat)!==-1&&c.niveau===state.niveau;});if(!pool.length)pool=REVISE_DATA.chapitres;var c=pool[Math.floor(Math.random()*pool.length)];doDaily(c.id); }
-  // Les cartes de l'arcade utilisent des onclick HTML : exposer leurs actions au WebView.
-  window.gamePickChapter=gamePickChapter;
-  window.gameStartChapter=gameStartChapter;
-  window.doDailyPick=doDailyPick;
-  window.gameModeChosen=gameModeChosen;
-  function quizFromList(chapId) {
-    state.chap = chapId;
-    var c = chapById(chapId);
-    quiz = { c: c, mode: 1, qs: poolFor(c, 1), i: 0, score: 0, streak: 0 };
-    pushRecent(chapId);
+  function gamePickSubject(mat){
+    gameSubjectChosen=mat;
+    var m=REVISE_DATA.matieres.filter(function(x){return x.id===mat;})[0], chs=chaptersFor(mat,state.niveau), p=load();
+    var box=document.getElementById('gameChapterList'); if(!box)return;
+    if(gameModeChosen==='hangman' && ['anglais','italien','francais'].indexOf(mat)<0){
+      box.innerHTML='<div class="warn">🔤 Le jeu du mot mystère est réservé au français, à l’anglais et à l’italien. Choisis une de ces matières.</div>';return;
+    }
+    var html='<h3 style="margin-top:16px">2 · '+m.icon+' '+m.nom+' — '+state.niveau+'</h3><p class="game-intro">Choisis ton niveau. Les chapitres suivants se débloquent dans l’ordre du programme.</p>';
+    chs.forEach(function(c,i){
+      var pct=p.maitrise[c.id]||0, unlocked=i===0||(p.maitrise[chs[i-1].id]||0)>=50;
+      html+='<button class="game-chapter" '+(unlocked?'':'disabled style="opacity:.42;filter:grayscale(1)"')+' onclick="gameStartChapter(\''+c.id+'\')">'
+        +(unlocked?'▶ ':'🔒 ')+'<b>Niveau '+(i+1)+' · '+c.titre+'</b><span>'+(pct>=50?'✔ Validé · ':'Progression · ')+pct+' %</span></button>';
+    });
+    box.innerHTML=html;
+  }
+  function gameStartChapter(id){
+    var c=chapById(id); if(!c)return;
+    var chs=chaptersFor(c.mat,c.niveau), idx=chs.map(function(x){return x.id;}).indexOf(id), p=load();
+    if(idx>0&&(p.maitrise[chs[idx-1].id]||0)<50){alert('Termine d’abord le niveau précédent pour débloquer ce chapitre.');return;}
+    if(gameModeChosen==='hangman'&&['anglais','italien','francais'].indexOf(c.mat)<0){alert('Le mot mystère est réservé aux langues.');return;}
+    var all=c.quiz.concat(c.vf.map(function(v){return {q:v.q,choix:['Vrai','Faux'],bon:v.v?0:1,exp:v.exp};}));
+    if(!all.length){alert('Les questions de ce chapitre arrivent bientôt.');return;}
+    quiz={c:c,mode:1,qs:shuffle(all),i:0,score:0,streak:0,boss:false,gameType:gameModeChosen,chapterLevel:idx+1};
+    if(gameModeChosen==='hangman')quiz.qs=quiz.qs.filter(function(q){return q.choix&&q.choix[q.bon]&&/[a-zà-ÿ]/i.test(q.choix[q.bon]);});
+    if(!quiz.qs.length){alert('Ce chapitre ne contient pas encore de mots à trouver.');return;}
+    quiz.qs=quiz.qs.slice(0,gameModeChosen==='mega'?12:8);
+    pushRecent(id); showQuestion();
+  }
+  function gameStartMega(){
+    var mats=myMatieres().map(function(m){return m.id;}), chapters=REVISE_DATA.chapitres.filter(function(c){return c.niveau===state.niveau&&mats.indexOf(c.mat)>=0;});
+    var p=load(), unlocked=[];
+    chapters.forEach(function(c){
+      var chs=chaptersFor(c.mat,c.niveau), idx=chs.map(function(x){return x.id;}).indexOf(c.id);
+      if(idx===0||(p.maitrise[chs[idx-1].id]||0)>=50)unlocked.push(c);
+    });
+    var pool=[];
+    unlocked.forEach(function(c){c.quiz.forEach(function(q){pool.push(Object.assign({},q,{_chapter:c}));});});
+    if(pool.length<3){alert('Débloque quelques chapitres pour lancer le Méga-quiz !');return;}
+    var first=unlocked[0]; quiz={c:first,mode:2,qs:shuffle(pool).slice(0,12),i:0,score:0,streak:0,boss:false,gameType:'mega',mega:true};
     showQuestion();
   }
-
+  function gameAnswerText(){
+    if(!quiz||quiz.waitingNext)return;
+    var q=quiz.qs[quiz.i], input=document.getElementById('writtenAnswer'); if(!input)return;
+    var val=normalAnswer(input.value), expected=normalAnswer(q.choix[q.bon]);
+    if(!val){input.focus();return;}
+    answer(val===expected?q.bon:(q.bon===0?1:0));
+  }
+  function normalAnswer(v){return String(v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');}
+  function gameSpeech(){
+    var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(!SR){alert('La dictée vocale n’est pas disponible sur cet appareil.');return;}
+    var rec=new SR(); rec.lang='fr-FR';rec.interimResults=false;rec.maxAlternatives=1;
+    var b=document.getElementById('voiceAnswer');if(b)b.textContent='🎙️ J’écoute…';
+    rec.onresult=function(e){var i=document.getElementById('writtenAnswer');if(i)i.value=e.results[0][0].transcript;if(b)b.textContent='🎙️ Dicter';};
+    rec.onerror=function(){if(b)b.textContent='🎙️ Dicter';};
+    rec.onend=function(){if(b)b.textContent='🎙️ Dicter';};rec.start();
+  }
+  function gameHangmanLetter(letter){
+    if(!quiz||quiz.waitingNext)return;
+    quiz.guessed=quiz.guessed||[];
+    if(quiz.guessed.indexOf(letter)>=0)return;
+    quiz.guessed.push(letter);
+    var q=quiz.qs[quiz.i], word=String(q.choix[q.bon]).toLocaleLowerCase('fr-FR');
+    var clean=word.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+    var target=clean.replace(/[^a-z]/g,'');
+    if(target.split('').indexOf(letter)>=0){
+      var found=quiz.guessed.join('');
+      var complete=target.split('').every(function(ch){return found.indexOf(ch)>=0;});
+      if(complete){answer(q.bon);return;}
+    }else{quiz.misses=(quiz.misses||0)+1;}
+    showQuestion();
+  }
+  function gameNext(){
+    if(!quiz||!quiz.waitingNext)return;
+    quiz.waitingNext=false;quiz.guessed=[];quiz.misses=0;quiz.i++;
+    if(quiz.i<quiz.qs.length)showQuestion();else showResults();
+  }
   // ================= TUTEUR =================
   function viewTuteur() {
     setTab('tuteur');
@@ -845,7 +924,7 @@ var App = (function () {
    'backToSubjects','backToChapters','askTutor','saveGateway','resetProgress','readAloud',
    'showFull','pickImages','onFiles','makeFromScan','scanAnswer','doDaily','showQuestion',
    'quizMode','viewProgres','viewScan','viewPlus','switchProfile','obLevel','toggleMatiere',
-   'finishOnboarding','quizFromList'].forEach(function (f) { window[f] = pub[f]; });
+   'finishOnboarding','quizFromList','gamePickMode','gamePickSubject','gameStartChapter','gameAnswerText','gameSpeech','gameHangmanLetter','gameNext','gameStartMega'].forEach(function (f) { window[f] = pub[f]; });
   return pub;
 })();
 
