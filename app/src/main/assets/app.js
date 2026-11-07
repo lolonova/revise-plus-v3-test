@@ -941,14 +941,14 @@ var App = (function () {
     switchProfile: switchProfile, closeDrawer: closeDrawer,
     obLevel: obLevel, toggleMatiere: toggleMatiere, finishOnboarding: finishOnboarding,
     gamePickMode:gamePickMode, gamePickSubject:gamePickSubject,
-    gameStartChapter:gameStartChapter, gameAnswerText:gameAnswerText, gameSpeech:gameSpeech,
+    gameStartChapter:gameStartChapter, openGames:viewJeux, gameAnswerText:gameAnswerText, gameSpeech:gameSpeech,
     gameHangmanLetter:gameHangmanLetter, gameNext:gameNext, gameStartMega:gameStartMega
   };
   ['chooseProfile','setLevel','selectSubject','openChapter','startQuiz','answer','goTab','handleBack',
    'backToSubjects','backToChapters','askTutor','saveGateway','resetProgress','readAloud',
    'showFull','pickImages','onFiles','makeFromScan','scanAnswer','doDaily','showQuestion',
    'quizMode','viewProgres','viewScan','viewPlus','switchProfile','obLevel','toggleMatiere',
-   'finishOnboarding','gamePickMode','gamePickSubject','gameStartChapter','gameAnswerText','gameSpeech','gameHangmanLetter','gameNext','gameStartMega'].forEach(function (f) { window[f] = pub[f]; });
+   'finishOnboarding','gamePickMode','gamePickSubject','gameStartChapter','openGames','gameAnswerText','gameSpeech','gameHangmanLetter','gameNext','gameStartMega'].forEach(function (f) { window[f] = pub[f]; });
   return pub;
 })();
 
