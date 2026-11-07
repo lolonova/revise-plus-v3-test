@@ -450,7 +450,8 @@ var App = (function () {
 
   function startQuiz(mode) {
     var c = chapById(state.chap);
-    quiz = { c: c, mode: mode, qs: poolFor(c, mode), i: 0, score: 0, streak: 0 };
+    var qs=poolFor(c,mode===1?1:2);if(mode===3)qs=qs.slice(0,5);
+    quiz = { c: c, mode: mode===1?1:2, qs: qs, i: 0, score: 0, streak: 0, boss: mode===3 };
     pushRecent(c.id);
     setTab('jeux');
     showQuestion();
@@ -529,7 +530,7 @@ var App = (function () {
       + '<button class="btn ghost" onclick="backToChapters()">📖 Retour au cours</button></div>';
     render(html);
   }
-  function quizMode() { return quiz ? quiz.mode : 1; }
+  function quizMode() { return quiz ? (quiz.boss ? 3 : quiz.mode) : 1; }
 
   // ================= DÉFI DU JOUR =================
   function dailyChallenge() {
