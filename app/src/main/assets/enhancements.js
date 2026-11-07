@@ -56,6 +56,8 @@
     oldGo(t); setTimeout(ensureCompanionDock,50);
   }
   App.goTab=go;window.goTab=go;window.ReviseHome=home;
+  var oldChoose=window.chooseProfile;
+  if(oldChoose){window.chooseProfile=function(name){oldChoose(name);setTimeout(ensureCompanionDock,90);};}
   var oldFinish=App.finishOnboarding;
   if(oldFinish){App.finishOnboarding=function(){oldFinish();home();};window.finishOnboarding=App.finishOnboarding;}
   document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){if((localStorage.getItem('reviseplus_currentProfile')||'')!=='')home();else welcome();ensureCompanionDock();},80);});
