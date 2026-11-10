@@ -95,9 +95,11 @@ public class MainActivity extends AppCompatActivity {
                 for (Voice voice : voices) {
                     Locale locale = voice.getLocale();
                     if (locale == null || !"fr".equalsIgnoreCase(locale.getLanguage())) continue;
-                    int score = voice.getQuality() * 10 - voice.getLatency();
+                    int score = voice.getQuality() * 100 - voice.getLatency();
                     if (Locale.FRANCE.equals(locale)) score += 1000;
-                    if (!voice.isNetworkConnectionRequired()) score += 20;
+                    // Les voix réseau de haute qualité sont souvent nettement plus naturelles.
+                    if (voice.isNetworkConnectionRequired()) score += 350;
+                    else score += 30;
                     if (score > bestScore) { bestScore = score; best = voice; }
                 }
             }
@@ -106,8 +108,8 @@ public class MainActivity extends AppCompatActivity {
             tts.setLanguage(Locale.FRANCE);
         }
         // Un rythme plus posé, avec une intonation douce pour les explications.
-        tts.setSpeechRate(0.84f);
-        tts.setPitch(1.02f);
+        tts.setSpeechRate(0.90f);
+        tts.setPitch(1.00f);
     }
 
     private void requestMic() {
@@ -160,9 +162,18 @@ public class MainActivity extends AppCompatActivity {
         @JavascriptInterface
         public void speak(String text) {
             if (tts != null) {
-                tts.setSpeechRate(0.84f);
-                tts.setPitch(1.02f);
+                tts.setSpeechRate(0.90f);
+                tts.setPitch(1.00f);
                 tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "reviseplus-fiche");
+            }
+        }
+
+        @JavascriptInterface
+        public void speakSlow(String text, float rate, float pitch) {
+            if (tts != null) {
+                tts.setSpeechRate(Math.max(0.65f, Math.min(1.05f, rate)));
+                tts.setPitch(Math.max(0.85f, Math.min(1.15f, pitch)));
+                tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "reviseplus-course-complet");
             }
         }
 
