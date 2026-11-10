@@ -363,6 +363,13 @@ var App = (function () {
         + '<div style="font-weight:800;font-size:0.85rem;color:var(--accent)">' + mt + ' %</div></div>';
     });
     html += '</div>';
+    html += '<div class="card" style="border:1px solid var(--accent)"><h3>🔎 Un cours manque ?</h3>'
+      + '<p style="font-size:.9rem">Recherche ou demande une fiche sur une notion absente de '+m.nom+'. Écris ta demande ou dicte-la.</p>'
+      + '<input type="text" id="lessonInput" placeholder="Ex. les fractions, les verbes irréguliers…" style="width:100%;padding:12px;margin:8px 0;border-radius:10px" onkeydown="if(event.key===\'Enter\')askLesson()">'
+      + '<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" onclick="askLesson()">✨ Rechercher / créer la fiche</button><button class="btn ghost" onclick="startLessonVoice()">🎙️ Demander à l’oral</button></div>'
+      + '<div id="lessonStatus" style="font-size:.85rem;margin-top:10px"></div>'
+      + (Tutor.mode()!=='IA' ? '<div class="control-advice">La génération automatique nécessite le service IA configuré par un parent. Tu peux aussi retrouver les fiches déjà présentes dans la matière.</div>' : '')
+      + '</div>';
     render(html);
   }
 
@@ -870,7 +877,7 @@ var App = (function () {
     status.textContent='⏳ Préparation de ta fiche…';
     Tutor.requestLesson(topic,state.niveau,subject?subject.value:'',function(lesson,error){
       if(error||!lesson){status.textContent='⚠️ '+(error||'Impossible de créer la fiche.');return;}
-      var mat=subject?subject.value:'maths';
+      var mat=subject?subject.value:(state.mat||'maths');
       var id='custom-'+Date.now();
       var saved={id:id,mat:mat,niveau:state.niveau,titre:lesson.titre,express:lesson.express,complet:lesson.complet,quiz:lesson.quiz||[],vf:lesson.vf||[]};
       var list=[];try{list=JSON.parse(localStorage.getItem('reviseplus_custom_lessons')||'[]');}catch(e){}
