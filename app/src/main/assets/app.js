@@ -879,10 +879,14 @@ var App = (function () {
       if(error||!lesson){status.textContent='⚠️ '+(error||'Impossible de créer la fiche.');return;}
       var mat=subject?subject.value:(state.mat||'maths');
       var id='custom-'+Date.now();
-      var saved={id:id,mat:mat,niveau:state.niveau,titre:lesson.titre,express:lesson.express,complet:lesson.complet,quiz:lesson.quiz||[],vf:lesson.vf||[]};
+      var saved={id:id,mat:mat,niveau:state.niveau,titre:lesson.titre,express:lesson.express,complet:lesson.complet,quiz:lesson.quiz||[],vf:lesson.vf||[],demande:topic,creeLe:new Date().toISOString(),origine:'demande-eleve'};
+      // Bibliothèque de connaissances persistante : la fiche reste disponible après fermeture/redémarrage.
       var list=[];try{list=JSON.parse(localStorage.getItem('reviseplus_custom_lessons')||'[]');}catch(e){}
-      list.push(saved);localStorage.setItem('reviseplus_custom_lessons',JSON.stringify(list));
-      REVISE_DATA.chapitres.push(saved);
+      var duplicate=list.findIndex(function(x){return x.mat===mat&&x.niveau===state.niveau&&String(x.demande||x.titre).toLowerCase()===topic.toLowerCase();});
+      if(duplicate>=0){saved.id=list[duplicate].id;list[duplicate]=saved;}else{list.push(saved);}
+      localStorage.setItem('reviseplus_custom_lessons',JSON.stringify(list));
+      if(!REVISE_DATA.chapitres.some(function(x){return x.id===saved.id;}))REVISE_DATA.chapitres.push(saved);
+      else {var ci=REVISE_DATA.chapitres.findIndex(function(x){return x.id===saved.id;});REVISE_DATA.chapitres[ci]=saved;}
       status.innerHTML='✅ Fiche « '+String(lesson.titre).replace(/</g,'&lt;')+' » ajoutée à '+state.niveau+'. <button class="btn" onclick="openChapter(\''+id+'\')">Ouvrir la leçon</button>';
       if(input)input.value='';
     });
