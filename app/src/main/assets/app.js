@@ -371,12 +371,30 @@ var App = (function () {
     var html = '<span class="back" onclick="backToChapters()">← ' + c.titre + '</span>';
     html += '<div class="card"><h3>' + c.titre + ' <button class="btn small" onclick="readAloud()" id="ttsBtn">🔊 Écouter</button></h3>';
     html += '<h4>Fiche express</h4><ul>' + c.express + '</ul>';
+    html += '<button class="btn ghost" onclick="downloadExpress()">⬇️ Télécharger la fiche courte</button>';
     html += '<button class="btn" onclick="showFull()">📖 Fiche complète</button> '
       + '<button class="btn ghost" onclick="startQuiz(1)">🧭 Découverte</button> '
       + '<button class="btn gold" onclick="startQuiz(2)">⚡ Expert</button>';
     html += '</div><div class="card hidden" id="fullCard"><h4>Fiche complète</h4>' + c.complet + '</div>';
     render(html);
   }
+
+  // Export de la fiche express en fichier HTML imprimable/consultable hors ligne.
+  function downloadExpress() {
+    var c = chapById(state.chap); if (!c) return;
+    var title = String(c.titre || 'Fiche express');
+    var content = '<!doctype html><html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width">'
+      + '<title>Fiche express - '+escapeHtml(title)+'</title>'
+      + '<style>body{font:16px/1.65 Arial,sans-serif;max-width:780px;margin:32px auto;padding:0 20px;color:#202033}h1{color:#5135a8}li{margin:8px 0}@media print{body{margin:0}}</style>'
+      + '<h1>'+escapeHtml(title)+'</h1><h2>Fiche express</h2><ul>'+c.express+'</ul>'
+      + '<p><small>Révise+ • Fiche de révision</small></p></html>';
+    var blob = new Blob([content], {type:'text/html;charset=utf-8'});
+    var url = URL.createObjectURL(blob), link=document.createElement('a');
+    link.href=url; link.download='Fiche-express-'+title.replace(/[^a-z0-9-]/gi,'-')+'.html';
+    document.body.appendChild(link); link.click(); link.remove();
+    setTimeout(function(){URL.revokeObjectURL(url);},1500);
+  }
+  function escapeHtml(v){return String(v).replace(/[&<>"]/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
 
   // Lecture pédagogique : texte nettoyé, voix française naturelle si disponible,
   // débit ralenti et ponctuation qui laisse respirer les explications.
@@ -408,7 +426,7 @@ var App = (function () {
     var c = chapById(state.chap);
     if (!c) return;
     stopSpeech();
-    var txt = cleanForSpeech(c.titre) + '. Petite fiche. ' + cleanForSpeech(c.express);
+    var txt = cleanForSpeech(c.titre) + '. Cours complet. ' + cleanForSpeech(c.complet);
     var b = document.getElementById('ttsBtn');
     if (window.NativeBridge && typeof window.NativeBridge.speakSlow === 'function') {
       window.NativeBridge.speakSlow(txt, 0.84, 1.02);
@@ -421,7 +439,7 @@ var App = (function () {
       u.volume = 1;
       var voice = preferredFrenchVoice();
       if (voice) u.voice = voice;
-      u.onend = function() { if (run === speechRun && b) { b.textContent = '🔊 Écouter'; b.onclick = readAloud; } };
+      u.onend = function() { if (run === speechRun && b) { b.textContent = '🎧 Écouter le cours complet'; b.onclick = readAloud; } };
       speechSynthesis.speak(u);
     } else if (window.NativeBridge) {
       // Secours sur les WebView sans synthèse vocale web.
@@ -436,7 +454,7 @@ var App = (function () {
     if (window.speechSynthesis) speechSynthesis.cancel();
     if (window.NativeBridge && window.NativeBridge.stopSpeak) window.NativeBridge.stopSpeak();
     var b = document.getElementById('ttsBtn');
-    if (b) { b.textContent = '🔊 Écouter'; b.onclick = readAloud; }
+    if (b) { b.textContent = '🎧 Écouter le cours complet'; b.onclick = readAloud; }
   }
 
   // ================= QUIZ =================
