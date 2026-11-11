@@ -221,53 +221,31 @@ var App = (function () {
   function viewAccueil() {
     setTab('accueil');
     if (!state.profile) { viewWelcome(); return; }
-    var p = load();
-    var pct = overallPct(p);
-    var st = statutFor(p);
-    var html = '';
-    // ===== Mon espace (façon maquette) =====
-    html += '<div class="hero espace">'
-      + '<div class="avatar"><img src="' + (state.profile === 'Emma' ? 'images/3d/lumi-fairy-3d.png' : 'images/3d/gabriel-explorer-3d.png') + '" alt=""></div>'
-      + '<div class="who"><div class="name">' + (state.profile === 'Emma' ? 'Bienvenue Emma ✨' : 'Prêt pour la mission, Gabriel 🚀') + '</div>'
-      + '<div class="cls">' + (state.profile === 'Emma' ? 'Lumi et son chaton sont avec toi !' : 'Nova, ton robot-guide, est prêt !') + '</div>'
-      + '<div class="cls">Classe de ' + state.niveau + ' · ' + st.nom + ' · +' + p.xp + ' XP</div>'
-      + '<div class="hero-bar"><div style="width:' + pct + '%"></div></div>'
-      + '<div class="cls">' + pct + ' % de progression</div></div>'
-      + '<div class="ring" style="--p:' + pct + '%"><span>' + pct + '%</span></div></div>';
-    html += '<button class="big-cta" onclick="goTab(\'cours\')">Reprendre mes révisions ➜</button>';
-    // Derniers chapitres
-    html += '<div class="card"><h3><span class="em">🕐</span>Mes derniers chapitres</h3>';
-    if (p.derniers && p.derniers.length) {
-      html += '<ul class="lastchaps">';
-      p.derniers.forEach(function (id) {
-        var c = chapById(id);
-        if (!c) return;
-        var m = p.maitrise[id] || 0;
-        var s = m >= 80 ? '<span class="st ok">✔️ Révision terminée</span>' : (m > 0 ? '<span class="st mid">⏳ En cours</span>' : '<span class="st">📖 À étudier</span>');
-        html += '<li><b>' + c.titre + '</b> ' + s + '</li>';
-      });
-      html += '</ul>';
-    } else {
-      html += '<p style="font-size:0.85rem;opacity:0.75">Commence un chapitre pour remplir ton espace !</p>';
-    }
-    html += '</div>';
-    // ===== Toutes mes fonctions =====
-    html += '<div class="section-title">Toutes mes fonctions</div>';
-    html += '<div class="grid2 fn-grid">'
-      + '<div class="item fn" onclick="goTab(\'cours\')"><span class="ic">📖</span><span class="nm">Apprendre</span><div class="sub">Mes révisions</div></div>'
-      + '<div class="item fn" onclick="goTab(\'jeux\')"><span class="ic">🎮</span><span class="nm">Jouer</span><div class="sub">Quiz & défis</div></div>'
-      + '<div class="item fn" onclick="goTab(\'plus\');viewProgres()"><span class="ic">📊</span><span class="nm">Progresser</span><div class="sub">Mes progrès</div></div>'
-      + '<div class="item fn" onclick="goTab(\'jeux\')"><span class="ic">🏆</span><span class="nm">Réussir</span><div class="sub">Défi du jour</div></div>'
-      + '<div class="item fn" onclick="goTab(\'tuteur\')"><span class="ic">🤖</span><span class="nm">Mon tuteur</span><div class="sub">Poser une question</div></div>'
-      + '<div class="item fn" onclick="goTab(\'plus\');viewScan()"><span class="ic">📷</span><span class="nm">Scanner</span><div class="sub">Créer une fiche</div></div>'
-      + '</div>';
-    // Défi + astuce
-    html += '<div class="section-title">Chaque jour compte</div>';
-    html += '<div class="card">'
-      + '<h3><span class="em">🎯</span>Défi du jour</h3>' + dailyChallenge() + ''
-      + '<h3 style="margin-top:12px"><span class="em">💡</span>Astuce du jour</h3>'
-      + '<div class="tip">' + TIPS[new Date().getDate() % TIPS.length] + '</div>'
-      + '</div>';
+    var p=load(), emma=state.profile==='Emma';
+    var buddy=emma?'Lumi':'Nova';
+    var art=emma?'images/3d/lumi-fairy-3d.png':'images/3d/gabriel-explorer-3d.png';
+    var pct=overallPct(p), ad={};
+    try{ad=JSON.parse(localStorage.getItem('reviseplus_adventure_'+state.profile)||'{}');}catch(e){}
+    var world=emma?'Jardin enchanté':'Base orbitale';
+    var greeting=emma?'Ton royaume a besoin de toi !':'Une nouvelle mission t’attend, explorateur !';
+    var html='<style>'
+      +'#view{padding:0!important;margin:0!important}.home-world{--accent:'+(emma?'#ff8bbd':'#62d5ff')+';position:relative;isolation:isolate;min-height:calc(100dvh - 118px);height:calc(100dvh - 118px);max-height:900px;overflow:hidden;border-radius:26px;padding:clamp(12px,3vw,22px);box-sizing:border-box;color:#fff;background:'+(emma?'radial-gradient(ellipse at 80% 12%,#ffb9d9 0,transparent 35%),linear-gradient(155deg,#4c2e79,#a84e9a 55%,#f08d9e)':'radial-gradient(ellipse at 80% 10%,#2e8ec0 0,transparent 38%),linear-gradient(155deg,#071b3b,#123c70 58%,#176c8b)')+';display:flex;flex-direction:column;gap:clamp(7px,1.4vh,14px);}'
+      +'.home-world:before,.home-world:after{content:"";position:absolute;z-index:-1;border-radius:50%;pointer-events:none}.home-world:before{width:65vw;height:65vw;max-width:390px;max-height:390px;right:-18%;top:15%;background:radial-gradient(circle,#ffffff20,transparent 68%);animation:homePulse 5s ease-in-out infinite}.home-world:after{inset:auto -20% -35% -20%;height:45%;background:linear-gradient(transparent,#07172b55)}'
+      +'@keyframes homePulse{50%{transform:scale(1.12);opacity:.65}}@keyframes homeBob{50%{transform:translateY(-8px)}}@keyframes homeTwinkle{50%{opacity:.35;transform:scale(.7)}}'
+      +'.hw-top{display:flex;align-items:center;justify-content:space-between;gap:8px}.hw-brand{font-size:clamp(11px,2.8vw,14px);font-weight:900;letter-spacing:1.5px;opacity:.9}.hw-level{font-size:12px;font-weight:800;background:#ffffff20;border:1px solid #ffffff30;padding:7px 11px;border-radius:20px;white-space:nowrap}'
+      +'.hw-hero{display:flex;align-items:center;min-height:0;flex:1;gap:2px;position:relative}.hw-copy{flex:1;min-width:0;z-index:2}.hw-kicker{font-size:clamp(10px,2.5vw,13px);font-weight:900;letter-spacing:1px;text-transform:uppercase;color:#fffbd0}.hw-copy h1{font-size:clamp(23px,6.3vw,34px);line-height:1.02;margin:7px 0 8px;font-weight:1000;letter-spacing:-.7px}.hw-copy p{font-size:clamp(12px,3.2vw,15px);line-height:1.35;margin:0;max-width:240px;color:#fffde9}.hw-art{width:48%;max-width:230px;max-height:33vh;object-fit:contain;filter:drop-shadow(0 15px 18px #0005);animation:homeBob 4s ease-in-out infinite;align-self:center}'
+      +'.hw-progress{background:#ffffff20;border:1px solid #ffffff25;border-radius:16px;padding:9px 12px}.hw-progline{display:flex;justify-content:space-between;font-size:11px;font-weight:800;margin-bottom:6px}.hw-track{height:7px;border-radius:9px;background:#08152d55;overflow:hidden}.hw-track i{display:block;height:100%;width:'+pct+'%;border-radius:9px;background:linear-gradient(90deg,#fff4a9,var(--accent));box-shadow:0 0 12px var(--accent)}'
+      +'.hw-mission{border:1px solid #ffffff50;border-radius:20px;padding:12px;background:linear-gradient(110deg,#ffffff2c,#ffffff12);box-shadow:0 8px 24px #0002;display:flex;align-items:center;gap:10px}.hw-mission-icon{font-size:30px;flex:none}.hw-mission-copy{flex:1;min-width:0}.hw-mission-copy b{display:block;font-size:14px}.hw-mission-copy span{display:block;font-size:11px;opacity:.85;margin-top:3px}.hw-play{border:0;border-radius:14px;padding:12px 14px;background:linear-gradient(135deg,#fff5a8,#ffc95f);color:#3a2854;font-weight:1000;font-size:13px;box-shadow:0 4px 0 #b97c38;white-space:nowrap}'
+      +'.hw-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.hw-action{border:1px solid #ffffff35;background:#ffffff18;color:#fff;border-radius:16px;min-height:64px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-weight:800;font-size:11px}.hw-action span{font-size:23px;line-height:1}.hw-foot{display:flex;align-items:center;justify-content:space-between;font-size:10px;opacity:.78;padding:0 3px}.hw-spark{position:absolute;font-size:18px;animation:homeTwinkle 2.4s infinite}.hw-s1{top:15%;left:8%}.hw-s2{top:35%;right:7%;animation-delay:.8s}.hw-s3{bottom:25%;left:42%;animation-delay:1.3s}'
+      +'@media(max-height:690px){.home-world{gap:6px;padding:10px}.hw-hero{flex:.85}.hw-art{max-height:27vh}.hw-copy h1{font-size:23px}.hw-mission{padding:8px}.hw-action{min-height:55px}.hw-progress{padding:7px 10px}}@media(min-width:600px){.home-world{max-width:620px;margin:0 auto}.hw-copy h1{font-size:38px}}'
+      +'</style><section class="home-world '+(emma?'hw-emma':'hw-gabriel')+'">'
+      +'<span class="hw-spark hw-s1">✦</span><span class="hw-spark hw-s2">✧</span><span class="hw-spark hw-s3">✦</span>'
+      +'<div class="hw-top"><div class="hw-brand">✦ RÉVISE+ • TON MONDE</div><div class="hw-level">NIVEAU '+(p.niveau||1)+' · ⚡ '+(p.xp||0)+' XP</div></div>'
+      +'<div class="hw-hero"><div class="hw-copy"><div class="hw-kicker">'+(emma?'✨ Royaume magique':'🚀 Mission spatiale')+'</div><h1>'+(emma?'Bienvenue Emma !':'Salut Gabriel !')+'</h1><p>'+greeting+'<br><b>'+buddy+'</b> est prêt à partir avec toi.</p></div><img class="hw-art" src="'+art+'" alt="'+buddy+'"></div>'
+      +'<div class="hw-progress"><div class="hw-progline"><span>🌟 Ton aventure progresse</span><span>'+pct+'%</span></div><div class="hw-track"><i></i></div></div>'
+      +'<div class="hw-mission"><div class="hw-mission-icon">'+(emma?'🦋':'🛸')+'</div><div class="hw-mission-copy"><b>Ta prochaine mission</b><span>'+(emma?'Aide les habitants du jardin':'Prépare le prochain décollage')+' · 5 min</span></div><button class="hw-play" onclick="goTab(\'aventure\')">JOUER ▶</button></div>'
+      +'<div class="hw-actions"><button class="hw-action" onclick="goTab(\'aventure\')"><span>🗺️</span>Explorer</button><button class="hw-action" onclick="goTab(\'jeux\')"><span>🎮</span>Défis</button><button class="hw-action" onclick="goTab(\'cours\')"><span>📚</span>Apprendre</button></div>'
+      +'<div class="hw-foot"><span>💜 À ton rythme, sans pression</span><span onclick="goTab(\'plus\');viewProgres()" style="font-weight:900">Mes progrès ↗</span></div></section>';
     render(html);
     updateChip();
   }
