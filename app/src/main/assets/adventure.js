@@ -95,7 +95,15 @@
     App.render(html);
   }
   function purchase(id,group){var d=data(),items=group==='outfit'?outfits():companions(),x=items.filter(function(a){return a.id===id;})[0];if(!x)return false;if(d.owned.indexOf(id)<0){if(d.coins<x.cost){alert('Encore un peu de révisions et tu auras assez de pièces !');return false;}d.coins-=x.cost;d.owned.push(id);}if(group==='outfit')d.look=id;else d.pet=id;save(d);return true;}
-  function visit(i){var w=zones()[i],p=prog();if(!w||xpTotal(p)<w.xp)return;var d=data();d.world=i;save(d);alert('✨ '+w.name+' ! '+w.desc);open();}
+  function visit(i){
+    var w=zones()[i],p=prog(),emma=profile()==='Emma';
+    if(!w||xpTotal(p)<w.xp)return;
+    var d=data();d.world=i;save(d);
+    var html='<div class="adventure-scene '+(emma?'scene-magic':'scene-galaxy')+'"><div class="scene-copy"><span class="season-pill">'+(emma?'MON ROYAUME MAGIQUE':'MA GALAXIE')+'</span><h2>'+w.icon+' '+w.name+'</h2><p>'+w.desc+'</p><b>⭐ '+xpTotal(p)+' XP</b></div><div class="scene-art"><img src="'+(emma?'images/3d/magic-world-3d.png':'images/3d/gabriel-explorer-3d.png')+'" alt=""></div></div>';
+    html+='<div class="guardian-card"><div class="guardian-face"><img src="'+(emma?'images/3d/lumi-fairy-3d.png':'images/3d/nova-robot-3d.png')+'" alt="'+(emma?'Lumi':'Nova')+'"></div><div class="guardian-talk"><small>'+(emma?'LUMI':'NOVA')+'</small><span>'+(emma?'Bienvenue dans ce nouvel endroit magique ! Prends le temps de regarder autour de toi. Chaque mission t’aidera à découvrir encore plus de merveilles.':'Bienvenue dans cette nouvelle zone, explorateur ! Prends le temps de découvrir les lieux. Chaque mission te fera avancer.')+'</span></div></div>';
+    html+='<div class="card" style="margin-top:14px"><h3>✨ Que veux-tu faire ?</h3><p>'+(emma?'Tu peux partir faire une petite mission pour gagner de l’expérience et ouvrir les prochains endroits.':'Une mission de révision te permettra de gagner de l’expérience et de découvrir la suite de la galaxie.')+'</p><button class="big-cta" onclick="goTab(\'jeux\')">🎯 Partir en mission</button><button class="big-cta" style="margin-top:10px;background:linear-gradient(135deg,#8d78c8,#bd83c8)" onclick="Adventure.open()">🗺️ Retour à la carte</button></div>';
+    App.render(html);
+  }
   var guardianMessagesG=['Tu n’as pas besoin de tout réussir du premier coup. Les essais font partie de la mission !','Bien joué pilote ! Tu progresses grâce à tes efforts, pas à la perfection.','On fait une petite pause ? Ton cerveau apprend aussi quand il se repose.','Respire doucement. Une question à la fois, tu peux y arriver.'];
   var guardianMessagesE=['Tu es merveilleuse même quand tu te trompes. On réessaie ensemble ? 🌸','Bravo pour tes efforts ! Chaque petite étoile compte.','On souffle comme une fleur qui s’ouvre… tout doucement.','Tu peux être fière de toi : tu as osé essayer ! ✨'];
   function say(text){try{if(!('speechSynthesis'in window))return;window.speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(text);u.lang='fr-FR';u.rate=.88;u.pitch=profile()==='Emma'?1.18:.92;window.speechSynthesis.speak(u);}catch(e){}}
