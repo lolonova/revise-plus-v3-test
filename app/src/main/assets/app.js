@@ -244,7 +244,7 @@ var App = (function () {
       +'<div class="hw-hero"><div class="hw-copy"><div class="hw-kicker">'+(emma?'✨ Royaume magique':'🚀 Mission spatiale')+'</div><h1>'+(emma?'Bienvenue Emma !':'Salut Gabriel !')+'</h1><p>'+greeting+'<br><b>'+buddy+'</b> est prêt à partir avec toi.</p></div><img class="hw-art" src="'+art+'" alt="'+buddy+'"></div>'
       +'<div class="hw-progress"><div class="hw-progline"><span>🌟 Ton aventure progresse</span><span>'+pct+'%</span></div><div class="hw-track"><i></i></div></div>'
       +'<div class="hw-mission"><div class="hw-mission-icon">'+(emma?'🦋':'🛸')+'</div><div class="hw-mission-copy"><b>Ta prochaine mission</b><span>'+(emma?'Aide les habitants du jardin':'Prépare le prochain décollage')+' · 5 min</span></div><button class="hw-play" onclick="goTab(\'aventure\')">JOUER ▶</button></div>'
-      +'<div class="hw-space-head">MON ESPACE</div><div class="hw-actions"><button class="hw-action" onclick="goTab(\\'aventure\\')"><span>🧑‍🚀</span>Mon compagnon</button><button class="hw-action" onclick="goTab(\\'jeux\\')"><span>🎮</span>Mes jeux</button><button class="hw-action" onclick="goTab(\\'cours\\')"><span>📚</span>Mes révisions</button></div>'
+      +'<div class="hw-space-head">MON ESPACE</div><div class="hw-actions"><button class="hw-action" onclick="goTab(\'aventure\')"><span>🧑‍🚀</span>Mon compagnon</button><button class="hw-action" onclick="goTab(\'jeux\')"><span>🎮</span>Mes jeux</button><button class="hw-action" onclick="goTab(\'cours\')"><span>📚</span>Mes révisions</button></div>'
       +'<div class="hw-foot"><span>💜 À ton rythme, sans pression</span><span onclick="goTab(\'plus\');viewProgres()" style="font-weight:900">Mes progrès ↗</span></div></section>';
     render(html);
     updateChip();
