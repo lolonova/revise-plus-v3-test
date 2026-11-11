@@ -87,7 +87,25 @@ var Tutor = (function () {
 
   function requestLesson(topic, niveau, matiere, cb) {
     if (isDemo || !gatewayURL) {
-      cb(null, "La création automatique d’une nouvelle fiche nécessite le service IA configuré par un parent. Les fiches déjà présentes restent accessibles hors connexion.");
+      // Mode local autonome : fiche repère construite à partir de la base embarquée.
+      var answer=findLocal(topic);
+      var safeTopic=String(topic||'Notion').trim();
+      var items=[];
+      if(answer){
+        items=answer.split(/(?<=[.!?])\\s+/).filter(Boolean);
+      }else{
+        items=[
+          "Définition : cherche ce que signifie « "+safeTopic+" » dans ton cours.",
+          "À retenir : repère les mots-clés, les règles et les exemples importants.",
+          "Méthode : relis la leçon, reformule avec tes mots, puis essaie un exercice.",
+          "Vérification : compare ta réponse avec le cours ou demande à un adulte."
+        ];
+      }
+      var express=items.map(function(x){return '<li>'+x.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</li>';}).join('');
+      var lesson={titre:"Fiche repère : "+safeTopic,express:express,
+        complet:'<p><b>Notion demandée :</b> '+safeTopic.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</p><ul>'+express+'</ul><p><i>Mode local : cette fiche est un support de révision, pas une réponse générée par une IA. Complète-la avec ton cours.</i></p>',
+        quiz:[],vf:[]};
+      cb(lesson,null);
       return;
     }
     fetch(gatewayURL, {
