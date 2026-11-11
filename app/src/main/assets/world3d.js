@@ -24,7 +24,7 @@ function cubeColor(col){var o=cube();for(var i=0;i<o.length;i+=6){o[i+3]=col[0];
 function sphereColor(col){var o=sphere();for(var i=0;i<o.length;i+=6){o[i+3]=col[0];o[i+4]=col[1];o[i+5]=col[2];}return o;}
 function terrain(){var o=[],n=44,step=42/n;function h(x,z){return .24*Math.sin(x*.38)*Math.cos(z*.31)+.14*Math.sin(z*.72+x*.2);}for(var iz=0;iz<n;iz++)for(var ix=0;ix<n;ix++){var x=-21+ix*step,z=-21+iz*step,x2=x+step,z2=z+step;var a=[x,h(x,z),z],b=[x2,h(x2,z),z],c=[x2,h(x2,z2),z2],d=[x,h(x,z2),z2];var v=h(x,z);var col=v>.17?[.28,.48,.27]:[.31,.56,.31];face(a,b,c,col,o);face(a,c,d,col,o);}return o;}
 function pathMesh(){var o=[];for(var i=0;i<24;i++){var z=-16+i*1.4,x=Math.sin(i*.24)*1.2;var a=[x-.9,.08,z],b=[x+.9,.08,z],c=[x+.9,.08,z+1.5],d=[x-.9,.08,z+1.5];face(a,b,c,[.63,.49,.32],o);face(a,c,d,[.58,.43,.28],o);}return o;}
-function initGL(){gl=canvas.getContext('webgl',{antialias:true,alpha:false});if(!gl)throw Error('WebGL indisponible sur cet appareil');program=gl.createProgram();gl.attachShader(program,shader(gl.VERTEX_SHADER,vs));gl.attachShader(program,shader(gl.FRAGMENT_SHADER,fs));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error('Shader WebGL');gl.useProgram(program);loc.p=gl.getAttribLocation(program,'p');loc.c=gl.getAttribLocation(program,'c');loc.mvp=gl.getUniformLocation(program,'mvp');mesh('cube',cube());mesh('tree',cone());mesh('trunk',cylinder());mesh('ball',sphere());mesh('skin',sphereColor([.86,.61,.43]));mesh('cloth0',cubeColor([.12,.35,.78]));mesh('hair0',sphereColor([.12,.08,.06]));mesh('trim0',cubeColor([.95,.68,.18]));mesh('terrain',terrain());mesh('path',pathMesh());gl.enable(gl.DEPTH_TEST);gl.enable(gl.CULL_FACE);}
+function initGL(){gl=canvas.getContext('webgl',{antialias:true,alpha:false});if(!gl)throw Error('WebGL indisponible sur cet appareil');program=gl.createProgram();gl.attachShader(program,shader(gl.VERTEX_SHADER,vs));gl.attachShader(program,shader(gl.FRAGMENT_SHADER,fs));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error('Shader WebGL');gl.useProgram(program);loc.p=gl.getAttribLocation(program,'p');loc.c=gl.getAttribLocation(program,'c');loc.mvp=gl.getUniformLocation(program,'mvp');mesh('cube',cube());mesh('tree',cone());mesh('trunk',cylinder());mesh('ball',sphere());mesh('skin',sphereColor([.86,.61,.43]));mesh('cloth0',cubeColor([.12,.35,.78]));mesh('hair0',sphereColor([.12,.08,.06]));mesh('trim0',cubeColor([.95,.68,.18]));for(var ai=0;ai<palettes.length;ai++){mesh('skin'+ai,sphereColor(palettes[ai].skin));mesh('cloth'+ai,cubeColor(palettes[ai].cloth));mesh('hair'+ai,sphereColor(palettes[ai].hair));mesh('trim'+ai,cubeColor(palettes[ai].trim));}mesh('terrain',terrain());mesh('path',pathMesh());gl.enable(gl.DEPTH_TEST);gl.enable(gl.CULL_FACE);}
 function drawObj(name,x,y,z,sx,sy,sz,col,ry,vp){var m=model(x,y,z,sx,sy,sz,ry),mvp=matmul(vp,m),me=meshes[name];gl.bindBuffer(gl.ARRAY_BUFFER,me.b);gl.enableVertexAttribArray(loc.p);gl.enableVertexAttribArray(loc.c);gl.vertexAttribPointer(loc.p,3,gl.FLOAT,false,24,0);gl.vertexAttribPointer(loc.c,3,gl.FLOAT,false,24,12);gl.uniformMatrix4fv(loc.mvp,false,mvp);gl.drawArrays(gl.TRIANGLES,0,me.count);}
 function scene(vp){
 drawObj('terrain',0,0,0,1,1,1,0,0,vp);
@@ -40,14 +40,14 @@ for(var r=0;r<18;r++){var rx=((r*11)%35)-17,rz=((r*19)%35)-17;drawObj('ball',rx,
 // lieux avec architecture différenciée
 places.forEach((p,i)=>{var roof=i===0?[.7,1.2,1.8]:[1.2,1.2,1.2];drawObj('cube',p.x,.6,p.z,3.2,1.2,3.2,0,0,vp);drawObj('cube',p.x,1.65,p.z,2.6,1.2,2.6,0,Math.PI/4,vp);drawObj('tree',p.x,2.9,p.z,1.8,2.6,1.8,0,0,vp);drawObj('cube',p.x-1.45,1.6,p.z, .35,2.4,.35,0,0,vp);drawObj('cube',p.x+1.45,1.6,p.z,.35,2.4,.35,0,0,vp);drawObj('ball',p.x,3.9,p.z,.42,.42,.42,0,0,vp);});
 // personnage : bottes, jambes, tunique, bras, tête, cheveux, cape et ceinture
-var pal=palettes[avatarStyle%palettes.length];
+var av=avatarStyle%palettes.length,sk='skin'+av,cl='cloth'+av,hr='hair'+av,tr='trim'+av;
 drawObj('cube',pos.x-.22,.22,pos.z,.24,.42,.34,0,0,vp);drawObj('cube',pos.x+.22,.22,pos.z,.24,.42,.34,0,0,vp);
-drawObj('cloth0',pos.x,.86,pos.z,.82,.92,.48,0,0,vp);
+drawObj(cl,pos.x,.86,pos.z,.82,.92,.48,0,0,vp);
 drawObj('cube',pos.x,.95,pos.z-.27,.72,.18,.12,0,0,vp);
-drawObj('skin',pos.x-.52,.98,pos.z,.23,.72,.24,0,0,vp);drawObj('skin',pos.x+.52,.98,pos.z,.23,.72,.24,0,0,vp);
-drawObj('skin',pos.x,1.62,pos.z,.58,.62,.56,0,0,vp);
-drawObj('hair0',pos.x,1.91,pos.z-.02,.64,.34,.62,0,0,vp);
-drawObj('trim0',pos.x,1.68,pos.z-.31,.12,.1,.05,0,0,vp);
+drawObj(sk,pos.x-.52,.98,pos.z,.23,.72,.24,0,0,vp);drawObj(sk,pos.x+.52,.98,pos.z,.23,.72,.24,0,0,vp);
+drawObj(sk,pos.x,1.62,pos.z,.58,.62,.56,0,0,vp);
+drawObj(hr,pos.x,1.91,pos.z-.02,.64,.34,.62,0,0,vp);
+drawObj(tr,pos.x,1.68,pos.z-.31,.12,.1,.05,0,0,vp);
 drawObj('cube',pos.x,1.18,pos.z+.29,.72,.72,.12,0,0,vp);
 if(mode==='place'){var p=places[target];drawObj('cube',p.x,.14,p.z,11,.25,11,0,0,vp);drawObj('cube',p.x,1.8,p.z,3.4,3,3.4,0,.4,vp);drawObj('tree',p.x+3,2.7,p.z+2,2.5,3.2,2.5,0,0,vp);}
 }
