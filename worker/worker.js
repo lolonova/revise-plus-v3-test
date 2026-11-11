@@ -25,6 +25,9 @@ export default {
     let body;
     try { body = await request.json(); } catch (e) { return json({ error: 'JSON invalide' }, 400); }
     const question = (body.question || '').toString().slice(0, 1000);
+    const isLesson = body.action === 'lesson';
+    const grade = ['5e','4e','3e'].includes(body.niveau) ? body.niveau : '4e';
+    const subject = (body.matiere || 'matière scolaire').toString().slice(0, 80);
     if (!question) return json({ error: 'question manquante' }, 400);
 
     const key = (typeof AI_KEY !== 'undefined') ? AI_KEY : '';
@@ -37,10 +40,10 @@ export default {
         body: JSON.stringify({
           model: 'mistral-small-latest',
           messages: [
-            { role: 'system', content: SYSTEM_PROMPT },
-            { role: 'user', content: question }
+            { role: 'system', content: isLesson ? 'Tu es concepteur pédagogique pour le collège français. Produis un cours fiable, progressif et adapté à la classe demandée. Réponds UNIQUEMENT avec un objet JSON valide, sans Markdown, sans texte avant ou après. Le JSON doit contenir titre (string), express (HTML simple avec 3 à 5 balises li), complet (HTML avec 3 à 5 sections h3 et paragraphes), quiz (tableau de 4 objets {q, choix: [3 réponses], bon: index 0-2, exp}), vf (tableau de 2 objets {q, v: bool, exp}). Ne prétends pas qu’une notion est au programme officiel si tu n’en es pas sûr ; indique les limites dans le cours.' : SYSTEM_PROMPT },
+            { role: 'user', content: isLesson ? 'Crée une fiche de cours complète sur : '+question+'. Classe : '+grade+'. Matière : '+subject+'. Niveau collège français. Inclure définitions, méthode, exemples et erreurs fréquentes.' : question }
           ],
-          max_tokens: 400,
+          max_tokens: isLesson ? 1800 : 400,
           temperature: 0.4
         })
       });
@@ -48,6 +51,14 @@ export default {
       const answer = d.choices && d.choices[0] && d.choices[0].message
         ? d.choices[0].message.content : null;
       if (!answer) return json({ error: 'réponse IA vide' }, 502);
+      if (isLesson) {
+        try {
+          const clean = answer.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '');
+          const lesson = JSON.parse(clean);
+          if (!lesson.titre || !lesson.complet || !Array.isArray(lesson.quiz)) throw new Error('structure incomplète');
+          return json({ lesson: lesson });
+        } catch (e) { return json({ error: 'La fiche générée n’a pas le format attendu. Réessaie avec une demande plus précise.' }, 502); }
+      }
       return json({ answer: answer });
     } catch (e) {
       return json({ error: 'service IA injoignable' }, 502);

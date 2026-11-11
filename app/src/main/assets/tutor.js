@@ -84,5 +84,39 @@ var Tutor = (function () {
       });
   }
 
-  return { mode: mode, setGateway: setGateway, send: send, history: history };
+
+  function requestLesson(topic, niveau, matiere, cb) {
+    if (isDemo || !gatewayURL) {
+      // Mode local autonome : fiche repère construite à partir de la base embarquée.
+      var answer=findLocal(topic);
+      var safeTopic=String(topic||'Notion').trim();
+      var items=[];
+      if(answer){
+        items=answer.split(/(?<=[.!?])\\s+/).filter(Boolean);
+      }else{
+        items=[
+          "Définition : cherche ce que signifie « "+safeTopic+" » dans ton cours.",
+          "À retenir : repère les mots-clés, les règles et les exemples importants.",
+          "Méthode : relis la leçon, reformule avec tes mots, puis essaie un exercice.",
+          "Vérification : compare ta réponse avec le cours ou demande à un adulte."
+        ];
+      }
+      var express=items.map(function(x){return '<li>'+x.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</li>';}).join('');
+      var lesson={titre:"Fiche repère : "+safeTopic,express:express,
+        complet:'<p><b>Notion demandée :</b> '+safeTopic.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</p><ul>'+express+'</ul><p><i>Mode local : cette fiche est un support de révision, pas une réponse générée par une IA. Complète-la avec ton cours.</i></p>',
+        quiz:[],vf:[]};
+      cb(lesson,null);
+      return;
+    }
+    fetch(gatewayURL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'lesson', question: topic, niveau: niveau || '4e', matiere: matiere || 'matière scolaire' })
+    }).then(function (r) { return r.json(); }).then(function (d) {
+      if (!d.lesson) { cb(null, d.error || "La fiche n’a pas pu être créée."); return; }
+      cb(d.lesson, null);
+    }).catch(function () { cb(null, "Impossible de joindre le service. Vérifie la connexion et l’adresse du Worker."); });
+  }
+
+  return { mode: mode, setGateway: setGateway, send: send, requestLesson: requestLesson, history: history };
 })();

@@ -1,9 +1,36 @@
+/* Diagnostic ciblé : capturer toute exception pendant la construction du moteur App. */
+try {
 /* Révise+ V6 — Logique applicative (design "dashboard" inspiré des maquettes)
    Progression par profil dans localStorage (reviseplus_<profil>). */
 
 var App = (function () {
+  // Audio Révise+ : petits sons synthétiques + ambiance musicale facultative
+  var AudioFX=(function(){
+    var ctx=null, musicOn=localStorage.getItem('rp_music')==='1', timer=null, step=0;
+    function audio(){if(!ctx){var C=window.AudioContext||window.webkitAudioContext;if(C)ctx=new C();}if(ctx&&ctx.state==='suspended')ctx.resume();return ctx;}
+    function tone(freq,dur,type,vol,delay){var c=audio();if(!c)return;var o=c.createOscillator(),g=c.createGain();o.type=type||'sine';o.frequency.value=freq;g.gain.setValueAtTime(.0001,c.currentTime+(delay||0));g.gain.exponentialRampToValueAtTime(vol||.04,c.currentTime+(delay||0)+.025);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+(delay||0)+dur);o.connect(g);g.connect(c.destination);o.start(c.currentTime+(delay||0));o.stop(c.currentTime+(delay||0)+dur+.04);}
+    function fx(ok){if(ok){tone(660,.16,'sine',.07);tone(880,.22,'sine',.045,.11);tone(1046,.3,'sine',.035,.22);}else{tone(240,.2,'triangle',.045);tone(190,.25,'triangle',.03,.13);}}
+    // Ambiance plus solaire : arpèges majeurs, basse légère et petite mélodie ascendante.
+    var chords=[[261.63,329.63,392.00],[220.00,261.63,329.63],[174.61,220.00,261.63],[196.00,246.94,293.66]];
+    var melody=[523.25,659.25,783.99,659.25,587.33,698.46,880,698.46,523.25,659.25,783.99,1046.5,783.99,659.25,587.33,523.25];
+    function tick(){
+      if(!musicOn)return;
+      var beat=step++, chord=chords[Math.floor(beat/4)%chords.length], note=melody[beat%melody.length];
+      tone(chord[beat%3],.24,'triangle',.018);
+      if(beat%4===0)tone(chord[0]/2,.42,'sine',.026,.01);
+      tone(note,.20,'sine',.014,.04);
+      timer=setTimeout(tick,310);
+    }
+    function set(on){musicOn=!!on;localStorage.setItem('rp_music',musicOn?'1':'0');var b=document.getElementById('musicToggle');if(b){b.textContent=musicOn?'♫':'♪';b.classList.toggle('music-on',musicOn);b.setAttribute('aria-label',musicOn?'Couper la musique':'Activer la musique');}if(timer){clearTimeout(timer);timer=null;}if(musicOn){audio();tick();}}
+    function toggle(){set(!musicOn);}
+    function init(){var b=document.getElementById('musicToggle');if(b)b.onclick=toggle;set(musicOn);}
+    return {fx:fx,init:init,toggle:toggle};
+  })();
+
   var state = { profile: null, niveau: '5e', mat: null, chap: null, tab: 'accueil' };
   var quiz = null;
+  var navHistory = [];
+  var restoringView = false;
   var MASCOT = { Gabriel: '🚀', Emma: '🐱' };
   var BADGES = [
     { id: 'premier', nom: 'Premier pas', ic: '🥇', test: function (p) { return p.xp >= 10; } },
@@ -11,7 +38,8 @@ var App = (function () {
     { id: 'serie', nom: 'Série de 5', ic: '🔥', test: function (p) { return (p.bestStreak || 0) >= 5; } },
     { id: 'parfait', nom: 'Sans faute', ic: '✨', test: function (p) { return p.perfect >= 1; } },
     { id: 'explorateur', nom: 'Explorateur', ic: '🧭', test: function (p) { return Object.keys(p.maitrise || {}).length >= 5; } },
-    { id: 'maitre', nom: 'Maître du chapitre', ic: '🎓', test: function (p) { return Object.values(p.maitrise || {}).some(function (m) { return m >= 90; }); } }
+    { id: 'maitre', nom: 'Maître du chapitre', ic: '🎓', test: function (p) { return Object.values(p.maitrise || {}).some(function (m) { return m >= 90; }); } },
+    { id: 'chasseur', nom: 'Chasseur de boss', ic: '👾', test: function (p) { return (p.bossWins || 0) >= 1; } }
   ];
   var TIPS = [
     'Relis ta fiche express juste avant de dormir : le cerveau consolide la nuit !',
@@ -28,7 +56,7 @@ var App = (function () {
     catch (e) { return fresh(); }
   }
   function fresh() {
-    return { xp: 0, niveau: 1, streak: 0, bestStreak: 0, perfect: 0, dailyDate: '', dailyChap: '', badges: [], maitrise: {}, erreurs: {}, derniers: [] };
+    return { xp: 0, niveau: 1, streak: 0, bestStreak: 0, perfect: 0, bossWins: 0, dailyDate: '', dailyChap: '', badges: [], maitrise: {}, erreurs: {}, derniers: [] };
   }
   function save(p) { localStorage.setItem(key(), JSON.stringify(p)); }
 
@@ -80,7 +108,39 @@ var App = (function () {
     return REVISE_DATA.chapitres.filter(function (x) { return x.id === id; })[0];
   }
 
-  function render(html) { document.getElementById('view').innerHTML = html; window.scrollTo(0, 0); }
+  function saveCurrentView() {
+    var el = document.getElementById('view');
+    if (!el || !el.innerHTML || restoringView) return;
+    navHistory.push({ html: el.innerHTML, state: JSON.parse(JSON.stringify(state)), tab: state.tab, scroll: window.scrollY || 0 });
+    if (navHistory.length > 30) navHistory.shift();
+  }
+  function render(html) {
+    saveCurrentView();
+    document.getElementById('view').innerHTML = html;
+    window.scrollTo(0, 0);
+    updateBackButton();
+  }
+  function updateBackButton() {
+    var b = document.getElementById('backBtn');
+    if (b) b.classList.toggle('back-ready', navHistory.length > 0 || (state.tab && state.tab !== 'accueil'));
+  }
+  function handleBack() {
+    var drawer = document.getElementById('drawer');
+    if (drawer && drawer.classList.contains('open')) { closeDrawer(); return true; }
+    if (navHistory.length) {
+      var previous = navHistory.pop();
+      restoringView = true;
+      state = previous.state;
+      document.getElementById('view').innerHTML = previous.html;
+      setTab(previous.tab || 'accueil');
+      updateChip();
+      restoringView = false;
+      setTimeout(function(){ window.scrollTo(0, previous.scroll || 0); updateBackButton(); }, 0);
+      return true;
+    }
+    if (state.tab && state.tab !== 'accueil') { goTab('accueil'); return true; }
+    return false;
+  }
   function setTab(t) {
     state.tab = t;
     document.querySelectorAll('#drawer nav button').forEach(function (b) {
@@ -116,6 +176,7 @@ var App = (function () {
     }
   }
   function switchProfile() {
+    navHistory = [];
     closeDrawer();
     state.profile = null; state.mat = null; state.chap = null;
     localStorage.removeItem('reviseplus_currentProfile');
@@ -152,6 +213,7 @@ var App = (function () {
   }
   function finishOnboarding() {
     if (!onboardingMats().length) return;
+    localStorage.setItem('reviseplus_setup_'+state.profile,'1');
     viewAccueil();
   }
 
@@ -159,63 +221,41 @@ var App = (function () {
   function viewAccueil() {
     setTab('accueil');
     if (!state.profile) { viewWelcome(); return; }
-    var p = load();
-    var pct = overallPct(p);
-    var st = statutFor(p);
-    var html = '';
-    // ===== Mon espace (façon maquette) =====
-    html += '<div class="hero espace">'
-      + '<div class="avatar">' + MASCOT[state.profile] + '</div>'
-      + '<div class="who"><div class="name">Mon espace — ' + state.profile + ' ' + st.ic + '</div>'
-      + '<div class="cls">Classe de ' + state.niveau + ' · ' + st.nom + ' · +' + p.xp + ' XP</div>'
-      + '<div class="hero-bar"><div style="width:' + pct + '%"></div></div>'
-      + '<div class="cls">' + pct + ' % de progression</div></div>'
-      + '<div class="ring" style="--p:' + pct + '%"><span>' + pct + '%</span></div></div>';
-    html += '<button class="big-cta" onclick="goTab(\'cours\')">Reprendre mes révisions ➜</button>';
-    // Derniers chapitres
-    html += '<div class="card"><h3><span class="em">🕐</span>Mes derniers chapitres</h3>';
-    if (p.derniers && p.derniers.length) {
-      html += '<ul class="lastchaps">';
-      p.derniers.forEach(function (id) {
-        var c = chapById(id);
-        if (!c) return;
-        var m = p.maitrise[id] || 0;
-        var s = m >= 80 ? '<span class="st ok">✔️ Révision terminée</span>' : (m > 0 ? '<span class="st mid">⏳ En cours</span>' : '<span class="st">📖 À étudier</span>');
-        html += '<li><b>' + c.titre + '</b> ' + s + '</li>';
-      });
-      html += '</ul>';
-    } else {
-      html += '<p style="font-size:0.85rem;opacity:0.75">Commence un chapitre pour remplir ton espace !</p>';
-    }
-    html += '</div>';
-    // ===== Toutes mes fonctions =====
-    html += '<div class="section-title">Toutes mes fonctions</div>';
-    html += '<div class="grid2 fn-grid">'
-      + '<div class="item fn" onclick="goTab(\'cours\')"><span class="ic">📖</span><span class="nm">Apprendre</span><div class="sub">Mes révisions</div></div>'
-      + '<div class="item fn" onclick="goTab(\'jeux\')"><span class="ic">🎮</span><span class="nm">Jouer</span><div class="sub">Quiz & défis</div></div>'
-      + '<div class="item fn" onclick="goTab(\'plus\');viewProgres()"><span class="ic">📊</span><span class="nm">Progresser</span><div class="sub">Mes progrès</div></div>'
-      + '<div class="item fn" onclick="goTab(\'jeux\')"><span class="ic">🏆</span><span class="nm">Réussir</span><div class="sub">Défi du jour</div></div>'
-      + '<div class="item fn" onclick="goTab(\'tuteur\')"><span class="ic">🤖</span><span class="nm">Mon tuteur</span><div class="sub">Poser une question</div></div>'
-      + '<div class="item fn" onclick="goTab(\'plus\');viewScan()"><span class="ic">📷</span><span class="nm">Scanner</span><div class="sub">Créer une fiche</div></div>'
-      + '</div>';
-    // Défi + astuce
-    html += '<div class="section-title">Chaque jour compte</div>';
-    html += '<div class="card">'
-      + '<h3><span class="em">🎯</span>Défi du jour</h3>' + dailyChallenge() + ''
-      + '<h3 style="margin-top:12px"><span class="em">💡</span>Astuce du jour</h3>'
-      + '<div class="tip">' + TIPS[new Date().getDate() % TIPS.length] + '</div>'
-      + '</div>';
+    var p=load(), emma=state.profile==='Emma';
+    var buddy=emma?'Lumi':'Nova';
+    var art=emma?'images/3d/lumi-fairy-3d.png':'images/3d/gabriel-explorer-3d.png';
+    var pct=overallPct(p), ad={};
+    try{ad=JSON.parse(localStorage.getItem('reviseplus_adventure_'+state.profile)||'{}');}catch(e){}
+    var world=emma?'Jardin enchanté':'Base orbitale';
+    var greeting=emma?'Ton royaume a besoin de toi !':'Une nouvelle mission t’attend, explorateur !';
+    var html='<style>'
+      +'#view{padding:0!important;margin:0!important}.home-world{--accent:'+(emma?'#ff8bbd':'#62d5ff')+';position:relative;isolation:isolate;min-height:calc(100dvh - 118px);height:calc(100dvh - 118px);max-height:900px;overflow:hidden;border-radius:26px;padding:clamp(12px,3vw,22px);box-sizing:border-box;color:#fff;background:'+(emma?'radial-gradient(ellipse at 80% 12%,#ffb9d9 0,transparent 35%),linear-gradient(155deg,#4c2e79,#a84e9a 55%,#f08d9e)':'radial-gradient(ellipse at 80% 10%,#2e8ec0 0,transparent 38%),linear-gradient(155deg,#071b3b,#123c70 58%,#176c8b)')+';display:flex;flex-direction:column;gap:clamp(7px,1.4vh,14px);}'
+      +'.home-world:before,.home-world:after{content:"";position:absolute;z-index:-1;border-radius:50%;pointer-events:none}.home-world:before{width:65vw;height:65vw;max-width:390px;max-height:390px;right:-18%;top:15%;background:radial-gradient(circle,#ffffff20,transparent 68%);animation:homePulse 5s ease-in-out infinite}.home-world:after{inset:auto -20% -35% -20%;height:45%;background:linear-gradient(transparent,#07172b55)}'
+      +'@keyframes homePulse{50%{transform:scale(1.12);opacity:.65}}@keyframes homeBob{50%{transform:translateY(-8px)}}@keyframes homeTwinkle{50%{opacity:.35;transform:scale(.7)}}'
+      +'.hw-top{display:flex;align-items:center;justify-content:space-between;gap:8px}.hw-brand{font-size:clamp(11px,2.8vw,14px);font-weight:900;letter-spacing:1.5px;opacity:.9}.hw-level{font-size:12px;font-weight:800;background:#ffffff20;border:1px solid #ffffff30;padding:7px 11px;border-radius:20px;white-space:nowrap}'
+      +'.hw-hero{display:flex;align-items:center;min-height:0;flex:1;gap:2px;position:relative}.hw-copy{flex:1;min-width:0;z-index:2}.hw-kicker{font-size:clamp(10px,2.5vw,13px);font-weight:900;letter-spacing:1px;text-transform:uppercase;color:#fffbd0}.hw-copy h1{font-size:clamp(23px,6.3vw,34px);line-height:1.02;margin:7px 0 8px;font-weight:1000;letter-spacing:-.7px}.hw-copy p{font-size:clamp(12px,3.2vw,15px);line-height:1.35;margin:0;max-width:240px;color:#fffde9}.hw-art{width:48%;max-width:230px;max-height:33vh;object-fit:contain;filter:drop-shadow(0 15px 18px #0005);animation:homeBob 4s ease-in-out infinite;align-self:center}'
+      +'.hw-progress{background:#ffffff20;border:1px solid #ffffff25;border-radius:16px;padding:9px 12px}.hw-progline{display:flex;justify-content:space-between;font-size:11px;font-weight:800;margin-bottom:6px}.hw-track{height:7px;border-radius:9px;background:#08152d55;overflow:hidden}.hw-track i{display:block;height:100%;width:'+pct+'%;border-radius:9px;background:linear-gradient(90deg,#fff4a9,var(--accent));box-shadow:0 0 12px var(--accent)}'
+      +'.hw-mission{border:1px solid #ffffff50;border-radius:20px;padding:12px;background:linear-gradient(110deg,#ffffff2c,#ffffff12);box-shadow:0 8px 24px #0002;display:flex;align-items:center;gap:10px}.hw-mission-icon{font-size:30px;flex:none}.hw-mission-copy{flex:1;min-width:0}.hw-mission-copy b{display:block;font-size:14px}.hw-mission-copy span{display:block;font-size:11px;opacity:.85;margin-top:3px}.hw-play{border:0;border-radius:14px;padding:12px 14px;background:linear-gradient(135deg,#fff5a8,#ffc95f);color:#3a2854;font-weight:1000;font-size:13px;box-shadow:0 4px 0 #b97c38;white-space:nowrap}'
+      +'.hw-space-head{display:flex;align-items:center;gap:9px;font-size:10px;font-weight:1000;letter-spacing:1.5px;color:#fffde9;padding:1px 2px 0}.hw-space-head:after{content:"";height:1px;flex:1;background:#ffffff55}.hw-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.hw-action{border:1px solid #ffffff48;background:linear-gradient(145deg,#ffffff2b,#ffffff12);color:#fff;border-radius:17px;min-height:64px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-weight:900;font-size:11px;box-shadow:0 6px 14px #0002}.hw-action span{font-size:23px;line-height:1;filter:drop-shadow(0 3px 4px #0003)}.hw-action:active{transform:scale(.96)}.hw-foot{display:flex;align-items:center;justify-content:space-between;font-size:10px;opacity:.78;padding:0 3px}.hw-spark{position:absolute;font-size:18px;animation:homeTwinkle 2.4s infinite}.hw-s1{top:15%;left:8%}.hw-s2{top:35%;right:7%;animation-delay:.8s}.hw-s3{bottom:25%;left:42%;animation-delay:1.3s}'
+      +'@media(max-height:690px){.home-world{gap:6px;padding:10px}.hw-hero{flex:.85}.hw-art{max-height:27vh}.hw-copy h1{font-size:23px}.hw-mission{padding:8px}.hw-action{min-height:55px}.hw-progress{padding:7px 10px}}@media(min-width:600px){.home-world{max-width:620px;margin:0 auto}.hw-copy h1{font-size:38px}}'
+      +'</style><section class="home-world '+(emma?'hw-emma':'hw-gabriel')+'">'
+      +'<span class="hw-spark hw-s1">✦</span><span class="hw-spark hw-s2">✧</span><span class="hw-spark hw-s3">✦</span>'
+      +'<div class="hw-top"><div class="hw-brand">✦ RÉVISE+ • TON MONDE</div><div class="hw-level">NIVEAU '+(p.niveau||1)+' · ⚡ '+(p.xp||0)+' XP</div></div>'
+      +'<div class="hw-hero"><div class="hw-copy"><div class="hw-kicker">'+(emma?'✨ Royaume magique':'🚀 Mission spatiale')+'</div><h1>'+(emma?'Bienvenue Emma !':'Salut Gabriel !')+'</h1><p>'+greeting+'<br><b>'+buddy+'</b> est prêt à partir avec toi.</p></div><img class="hw-art" src="'+art+'" alt="'+buddy+'"></div>'
+      +'<div class="hw-progress"><div class="hw-progline"><span>🌟 Ton aventure progresse</span><span>'+pct+'%</span></div><div class="hw-track"><i></i></div></div>'
+      +'<div class="hw-mission"><div class="hw-mission-icon">'+(emma?'🦋':'🛸')+'</div><div class="hw-mission-copy"><b>Ta prochaine mission</b><span>'+(emma?'Aide les habitants du jardin':'Prépare le prochain décollage')+' · 5 min</span></div><button class="hw-play" onclick="goTab(\'aventure\')">JOUER ▶</button></div>'
+      +'<div class="hw-space-head">MON ESPACE</div><div class="hw-actions"><button class="hw-action" onclick="goTab(\'aventure\')"><span>🧑‍🚀</span>Mon compagnon</button><button class="hw-action" onclick="goTab(\'jeux\')"><span>🎮</span>Mes jeux</button><button class="hw-action" onclick="goTab(\'cours\')"><span>📚</span>Mes révisions</button></div>'
+      +'<div class="hw-foot"><span>💜 À ton rythme, sans pression</span><span onclick="goTab(\'plus\');viewProgres()" style="font-weight:900">Mes progrès ↗</span></div></section>';
     render(html);
     updateChip();
   }
 
   function viewWelcome() {
-    var html = '<div class="card"><h3><span class="em">👋</span>Bienvenue sur Révise+ !</h3>'
-      + '<p>Réussir pas à pas, du collège au lycée. Choisis ton profil :</p>'
-      + '<div class="grid2">'
-      + '<div class="item" onclick="chooseProfile(\'Gabriel\')"><span class="ic">🚀</span><span class="nm">Gabriel</span><div class="sub">Univers galaxie</div></div>'
-      + '<div class="item" onclick="chooseProfile(\'Emma\')"><span class="ic">🐱</span><span class="nm">Emma</span><div class="sub">Univers kawaii</div></div>'
-      + '</div></div>'
+    var html = '<section class="profile-select">'
+      + '<div class="profile-select-head"><div class="eyebrow">Ton aventure commence ici</div><h2>Qui part à la découverte ?</h2><p>Choisis ton univers. Ton compagnon t’attend pour apprendre, jouer et progresser.</p></div>'
+      + '<button class="profile-choice gabriel" onclick="chooseProfile(\'Gabriel\')"><img class="profile-art" src="images/3d/gabriel-explorer-3d.png" alt=""><span class="profile-spark">✦</span><span class="profile-copy"><span class="profile-label">Exploration • Galaxie</span><span class="profile-name">Gabriel</span><span class="profile-desc">Cap sur les étoiles avec Nova, ton robot-guide.</span><span class="profile-enter">Entrer dans mon univers <b>↗</b></span></span></button>'
+      + '<button class="profile-choice emma" onclick="chooseProfile(\'Emma\')"><img class="profile-art" src="images/3d/lumi-fairy-3d.png" alt=""><span class="profile-spark">✧</span><span class="profile-copy"><span class="profile-label">Magie • Jardin enchanté</span><span class="profile-name">Emma</span><span class="profile-desc">Un monde doux et coloré avec Lumi, ta fée complice.</span><span class="profile-enter">Entrer dans mon univers <b>↗</b></span></span></button>'
+      + '<div class="profile-footnote">✨ Deux univers, une aventure à ton rythme</div></section>'
       + '<div class="card"><h3><span class="em">✨</span>Comment ça marche ?</h3><ul>'
       + '<li>Choisis ta classe et révise avec des fiches (express et complètes).</li>'
       + '<li>Écoute-les avec le bouton 🔊 si tu préfères.</li>'
@@ -269,23 +309,22 @@ var App = (function () {
     if (needProfile()) return;
     if (state.chap) { viewChapitre(state.chap); return; }
     if (state.mat) { viewMatiere(state.mat); return; }
-    var p = load();
-    var html = '<div class="card"><h3><span class="em">🎓</span>Ma classe</h3><div class="grid3">';
-    REVISE_DATA.niveaux.forEach(function (n) {
-      html += '<div class="item' + (state.niveau === n ? ' sel' : '') + '" onclick="setLevel(\'' + n + '\')"><span class="nm" style="font-size:1rem">' + n + '</span></div>';
+    var p=load(), emma=state.profile==='Emma', buddy=emma?'Lumi':'Nova';
+    var accent=emma?'#ff9bc9':'#65d8ff';
+    var html='<style>'
+      +'.study-world{height:calc(100dvh - 118px);min-height:430px;max-height:900px;box-sizing:border-box;overflow:hidden;border-radius:25px;padding:clamp(10px,2.5vw,18px);color:#fff;background:'+(emma?'radial-gradient(circle at 90% 0%,#f5a9d3 0,transparent 38%),linear-gradient(155deg,#513276,#874b9d 60%,#bd719e)':'radial-gradient(circle at 90% 0%,#368bb8 0,transparent 38%),linear-gradient(155deg,#071c3e,#174b7b 62%,#126d83)')+';display:flex;flex-direction:column;gap:clamp(7px,1.3vh,12px)}'
+      +'.study-top{display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:900;letter-spacing:1px}.study-levels{display:flex;gap:6px}.study-levels button{flex:1;min-width:0;border:1px solid #ffffff45;border-radius:12px;padding:8px 3px;background:#ffffff17;color:#fff;font-weight:800;font-size:11px}.study-levels button.active{background:#fff;color:'+(emma?'#704078':'#123c67')+';box-shadow:0 3px 0 '+accent+'}.study-heading{display:flex;align-items:center;gap:8px;min-height:65px}.study-heading img{width:68px;height:68px;object-fit:contain;filter:drop-shadow(0 6px 8px #0004)}.study-heading h2{font-size:clamp(20px,5.5vw,27px);line-height:1.05;margin:0 0 4px}.study-heading p{font-size:11px;margin:0;opacity:.85}.study-subtitle{font-size:11px;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin:2px 0}.study-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(0,1fr);gap:7px;flex:1;min-height:0}.study-subject{position:relative;overflow:hidden;border:1px solid #ffffff42;border-radius:15px;background:linear-gradient(145deg,#ffffff2b,#ffffff12);color:#fff;text-align:left;padding:9px;display:flex;flex-direction:column;justify-content:center;min-height:0}.study-subject:active{transform:scale(.98)}.study-subject .ico{font-size:22px}.study-subject b{font-size:12px;line-height:1.1;margin-top:3px}.study-subject small{font-size:9px;opacity:.8;margin-top:4px}.study-foot{display:flex;justify-content:space-between;align-items:center;font-size:10px;opacity:.8}.study-back{border:0;background:#ffffff20;color:#fff;border-radius:12px;padding:8px 11px;font-weight:800}@media(max-height:690px){.study-world{gap:6px;padding:9px}.study-heading{min-height:52px}.study-heading img{width:55px;height:55px}.study-subject{padding:7px}.study-subject .ico{font-size:19px}}'
+      +'</style><section class="study-world"><div class="study-top"><span>✦ TON CENTRE DE SAVOIR</span><span>'+p.xp+' XP</span></div>'
+      +'<div class="study-heading"><img src="'+(emma?'images/3d/lumi-fairy-3d.png':'images/3d/nova-robot-3d.png')+'" alt="'+buddy+'"><div><h2>'+(emma?'La bibliothèque magique':'Le centre de formation')+'</h2><p>'+(emma?'Lumi t’accompagne dans tes découvertes.':'Nova prépare ta prochaine mission.')+'</p></div></div>'
+      +'<div class="study-subtitle">Choisis ta classe</div><div class="study-levels">';
+    REVISE_DATA.niveaux.forEach(function(n){html+='<button class="'+(state.niveau===n?'active':'')+'" onclick="setLevel(\''+n+'\')">'+n+'</button>';});
+    html+='</div><div class="study-subtitle">Quelle matière veux-tu explorer ?</div><div class="study-grid">';
+    myMatieres().forEach(function(m){
+      var chs=chaptersFor(m.id,state.niveau),done=chs.filter(function(c){return (p.maitrise[c.id]||0)>=50;}).length;
+      html+='<button class="study-subject" onclick="selectSubject(\''+m.id+'\')"><span class="ico">'+m.icon+'</span><b>'+m.nom.split('-')[0]+'</b><small>'+done+' / '+chs.length+' chapitres maîtrisés</small></button>';
     });
-    html += '</div></div>';
-    html += '<div class="card"><h3><span class="em">📚</span>Mes matières — classe de ' + state.niveau + '</h3><div class="grid2">';
-    myMatieres().forEach(function (m) {
-      var chs = chaptersFor(m.id, state.niveau);
-      var done = chs.filter(function (c) { return (p.maitrise[c.id] || 0) >= 50; }).length;
-      html += '<div class="item" onclick="selectSubject(\'' + m.id + '\')">'
-        + '<span class="ic">' + m.icon + '</span><span class="nm">' + m.nom.split('-')[0] + '</span>'
-        + '<div class="sub">' + done + '/' + chs.length + ' validés</div></div>';
-    });
-    html += '</div></div>';
-    render(html);
-    updateChip();
+    html+='</div><div class="study-foot"><span>🌱 Chaque petite étape compte.</span><button class="study-back" onclick="viewAccueil()">← Mon univers</button></div></section>';
+    render(html); updateChip();
   }
 
   function viewMatiere(mat) {
@@ -301,6 +340,13 @@ var App = (function () {
         + '<div style="font-weight:800;font-size:0.85rem;color:var(--accent)">' + mt + ' %</div></div>';
     });
     html += '</div>';
+    html += '<div class="card" style="border:1px solid var(--accent)"><h3>🔎 Un cours manque ?</h3>'
+      + '<p style="font-size:.9rem">Recherche ou demande une fiche sur une notion absente de '+m.nom+'. Écris ta demande ou dicte-la.</p>'
+      + '<input type="text" id="lessonInput" placeholder="Ex. les fractions, les verbes irréguliers…" style="width:100%;padding:12px;margin:8px 0;border-radius:10px" onkeydown="if(event.key===\'Enter\')askLesson()">'
+      + '<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" onclick="askLesson()">✨ Rechercher / créer la fiche</button><button class="btn ghost" onclick="startLessonVoice()">🎙️ Demander à l’oral</button></div>'
+      + '<div id="lessonStatus" style="font-size:.85rem;margin-top:10px"></div>'
+      + (Tutor.mode()!=='IA' ? '<div class="control-advice">Mode local sans IA : une fiche repère peut être créée à partir des connaissances intégrées. Pour les notions absentes, complète-la avec ton cours.</div>' : '')
+      + '</div>';
     render(html);
   }
 
@@ -309,6 +355,7 @@ var App = (function () {
     var html = '<span class="back" onclick="backToChapters()">← ' + c.titre + '</span>';
     html += '<div class="card"><h3>' + c.titre + ' <button class="btn small" onclick="readAloud()" id="ttsBtn">🔊 Écouter</button></h3>';
     html += '<h4>Fiche express</h4><ul>' + c.express + '</ul>';
+    html += '<button class="btn ghost" onclick="downloadExpress()">⬇️ Télécharger la fiche courte</button>';
     html += '<button class="btn" onclick="showFull()">📖 Fiche complète</button> '
       + '<button class="btn ghost" onclick="startQuiz(1)">🧭 Découverte</button> '
       + '<button class="btn gold" onclick="startQuiz(2)">⚡ Expert</button>';
@@ -316,23 +363,82 @@ var App = (function () {
     render(html);
   }
 
+  // Export de la fiche express en fichier HTML imprimable/consultable hors ligne.
+  function downloadExpress() {
+    var c = chapById(state.chap); if (!c) return;
+    var title = String(c.titre || 'Fiche express');
+    var content = '<!doctype html><html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width">'
+      + '<title>Fiche express - '+escapeHtml(title)+'</title>'
+      + '<style>body{font:16px/1.65 Arial,sans-serif;max-width:780px;margin:32px auto;padding:0 20px;color:#202033}h1{color:#5135a8}li{margin:8px 0}@media print{body{margin:0}}</style>'
+      + '<h1>'+escapeHtml(title)+'</h1><h2>Fiche express</h2><ul>'+c.express+'</ul>'
+      + '<p><small>Révise+ • Fiche de révision</small></p></html>';
+    var blob = new Blob([content], {type:'text/html;charset=utf-8'});
+    var url = URL.createObjectURL(blob), link=document.createElement('a');
+    link.href=url; link.download='Fiche-express-'+title.replace(/[^a-z0-9-]/gi,'-')+'.html';
+    document.body.appendChild(link); link.click(); link.remove();
+    setTimeout(function(){URL.revokeObjectURL(url);},1500);
+  }
+  function escapeHtml(v){return String(v).replace(/[&<>"]/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+
+  // Lecture pédagogique : texte nettoyé, voix française naturelle si disponible,
+  // débit ralenti et ponctuation qui laisse respirer les explications.
+  var speechRun = 0;
+  function cleanForSpeech(html) {
+    var box = document.createElement('div');
+    box.innerHTML = html || '';
+    var txt = (box.innerText || box.textContent || '').replace(/[→←↑↓↗↘▶►◆★✦✧]/g, ' ');
+    return txt
+      .replace(/\b(\d+)\s*%/g, '$1 pour cent')
+      .replace(/\s+/g, ' ')
+      .replace(/\s*([:;])\s*/g, '$1 ')
+      .replace(/\s*([.!?])\s*/g, '$1 ')
+      .trim();
+  }
+  function preferredFrenchVoice() {
+    if (!window.speechSynthesis) return null;
+    var voices = speechSynthesis.getVoices() || [];
+    var french = voices.filter(function(v) { return /^fr([-_]|$)/i.test(v.lang || ''); });
+    if (!french.length) return null;
+    var preferred = french.filter(function(v) {
+      return /google|natural|premium|enhanced|neural/i.test(v.name || '');
+    });
+    return (preferred[0] || french.filter(function(v) {
+      return /fr[-_]FR/i.test(v.lang || '');
+    })[0] || french[0]);
+  }
   function readAloud() {
     var c = chapById(state.chap);
-    var txt = c.titre + '. ' + c.express.replace(/<li>/g, ' ').replace(/<\/li>/g, '. ');
+    if (!c) return;
     stopSpeech();
-    if (window.NativeBridge) { window.NativeBridge.speak(txt); }
-    else if (window.speechSynthesis) {
-      var u = new SpeechSynthesisUtterance(txt); u.lang = 'fr-FR';
-      speechSynthesis.speak(u);
-    } else { alert('La lecture audio n\'est pas disponible.'); }
+    var txt = cleanForSpeech(c.titre) + '. Cours complet. ' + cleanForSpeech(c.complet);
     var b = document.getElementById('ttsBtn');
-    if (b) { b.textContent = '⏹ Stop'; b.onclick = stopSpeech; }
+    if (window.NativeBridge && typeof window.NativeBridge.speakSlow === 'function') {
+      window.NativeBridge.speakSlow(txt, 0.84, 1.02);
+    } else if (window.speechSynthesis && window.SpeechSynthesisUtterance) {
+      var run = ++speechRun;
+      var u = new SpeechSynthesisUtterance(txt);
+      u.lang = 'fr-FR';
+      u.rate = 0.84;
+      u.pitch = 1.02;
+      u.volume = 1;
+      var voice = preferredFrenchVoice();
+      if (voice) u.voice = voice;
+      u.onend = function() { if (run === speechRun && b) { b.textContent = '🎧 Écouter le cours complet'; b.onclick = readAloud; } };
+      speechSynthesis.speak(u);
+    } else if (window.NativeBridge) {
+      // Secours sur les WebView sans synthèse vocale web.
+      window.NativeBridge.speak(txt);
+    } else {
+      alert('La lecture audio n\'est pas disponible sur cet appareil.');
+    }
+    if (b) { b.textContent = '⏹ Arrêter'; b.onclick = stopSpeech; }
   }
   function stopSpeech() {
-    if (window.NativeBridge) window.NativeBridge.stopSpeak();
+    speechRun++;
     if (window.speechSynthesis) speechSynthesis.cancel();
+    if (window.NativeBridge && window.NativeBridge.stopSpeak) window.NativeBridge.stopSpeak();
     var b = document.getElementById('ttsBtn');
-    if (b) { b.textContent = '🔊 Écouter'; b.onclick = readAloud; }
+    if (b) { b.textContent = '🎧 Écouter le cours complet'; b.onclick = readAloud; }
   }
 
   // ================= QUIZ =================
@@ -359,73 +465,119 @@ var App = (function () {
 
   function startQuiz(mode) {
     var c = chapById(state.chap);
-    quiz = { c: c, mode: mode, qs: poolFor(c, mode), i: 0, score: 0, streak: 0 };
+    var qs=poolFor(c,mode===1?1:2);if(mode===3)qs=qs.slice(0,5);
+    quiz = { c: c, mode: mode===1?1:2, qs: qs, i: 0, score: 0, streak: 0, boss: mode===3 };
     pushRecent(c.id);
     setTab('jeux');
     showQuestion();
   }
 
   function showQuestion() {
-    var q = quiz.qs[quiz.i];
-    var html = '<div class="card"><h3><span class="em">' + quiz.c.icon + '</span>' + quiz.c.titre
-      + ' <span style="font-size:0.75rem;opacity:0.7">' + (quiz.i + 1) + '/' + quiz.qs.length + '</span>'
-      + (quiz.mode === 1 ? ' <span class="demo-tag">DÉCOUVERTE</span>' : ' <span class="demo-tag">EXPERT</span>') + '</h3>';
-    html += '<p style="font-weight:700">' + q.q + '</p>';
-    q.choix.forEach(function (ch, idx) {
-      html += '<button class="choice" id="ch' + idx + '" onclick="answer(' + idx + ')">' + ch + '</button>';
-    });
-    html += '<p id="fb" class="hidden"></p></div>';
-    render(html);
+    var q=quiz.qs[quiz.i], pct=Math.round((quiz.i/quiz.qs.length)*100), type=quiz.gameType||'quiz';
+    var emma=state.profile==='Emma',worldIndex=0;
+    try{var ad=JSON.parse(localStorage.getItem('reviseplus_adventure_'+state.profile)||'{}');worldIndex=Math.max(0,Math.min(5,ad.world||0));}catch(e){}
+    var worlds=emma?[
+      ['🌷','Jardin enchanté','🌸','🦋','✨','Les fleurs attendent tes bonnes réponses !'],
+      ['🧚','Forêt des fées','🍃','🧚','🌟','Aide les fées à retrouver leur poussière magique !'],
+      ['🏰','Château nuage','☁️','👑','💎','Les portes du château brillent à chaque réussite !'],
+      ['🌙','Lac des étoiles','🌊','🦢','⭐','Fais remonter les étoiles à la surface !'],
+      ['🐰','Vallée des animaux','🌿','🐾','🥕','Les petits habitants comptent sur toi !'],
+      ['🌈','Royaume arc-en-ciel','🎠','🦄','💖','Rends toutes ses couleurs au royaume !']
+    ]:[
+      ['🚀','Base orbitale','🪐','🛰️','⭐','Prépare le décollage avec Nova !'],
+      ['🤖','Lune des robots','🌙','⚙️','🔋','Redonne de l’énergie aux robots !'],
+      ['💎','Planète cristal','🔮','🪨','💠','Fais briller les cristaux du savoir !'],
+      ['🌌','Nébuleuse','☄️','🪐','🌠','Traverse la nébuleuse étoile après étoile !'],
+      ['🛰️','Station des étoiles','📡','🌍','✨','Réactive les systèmes de la station !'],
+      ['🌠','Galaxie légendaire','🚀','👾','💫','La grande aventure commence !']
+    ];
+    var w=worlds[worldIndex],title=q._chapter?q._chapter.titre:quiz.c.titre;
+    quiz.treasures=quiz.treasures||0;
+    var html='<style>@keyframes worldFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}@keyframes worldGlow{0%,100%{filter:drop-shadow(0 0 3px #fff8)}50%{filter:drop-shadow(0 0 12px #fff)}}.immersive-stage{position:relative;overflow:hidden;border-radius:24px;padding:16px;margin-bottom:12px;background:'+(emma?'linear-gradient(145deg,#f9dff0,#c9b5f5 55%,#b5e9d7)':'linear-gradient(145deg,#17295f,#466ec2 60%,#86c8ed)')+';color:'+(emma?'#593d72':'#fff')+';box-shadow:0 12px 26px #253b7730}.immersive-stage:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 15% 15%,#fff9 0 2px,transparent 3px),radial-gradient(circle at 80% 25%,#fff8 0 2px,transparent 3px),radial-gradient(circle at 55% 80%,#fff7 0 2px,transparent 3px);background-size:75px 75px;pointer-events:none}.immersive-world-head{position:relative;display:flex;align-items:center;justify-content:space-between;gap:8px}.immersive-world-head b{font-size:12px;letter-spacing:1px}.immersive-scene-icons{position:relative;display:flex;justify-content:space-around;align-items:center;font-size:30px;padding:12px 0 5px}.immersive-scene-icons span{animation:worldFloat 3s ease-in-out infinite}.immersive-scene-icons span:nth-child(2){animation-delay:.5s}.immersive-scene-icons span:nth-child(3){animation-delay:1s}.immersive-story{position:relative;font-size:12px;font-weight:700;background:#ffffff38;border-radius:13px;padding:9px}.treasure-meter{position:relative;margin-top:10px;font-size:12px;font-weight:900;display:flex;justify-content:space-between}.treasure-meter strong{animation:worldGlow 2s infinite}.quiz-shell{padding-bottom:18px}.quiz-shell .card{border-radius:22px;box-shadow:0 10px 25px #192a4a18}.quiz-progress-track{height:9px;border-radius:9px;background:#d8d8e8;overflow:hidden;margin:8px 0 14px}.quiz-progress-track i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,#7ad7b4,#a78bea);transition:width .35s}</style>';
+    html+='<div class="immersive-stage"><div class="immersive-world-head"><b>'+w[0]+' '+w[1].toUpperCase()+'</b><span>MISSION '+(quiz.i+1)+'/'+quiz.qs.length+'</span></div><div class="immersive-scene-icons"><span>'+w[2]+'</span><span>'+w[3]+'</span><span>'+w[4]+'</span></div><div class="immersive-story">'+(emma?'Lumi : ':'Nova : ')+w[5]+'</div><div class="treasure-meter"><span>✨ Trésors récoltés</span><strong>'+quiz.treasures+' / '+quiz.qs.length+'</strong></div></div>';
+    html+='<div class="quiz-shell"><div class="quiz-progress-top"><span>'+(type==='mega'?'🌟 MÉGA-QUIZ MULTIMATIÈRES':'🎮 AVENTURE · '+(quiz.chapterLevel?'NIVEAU '+quiz.chapterLevel:'MISSION'))+'</span><b>'+pct+' %</b></div>'
+      +'<div class="quiz-progress-track"><i style="width:'+pct+'%"></i></div><div class="card"><div class="quiz-guardian"><img src="'+(emma?'images/3d/lumi-fairy-3d.png':'images/3d/nova-robot-3d.png')+'" alt=""><div><b>'+(emma?'Lumi est avec toi ✨':'Nova est à tes côtés 🤖')+'</b><span>Explore à ton rythme. Chaque essai fait avancer ton aventure !</span></div></div>'
+      +'<h3>'+title+'</h3><p style="font-weight:700">'+(type==='hangman'?'🔎 Indice : ':'')+q.q+'</p>';
+    if(type==='written'){
+      html+='<input id="writtenAnswer" type="text" autocomplete="off" placeholder="Écris ta réponse…" onkeydown="if(event.key===\'Enter\')gameAnswerText()">'
+        +'<button class="btn" onclick="gameAnswerText()">Valider</button> <button class="btn ghost" id="voiceAnswer" onclick="gameSpeech()">🎙️ Dicter</button>';
+    }else if(type==='hangman'){
+      var word=String(q.choix[q.bon]), clean=word.toLocaleLowerCase('fr-FR').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z ]/g,'');
+      quiz.guessed=quiz.guessed||[];quiz.misses=quiz.misses||0;
+      html+='<div style="font-size:1.65rem;letter-spacing:5px;text-align:center;padding:16px 4px;font-weight:900">'+clean.split('').map(function(ch){return ch===' '?'　':(quiz.guessed.indexOf(ch)>=0?ch.toUpperCase():'＿');}).join(' ')+'</div>'
+        +'<p style="text-align:center">Erreurs : '+quiz.misses+' / 7</p><div class="grid3">';
+      'abcdefghijklmnopqrstuvwxyz'.split('').forEach(function(ch){html+='<button class="btn small" '+(quiz.guessed.indexOf(ch)>=0?'disabled':'')+' onclick="gameHangmanLetter(\''+ch+'\')">'+ch.toUpperCase()+'</button>';});
+      html+='</div>';
+      if(quiz.misses>=7){html+='<p>Le mot était : <b>'+word+'</b></p><button class="btn" onclick="answer(-1)">Voir la correction</button>';}
+    }else{
+      q.choix.forEach(function(ch,idx){html+='<button class="choice" id="ch'+idx+'" onclick="answer('+idx+')">'+ch+'</button>';});
+    }
+    html+='<p id="fb" class="hidden"></p></div></div>';render(html);
   }
 
   function answer(idx) {
     var q = quiz.qs[quiz.i];
+    if(idx<0)idx=q.bon===0?1:0;
     var ok = idx === q.bon;
+    if (AudioFX) AudioFX.fx(ok);
     var fb = document.getElementById('fb');
-    document.getElementById('ch' + q.bon).classList.add('right');
-    if (!ok) document.getElementById('ch' + idx).classList.add('wrong');
+    var correctBtn=document.getElementById('ch'+q.bon), wrongBtn=document.getElementById('ch'+idx);
+    if(correctBtn)correctBtn.classList.add('right');
+    if(!ok&&wrongBtn)wrongBtn.classList.add('wrong');
     fb.classList.remove('hidden');
-    fb.innerHTML = ok ? '✅ Bravo ! ' + (q.exp || '') : '❌ ' + (q.exp || 'Réponse : ' + q.choix[q.bon]);
-    for (var k = 0; k < q.choix.length; k++) document.getElementById('ch' + k).onclick = null;
+    fb.innerHTML = '<div class="answer-feedback '+(ok?'feedback-good':'feedback-wrong')+'">'+(ok?'✨ Bien joué !':'💡 On apprend aussi en se trompant !')+'<div class="feedback-explain">'+(q.exp || ('La bonne réponse est : '+q.choix[q.bon]))+'</div><div class="feedback-actions"><button class="btn ghost small" onclick="quizAskWhy()">🤔 Je veux comprendre</button><button class="btn small" onclick="gameNext()">J’ai compris · Suivant →</button></div></div>';
+    for (var k = 0; k < q.choix.length; k++){var choiceBtn=document.getElementById('ch'+k);if(choiceBtn)choiceBtn.onclick=null;}
     var p = load();
     if (ok) {
-      quiz.score++; quiz.streak++;
+      quiz.score++; quiz.streak++; quiz.treasures=(quiz.treasures||0)+1;
       p.streak = Math.max(p.streak || 0, quiz.streak);
       p.bestStreak = Math.max(p.bestStreak || 0, quiz.streak);
-      setMaitrise(quiz.c.id, quiz.mode === 1 ? 8 : 12);
-      clearError(quiz.c.id, q.q);
+      setMaitrise((q._chapter||quiz.c).id, quiz.mode === 1 ? 8 : 12);
+      clearError((q._chapter||quiz.c).id, q.q);
       addXP(quiz.mode === 1 ? 5 : 10);
     } else {
       quiz.streak = 0;
       p.streak = 0; save(p);
-      setMaitrise(quiz.c.id, quiz.mode === 1 ? -8 : -12);
-      recordError(quiz.c.id, q.q);
+      setMaitrise((q._chapter||quiz.c).id, quiz.mode === 1 ? -8 : -12);
+      recordError((q._chapter||quiz.c).id, q.q);
     }
-    setTimeout(function () {
-      quiz.i++;
-      if (quiz.i < quiz.qs.length) showQuestion(); else showResults();
-    }, 1500);
+    // Le feedback reste affiché jusqu'à ce que l'enfant décide de continuer.
+    quiz.waitingNext = true;
+  }
+  function quizNext(){
+    if(!quiz || !quiz.waitingNext)return;
+    quiz.waitingNext=false; quiz.i++;
+    if(quiz.i<quiz.qs.length)showQuestion();else showResults();
+  }
+  function quizAskWhy(){
+    var q=quiz.qs[quiz.i], txt='Peux-tu m’expliquer simplement cette question : '+q.q+' La correction est : '+(q.exp||q.choix[q.bon]);
+    goTab('tuteur');
+    setTimeout(function(){var inp=document.getElementById('chatInput');if(inp){inp.value=txt;inp.focus();}},120);
   }
 
   function showResults() {
     var pct = Math.round(100 * quiz.score / quiz.qs.length);
+    var bossWin=!!(quiz.boss && pct>=60);
     var p = load();
+    if(bossWin){p.bossWins=(p.bossWins||0)+1;save(p);}
     if (pct === 100) { p.perfect = (p.perfect || 0) + 1; save(p); }
-    p = addXP(20 + Math.round(pct / 5));
+    p = addXP(20 + Math.round(pct / 5) + (bossWin?25:0) + (quiz.gameType==='mega'?50:0));
     if (quiz.daily) grantDaily(quiz.c.id);
-    var html = '<div class="card stat"><h3><span class="em">🏁</span>Résultat — ' + quiz.c.titre + '</h3>'
+    var html = '<div class="card stat result-card '+(bossWin?'boss-victory':'')+'"><div class="result-hero">'+(quiz.gameType==='mega'?'🌟':(bossWin?'👑':'🏁'))+'</div><h3>'+(quiz.gameType==='mega'?'Méga-quiz terminé !':(quiz.boss?(bossWin?'Boss vaincu !':'Le boss résiste encore…'):'Mission terminée'))+' — ' + (quiz.gameType==='mega'?'toutes les matières':quiz.c.titre) + '</h3>'
       + '<span class="n">' + pct + ' %</span>'
       + '<p>' + quiz.score + ' / ' + quiz.qs.length + ' bonnes réponses</p>'
       + '<p>XP total : <b>' + p.xp + '</b> — Niveau ' + p.niveau + '</p>';
     if (pct < 50) html += '<p>💡 Relis la fiche express, puis retente : les questions ratées reviendront !</p>';
     else if (pct < 100) html += '<p>💡 Bien joué ! Passe en mode ⚡ Expert pour viser le sans-faute.</p>';
     else html += '<p>🏆 Sans faute, bravo !</p>';
-    html += '<button class="btn" onclick="startQuiz(quizMode())">🔄 Rejouer</button> '
+    if(quiz.gameType==='mega')html+='<p>🌟 Bonus Méga-quiz inclus : +50 XP !</p>';
+    if(quiz.boss)html+='<div class="boss-reward">'+(bossWin?'🎉 Boss vaincu : +25 XP bonus et badge Chasseur de boss !':'💪 Tu as déjà appris beaucoup. Reviens défier le boss après une petite révision.')+'</div>';
+    html += '<button class="btn" onclick="'+(quiz.gameType==='mega'?'gameStartMega()':'gameStartChapter(\''+quiz.c.id+'\')')+'">🔄 Rejouer</button> '
       + '<button class="btn ghost" onclick="goTab(\'plus\');viewProgres()">📊 Mes progrès</button> '
       + '<button class="btn ghost" onclick="backToChapters()">📖 Retour au cours</button></div>';
     render(html);
   }
-  function quizMode() { return quiz ? quiz.mode : 1; }
+  function quizMode() { return quiz ? (quiz.boss ? 3 : quiz.mode) : 1; }
 
   // ================= DÉFI DU JOUR =================
   function dailyChallenge() {
@@ -582,56 +734,162 @@ var App = (function () {
     viewProgres();
   }
 
-  // ================= JEUX =================
+  // ================= ARCADE : PARCOURS PAR MATIÈRE ET CHAPITRE =================
+  var gameModeChosen = 'quiz', gameSubjectChosen = null;
+  function gameModesHtml(){
+    return '<div class="game-mode-grid">'
+      + '<button class="game-mode mode-quest '+(gameModeChosen==='quiz'?'selected':'')+'" onclick="gamePickMode(\'quiz\')"><span class="game-art">🧠</span><b>Quiz à choix</b><small>Choisis la bonne réponse</small><span class="game-launch">Jouer ↗</span></button>'
+      + '<button class="game-mode mode-speed '+(gameModeChosen==='written'?'selected':'')+'" onclick="gamePickMode(\'written\')"><span class="game-art">✍️</span><b>Réponse écrite</b><small>Écris ou dicte ta réponse</small><span class="game-launch">Jouer ↗</span></button>'
+      + '<button class="game-mode mode-boss '+(gameModeChosen==='hangman'?'selected':'')+'" onclick="gamePickMode(\'hangman\')"><span class="game-art">🔤</span><b>Le mot mystère</b><small>Pendu pédagogique pour les langues</small><span class="game-launch">Jouer ↗</span></button>'
+      + '<button class="game-mode mode-daily '+(gameModeChosen==='mega'?'selected':'')+'" onclick="gamePickMode(\'mega\')"><span class="game-art">🌟</span><b>Méga-quiz</b><small>Toutes les matières · gros bonus XP</small><span class="game-launch">+50 XP ↗</span></button></div>';
+  }
   function viewJeux() {
     setTab('jeux');
     if (needProfile()) return;
-    var p = load();
-    var html = '<div class="card"><h3><span class="em">🎮</span>Mes jeux</h3>'
-      + '<p style="font-size:0.9rem">Choisis un chapitre dans <b>Mes révisions</b>, puis lance :</p>'
-      + '<ul><li><b>🧭 Découverte</b> : la moitié des questions, pour apprendre en douceur.</li>'
-      + '<li><b>⚡ Expert</b> : toutes les questions, XP doublés, maîtrise qui grimpe plus vite.</li>'
-      + '<li>Les questions ratées reviennent te challenger : c\'est l\'entraînement espacé !</li></ul>'
-      + '<div class="grid3">'
-      + '<div class="stat"><span class="n">' + p.xp + '</span>XP</div>'
-      + '<div class="stat"><span class="n">' + (p.bestStreak || 0) + '</span>record</div>'
-      + '<div class="stat"><span class="n">' + p.badges.length + '</span>badges</div>'
-      + '</div></div>';
-    html += '<div class="card"><h3><span class="em">🎯</span>Défi du jour</h3>' + dailyChallenge() + '</div>';
-    // Choix direct d'un chapitre à jouer
-    html += '<div class="card"><h3><span class="em">🎯</span>Jouer avec un chapitre</h3>'
-      + '<p style="font-size:0.85rem;opacity:0.8">Tes matières — classe de ' + state.niveau + ' :</p>';
-    myMatieres().forEach(function (m) {
-      var chs = chaptersFor(m.id, state.niveau);
-      if (!chs.length) return;
-      html += '<p style="margin:10px 0 4px;font-weight:800">' + m.icon + ' ' + m.nom + '</p>';
-      chs.forEach(function (c) {
-        html += '<button class="choice" onclick="quizFromList(\'' + c.id + '\')">' + c.titre + '</button>';
-      });
-    });
-    html += '</div>';
-    render(html);
-    updateChip();
+    var p=load(),emma=state.profile==='Emma',buddy=emma?'Lumi':'Nova';
+    var html='<style>'
+      +'.arcade-world{height:calc(100dvh - 118px);min-height:430px;max-height:900px;box-sizing:border-box;overflow:hidden;border-radius:25px;padding:clamp(9px,2.3vw,16px);color:#fff;background:'+(emma?'radial-gradient(circle at 85% 0%,#ffb6d7 0,transparent 34%),linear-gradient(155deg,#502d77,#8b4a9b 60%,#c4779e)':'radial-gradient(circle at 85% 0%,#3b9bc2 0,transparent 35%),linear-gradient(155deg,#071b3c,#174a78 60%,#126c83)')+';display:flex;flex-direction:column;gap:7px}'
+      +'.arcade-head{display:flex;align-items:center;gap:9px}.arcade-head img{width:58px;height:58px;object-fit:contain;filter:drop-shadow(0 5px 7px #0004)}.arcade-head h2{font-size:clamp(19px,5vw,25px);margin:0}.arcade-head p{font-size:10px;margin:3px 0 0;opacity:.85}.arcade-mini-stats{display:flex;gap:5px}.arcade-mini-stats span{flex:1;text-align:center;background:#ffffff1c;border:1px solid #ffffff25;border-radius:10px;padding:6px 2px;font-size:10px;font-weight:800}.arcade-label{font-size:10px;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin:3px 0}.arcade-world .game-mode-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.arcade-world .game-mode{min-height:74px;border-radius:14px;border:1px solid #ffffff40;background:#ffffff19;color:#fff;padding:7px;text-align:left;display:grid;grid-template-columns:30px 1fr;grid-template-rows:auto auto;column-gap:6px;align-items:center}.arcade-world .game-mode.selected{background:#fff;color:'+(emma?'#673b7c':'#123c66')+';border:2px solid '+(emma?'#ffd1e7':'#8beaff')+'}.arcade-world .game-art{grid-row:1/3;font-size:24px}.arcade-world .game-mode b{font-size:11px}.arcade-world .game-mode small{font-size:9px;line-height:1.15}.arcade-world .game-launch{display:none}.arcade-world .section-title{font-size:10px;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin:3px 0}.arcade-world .game-intro{font-size:10px;line-height:1.25;margin:0 0 5px;opacity:.8}.arcade-world .game-chapter-card{background:transparent;border:0;padding:0;margin:0;box-shadow:none;min-height:0;flex:1;overflow:hidden;display:flex;flex-direction:column}.arcade-world .game-chapter-card .grid2{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.arcade-world .game-chapter-card .item{min-width:0;padding:6px 3px;border-radius:11px;background:#ffffff1c;color:#fff;border:1px solid #ffffff28}.arcade-world .game-chapter-card .item .ic{font-size:18px}.arcade-world .game-chapter-card .item .nm{font-size:9px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.arcade-world .game-chapter-card .item .sub{font-size:8px}.arcade-world #gameChapterList{overflow-y:auto;min-height:0}.arcade-world .game-step-title{font-size:10px;font-weight:900;margin:5px 0}.arcade-world .game-selected-summary{font-size:10px;background:#ffffff20;padding:6px;border-radius:9px}.arcade-world .game-chapter{display:flex;width:100%;justify-content:space-between;gap:5px;margin:4px 0;padding:8px;border:1px solid #ffffff35;border-radius:10px;background:#ffffff18;color:#fff;font-size:10px;text-align:left}.arcade-world .game-chapter span{white-space:nowrap}.arcade-foot{font-size:9px;opacity:.8;display:flex;justify-content:space-between;align-items:center}.arcade-foot button{border:0;border-radius:10px;padding:7px 10px;background:#ffffff22;color:#fff;font-weight:800}@media(max-height:690px){.arcade-world{gap:5px;padding:8px}.arcade-head img{width:48px;height:48px}.arcade-world .game-mode{min-height:62px;padding:5px}.arcade-world .game-chapter-card .item{padding:4px 2px}}'
+      +'</style><section class="arcade-world"><div class="arcade-head"><img src="'+(emma?'images/3d/lumi-fairy-3d.png':'images/3d/nova-robot-3d.png')+'" alt="'+buddy+'"><div><h2>'+(emma?'Les défis de Lumi':'Les missions de Nova')+'</h2><p>Choisis un jeu, une matière, puis ton chapitre.</p></div></div>'
+      +'<div class="arcade-mini-stats"><span>⚡ '+p.xp+' XP</span><span>🔥 '+(p.bestStreak||0)+' série record</span><span>🏅 '+p.badges.length+' badges</span></div>'
+      +'<div class="arcade-label">① Choisis ton défi</div>'+gameModesHtml()
+      +'<div class="arcade-label">② Choisis ta matière · '+state.niveau+'</div><div class="card game-chapter-card"><div class="grid2">';
+    myMatieres().forEach(function(m){var chs=chaptersFor(m.id,state.niveau),done=chs.filter(function(c){return (p.maitrise[c.id]||0)>=50;}).length;html+='<button class="item" onclick="gamePickSubject(\''+m.id+'\')" style="border:2px solid '+(gameSubjectChosen===m.id?'#ffe58a':'#ffffff25')+'"><span class="ic">'+m.icon+'</span><span class="nm">'+m.nom.split('-')[0]+'</span><div class="sub">'+done+'/'+chs.length+' validés</div></button>';});
+    html+='</div><div id="gameChapterList"></div></div><div class="arcade-foot"><span>🌱 Pas de pénalité en cas d’erreur.</span><button onclick="viewAccueil()">← Mon univers</button></div></section>';
+    render(html);updateChip();
+    if(gameSubjectChosen)gamePickSubject(gameSubjectChosen);
   }
-  function quizFromList(chapId) {
-    state.chap = chapId;
-    var c = chapById(chapId);
-    quiz = { c: c, mode: 1, qs: poolFor(c, 1), i: 0, score: 0, streak: 0 };
-    pushRecent(chapId);
+  function gamePickMode(mode){
+    gameModeChosen=mode;
+    if(mode==='mega'){gameStartMega();return;}
+    if(mode==='hangman' && gameSubjectChosen && ['anglais','italien','francais'].indexOf(gameSubjectChosen)<0)gameSubjectChosen=null;
+    viewJeux();
+  }
+  function gamePickSubject(mat){
+    gameSubjectChosen=mat;
+    var m=REVISE_DATA.matieres.filter(function(x){return x.id===mat;})[0], chs=chaptersFor(mat,state.niveau), p=load();
+    var box=document.getElementById('gameChapterList'); if(!box)return;
+    if(gameModeChosen==='hangman' && ['anglais','italien','francais'].indexOf(mat)<0){
+      box.innerHTML='<div class="warn">🔤 Le jeu du mot mystère est réservé au français, à l’anglais et à l’italien. Choisis une de ces matières.</div>';return;
+    }
+    var html='<div class="game-step-title">③ Choisis ton chapitre</div><div class="game-selected-summary">🎮 '+(gameModeChosen==='quiz'?'Quiz à choix':gameModeChosen==='written'?'Réponse écrite':'Mot mystère')+' <span>→</span> '+m.icon+' '+m.nom+' <span>→</span> '+state.niveau+'</div><p class="game-intro">Appuie sur un chapitre pour lancer la partie. Les suivants se débloquent au fil de ta progression.</p>';
+    chs.forEach(function(c,i){
+      var pct=p.maitrise[c.id]||0, unlocked=i===0||(p.maitrise[chs[i-1].id]||0)>=50;
+      html+='<button class="game-chapter" '+(unlocked?'':'disabled style="opacity:.42;filter:grayscale(1)"')+' onclick="gameStartChapter(\''+c.id+'\')">'
+        +(unlocked?'▶ ':'🔒 ')+'<b>Niveau '+(i+1)+' · '+c.titre+'</b><span>'+(pct>=50?'✔ Validé · ':'Progression · ')+pct+' %</span></button>';
+    });
+    box.innerHTML=html;
+  }
+  function gameStartChapter(id){
+    var c=chapById(id); if(!c)return;
+    var chs=chaptersFor(c.mat,c.niveau), idx=chs.map(function(x){return x.id;}).indexOf(id), p=load();
+    if(idx>0&&(p.maitrise[chs[idx-1].id]||0)<50){alert('Termine d’abord le niveau précédent pour débloquer ce chapitre.');return;}
+    if(gameModeChosen==='hangman'&&['anglais','italien','francais'].indexOf(c.mat)<0){alert('Le mot mystère est réservé aux langues.');return;}
+    var all=gameModeChosen==='hangman'?c.quiz.slice():c.quiz.concat(c.vf.map(function(v){return {q:v.q,choix:['Vrai','Faux'],bon:v.v?0:1,exp:v.exp};}));
+    if(!all.length){alert('Les questions de ce chapitre arrivent bientôt.');return;}
+    quiz={c:c,mode:1,qs:shuffle(all),i:0,score:0,streak:0,boss:false,gameType:gameModeChosen,chapterLevel:idx+1};
+    if(gameModeChosen==='hangman')quiz.qs=quiz.qs.filter(function(q){return q.choix&&q.choix[q.bon]&&/[a-zà-ÿ]/i.test(q.choix[q.bon]);});
+    if(!quiz.qs.length){alert('Ce chapitre ne contient pas encore de mots à trouver.');return;}
+    quiz.qs=quiz.qs.slice(0,gameModeChosen==='mega'?12:8);
+    pushRecent(id); showQuestion();
+  }
+  function gameStartMega(){
+    var mats=myMatieres().map(function(m){return m.id;}), chapters=REVISE_DATA.chapitres.filter(function(c){return c.niveau===state.niveau&&mats.indexOf(c.mat)>=0;});
+    var p=load(), unlocked=[];
+    chapters.forEach(function(c){
+      var chs=chaptersFor(c.mat,c.niveau), idx=chs.map(function(x){return x.id;}).indexOf(c.id);
+      if(idx===0||(p.maitrise[chs[idx-1].id]||0)>=50)unlocked.push(c);
+    });
+    var pool=[];
+    unlocked.forEach(function(c){c.quiz.forEach(function(q){pool.push(Object.assign({},q,{_chapter:c}));});});
+    if(pool.length<3){alert('Débloque quelques chapitres pour lancer le Méga-quiz !');return;}
+    var first=unlocked[0]; quiz={c:first,mode:2,qs:shuffle(pool).slice(0,12),i:0,score:0,streak:0,boss:false,gameType:'mega',mega:true};
     showQuestion();
   }
-
+  function gameAnswerText(){
+    if(!quiz||quiz.waitingNext)return;
+    var q=quiz.qs[quiz.i], input=document.getElementById('writtenAnswer'); if(!input)return;
+    var val=normalAnswer(input.value), expected=normalAnswer(q.choix[q.bon]);
+    if(!val){input.focus();return;}
+    answer(val===expected?q.bon:(q.bon===0?1:0));
+  }
+  function normalAnswer(v){return String(v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');}
+  function gameSpeech(){
+    var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(!SR){alert('La dictée vocale n’est pas disponible sur cet appareil.');return;}
+    var rec=new SR(); rec.lang=(quiz.c.mat==='anglais'?'en-GB':(quiz.c.mat==='italien'?'it-IT':'fr-FR'));rec.interimResults=false;rec.maxAlternatives=1;
+    var b=document.getElementById('voiceAnswer');if(b)b.textContent='🎙️ J’écoute…';
+    rec.onresult=function(e){var i=document.getElementById('writtenAnswer');if(i)i.value=e.results[0][0].transcript;if(b)b.textContent='🎙️ Dicter';};
+    rec.onerror=function(){if(b)b.textContent='🎙️ Dicter';};
+    rec.onend=function(){if(b)b.textContent='🎙️ Dicter';};rec.start();
+  }
+  function gameHangmanLetter(letter){
+    if(!quiz||quiz.waitingNext)return;
+    quiz.guessed=quiz.guessed||[];
+    if(quiz.guessed.indexOf(letter)>=0)return;
+    quiz.guessed.push(letter);
+    var q=quiz.qs[quiz.i], word=String(q.choix[q.bon]).toLocaleLowerCase('fr-FR');
+    var clean=word.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+    var target=clean.replace(/[^a-z]/g,'');
+    if(target.split('').indexOf(letter)>=0){
+      var found=quiz.guessed.join('');
+      var complete=target.split('').every(function(ch){return found.indexOf(ch)>=0;});
+      if(complete){answer(q.bon);return;}
+    }else{quiz.misses=(quiz.misses||0)+1;}
+    showQuestion();
+  }
+  function gameNext(){
+    if(!quiz||!quiz.waitingNext)return;
+    quiz.waitingNext=false;quiz.guessed=[];quiz.misses=0;quiz.i++;
+    if(quiz.i<quiz.qs.length)showQuestion();else showResults();
+  }
   // ================= TUTEUR =================
   function viewTuteur() {
     setTab('tuteur');
     if (needProfile()) return;
     var html = '<div class="card"><h3><span class="em">🤖</span>Mon tuteur ' + (Tutor.mode() === 'IA' ? '' : '<span class="demo-tag">MODE DÉMONSTRATION</span>') + '</h3>';
-    if (Tutor.mode() !== 'IA') html += '<p style="font-size:0.8rem;opacity:0.8">En mode démo, je réponds sur quelques notions (fractions, Pythagore, atome, équations, Révolution...). Ce n\'est pas une IA : un parent peut activer le mode IA (voir Réglages).</p>';
-    html += '<div id="chatlog"></div>'
+    html += '<p style="font-size:.84rem;opacity:.82">Une notion manque ? Demande une nouvelle fiche : elle sera ajoutée à tes cours sur cet appareil.</p>';
+    html += '<label style="display:block;margin:8px 0 4px">Matière</label><select id="lessonSubject" style="width:100%;padding:11px;border-radius:10px;background:var(--bg2);color:var(--txt);border:1px solid var(--accent)">';
+    REVISE_DATA.matieres.forEach(function(m){html+='<option value="'+m.id+'">'+m.nom+'</option>';});
+    html += '</select><input type="text" id="lessonInput" placeholder="Ex. les verbes irréguliers anglais" style="width:100%;padding:12px;margin-top:8px;border-radius:10px" onkeydown="if(event.key===\'Enter\')askLesson()">';
+    html += '<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" onclick="askLesson()">✨ Créer ma fiche</button><button class="btn ghost" onclick="startLessonVoice()">🎙️ Dicter</button></div><div id="lessonStatus" style="font-size:.82rem;margin:8px 0"></div>';
+    if (Tutor.mode() !== 'IA') html += '<div class="control-advice">📚 Tu peux créer une fiche repère même sans IA ni autorisation parentale. Elle sera enregistrée sur cet appareil ; complète-la avec ton cours si la notion n’est pas dans la base locale.</div>';
+    html += '<hr style="opacity:.2;margin:16px 0"><h3>💬 Poser une question</h3><div id="chatlog"></div>'
       + '<input type="text" id="chatInput" placeholder="Pose ta question de cours..." onkeydown="if(event.key===\'Enter\')askTutor()">'
       + '<button class="btn" onclick="askTutor()">Envoyer</button></div>';
     render(html);
     Tutor.history.forEach(function (m) { appendMsg(m.role, m.text); });
+  }
+  function askLesson() {
+    var input=document.getElementById('lessonInput'), topic=input&&input.value.trim();
+    if(!topic)return;
+    var subject=document.getElementById('lessonSubject');
+    var status=document.getElementById('lessonStatus');
+    status.textContent=Tutor.mode()==='IA'?'⏳ Préparation de ta fiche avec le tuteur…':'⏳ Création de ta fiche repère locale…';
+    Tutor.requestLesson(topic,state.niveau,subject?subject.value:'',function(lesson,error){
+      if(error||!lesson){status.textContent='⚠️ '+(error||'Impossible de créer la fiche.');return;}
+      var mat=subject?subject.value:(state.mat||'maths');
+      var id='custom-'+Date.now();
+      var saved={id:id,mat:mat,niveau:state.niveau,titre:lesson.titre,express:lesson.express,complet:lesson.complet,quiz:lesson.quiz||[],vf:lesson.vf||[],demande:topic,creeLe:new Date().toISOString(),origine:'demande-eleve'};
+      // Bibliothèque de connaissances persistante : la fiche reste disponible après fermeture/redémarrage.
+      var list=[];try{list=JSON.parse(localStorage.getItem('reviseplus_custom_lessons')||'[]');}catch(e){}
+      var duplicate=list.findIndex(function(x){return x.mat===mat&&x.niveau===state.niveau&&String(x.demande||x.titre).toLowerCase()===topic.toLowerCase();});
+      if(duplicate>=0){saved.id=list[duplicate].id;list[duplicate]=saved;}else{list.push(saved);}
+      localStorage.setItem('reviseplus_custom_lessons',JSON.stringify(list));
+      if(!REVISE_DATA.chapitres.some(function(x){return x.id===saved.id;}))REVISE_DATA.chapitres.push(saved);
+      else {var ci=REVISE_DATA.chapitres.findIndex(function(x){return x.id===saved.id;});REVISE_DATA.chapitres[ci]=saved;}
+      status.innerHTML='✅ Fiche « '+String(lesson.titre).replace(/</g,'&lt;')+' » ajoutée à '+state.niveau+'. <button class="btn" onclick="openChapter(\''+id+'\')">Ouvrir la leçon</button>';
+      if(input)input.value='';
+    });
+  }
+  function startLessonVoice() {
+    var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(!SR){var s=document.getElementById('lessonStatus');if(s)s.textContent='La dictée vocale n’est pas disponible sur cet appareil. Tu peux écrire ta demande.';return;}
+    var rec=new SR();rec.lang='fr-FR';rec.interimResults=false;rec.maxAlternatives=1;
+    var s=document.getElementById('lessonStatus');if(s)s.textContent='🎙️ Je t’écoute…';
+    rec.onresult=function(e){var input=document.getElementById('lessonInput');if(input)input.value=e.results[0][0].transcript;if(s)s.textContent='Demande reconnue. Tu peux lancer la création.';};
+    rec.onerror=function(){if(s)s.textContent='Je n’ai pas réussi à reconnaître la demande. Réessaie ou écris-la.';};
+    rec.start();
   }
   function appendMsg(role, text) {
     var log = document.getElementById('chatlog');
@@ -658,13 +916,13 @@ var App = (function () {
 
   // ================= NAVIGATION =================
   function chooseProfile(name) {
-    state.profile = name;
+    navHistory = []; state.profile = name;
     document.body.className = name === 'Emma' ? 'theme-emma' : 'theme-gabriel';
     document.querySelector('.logo').textContent = name === 'Emma' ? '🐱' : '🚀';
     localStorage.setItem('reviseplus_currentProfile', name);
     state.niveau = localStorage.getItem('reviseplus_niveau_' + name) || '5e';
     state.mat = null; state.chap = null;
-    viewNiveau();
+    if(localStorage.getItem('reviseplus_setup_'+name)==='1') viewAccueil(); else viewNiveau();
   }
   function setLevel(n) {
     state.niveau = n;
@@ -677,51 +935,85 @@ var App = (function () {
   function backToChapters() { state.chap = null; state.mat = null; viewCours(); }
   function goTab(t) {
     closeDrawer();
-    if (t === 'accueil') { viewAccueil(); return; }
+    if (t === 'accueil') { if (window.ReviseHome) window.ReviseHome(); else viewAccueil(); return; }
     if (t === 'cours') { state.mat = null; state.chap = null; viewCours(); return; }
     if (t === 'jeux') { viewJeux(); return; }
+    if (t === 'aventure') { if (window.Adventure) Adventure.open(); else viewAccueil(); return; }
+    if (t === 'controles') { if (window.Controls) Controls.open(); else viewAccueil(); return; }
     if (t === 'tuteur') { viewTuteur(); return; }
     if (t === 'plus') { viewPlus(); return; }
   }
   function init() {
-    document.querySelectorAll('#drawer nav button').forEach(function (b) {
-      b.onclick = function () { goTab(b.dataset.tab); };
-    });
-    document.getElementById('menuBtn').onclick = openDrawer;
-    document.getElementById('drawerClose').onclick = closeDrawer;
-    document.getElementById('overlay').onclick = closeDrawer;
-    document.getElementById('switchProfileBtn').onclick = switchProfile;
-    var cur = localStorage.getItem('reviseplus_currentProfile');
-    if (cur === 'Gabriel' || cur === 'Emma') {
-      state.niveau = localStorage.getItem('reviseplus_niveau_' + cur) || '5e';
-      state.profile = cur;
-      document.body.className = cur === 'Emma' ? 'theme-emma' : 'theme-gabriel';
-      document.querySelector('.logo').textContent = cur === 'Emma' ? '🐱' : '🚀';
-      viewAccueil();
-    } else {
-      viewWelcome();
+    try {
+      document.querySelectorAll('#drawer nav button').forEach(function (b) {
+        b.onclick = function () { goTab(b.dataset.tab); };
+      });
+      var menu=document.getElementById('menuBtn'); if(menu) menu.onclick = openDrawer;
+      var backBtn = document.getElementById('backBtn'); if (backBtn) backBtn.onclick = handleBack;
+      var dc=document.getElementById('drawerClose'); if(dc) dc.onclick = closeDrawer;
+      var ov=document.getElementById('overlay'); if(ov) ov.onclick = closeDrawer;
+      var sw=document.getElementById('switchProfileBtn'); if(sw) sw.onclick = switchProfile;
+      try { AudioFX.init(); } catch(audioError) { console.warn('Audio désactivé au démarrage', audioError); }
+      var cur = localStorage.getItem('reviseplus_currentProfile');
+      if (cur === 'Gabriel' || cur === 'Emma') {
+        state.niveau = localStorage.getItem('reviseplus_niveau_' + cur) || '5e';
+        state.profile = cur;
+        document.body.className = cur === 'Emma' ? 'theme-emma' : 'theme-gabriel';
+        var logo=document.querySelector('.logo'); if(logo) logo.textContent = cur === 'Emma' ? '🐱' : '🚀';
+        try { viewAccueil(); } catch(homeError) {
+          console.error('Erreur accueil Révise+', homeError);
+          state.profile = null;
+          viewWelcome();
+          var note=document.createElement('div');
+          note.className='card'; note.style.cssText='margin:12px;padding:14px;background:#fff3cd;color:#624b00';
+          note.textContent='Un élément de ton ancien écran d’accueil pose problème. Tes progrès sont conservés. Choisis ton profil pour continuer.';
+          var view=document.getElementById('view'); if(view) view.insertBefore(note,view.firstChild);
+        }
+      } else {
+        viewWelcome();
+      }
+    } catch (bootError) {
+      console.error('Erreur démarrage Révise+', bootError);
+      var view=document.getElementById('view');
+      if(view) {
+        view.innerHTML='<section style="padding:20px;color:#fff"><h2>On relance Révise+ 🚀</h2><p>Le démarrage a rencontré un petit souci. Tes progrès ne sont pas effacés.</p><button id="rpRetry" style="padding:14px;border:0;border-radius:12px;background:#58c7f5;color:#08203c;font-weight:bold">Réessayer</button><button id="rpProfiles" style="padding:14px;margin:8px 0;border:0;border-radius:12px;background:#ffd36b;color:#332400;font-weight:bold">Choisir un profil</button></section>';
+        var retry=document.getElementById('rpRetry'); if(retry) retry.onclick=function(){location.reload();};
+        var profiles=document.getElementById('rpProfiles'); if(profiles) profiles.onclick=function(){try{state.profile=null;localStorage.removeItem('reviseplus_currentProfile');viewWelcome();}catch(e){location.reload();}};
+      }
     }
   }
 
   var pub = {
     chooseProfile: chooseProfile, setLevel: setLevel, selectSubject: selectSubject,
     openChapter: openChapter, startQuiz: startQuiz, answer: answer, goTab: goTab,
-    backToSubjects: backToSubjects, backToChapters: backToChapters, askTutor: askTutor,
+    backToSubjects: backToSubjects, backToChapters: backToChapters, askTutor: askTutor, askLesson: askLesson, startLessonVoice: startLessonVoice,
     saveGateway: saveGateway, resetProgress: resetProgress, readAloud: readAloud,
     pickImages: pickImages, onFiles: onFiles, makeFromScan: makeFromScan,
-    scanAnswer: scanAnswer, showFull: function () { document.getElementById('fullCard').classList.remove('hidden'); },
+    scanAnswer: scanAnswer, handleBack: handleBack, saveCurrentView: saveCurrentView, render: render, setTab: setTab, load: load, addXP: addXP, showFull: function () { document.getElementById('fullCard').classList.remove('hidden'); },
     doDaily: doDaily, showQuestion: showQuestion, quizMode: quizMode,
     viewProgres: viewProgres, viewScan: viewScan, viewPlus: viewPlus, init: init,
     switchProfile: switchProfile, closeDrawer: closeDrawer,
     obLevel: obLevel, toggleMatiere: toggleMatiere, finishOnboarding: finishOnboarding,
-    quizFromList: quizFromList
+    gamePickMode:gamePickMode, gamePickSubject:gamePickSubject,
+    gameStartChapter:gameStartChapter, openGames:viewJeux, gameAnswerText:gameAnswerText, gameSpeech:gameSpeech,
+    gameHangmanLetter:gameHangmanLetter, gameNext:gameNext, gameStartMega:gameStartMega
   };
-  ['chooseProfile','setLevel','selectSubject','openChapter','startQuiz','answer','goTab',
-   'backToSubjects','backToChapters','askTutor','saveGateway','resetProgress','readAloud',
+  ['chooseProfile','setLevel','selectSubject','openChapter','startQuiz','answer','goTab','handleBack',
+   'backToSubjects','backToChapters','askTutor','askLesson','startLessonVoice','saveGateway','resetProgress','readAloud',
    'showFull','pickImages','onFiles','makeFromScan','scanAnswer','doDaily','showQuestion',
    'quizMode','viewProgres','viewScan','viewPlus','switchProfile','obLevel','toggleMatiere',
-   'finishOnboarding','quizFromList'].forEach(function (f) { window[f] = pub[f]; });
+   'finishOnboarding','gamePickMode','gamePickSubject','gameStartChapter','openGames','gameAnswerText','gameSpeech','gameHangmanLetter','gameNext','gameStartMega'].forEach(function (f) { window[f] = pub[f]; });
   return pub;
 })();
 
 document.addEventListener('DOMContentLoaded', App.init);
+
+} catch (e) {
+  var detail = (e && (e.stack || e.message)) ? (e.stack || e.message) : String(e);
+  window.__RP_APP_BOOT_ERROR__ = detail;
+  console.error('ERREUR FATALE app.js : ' + detail);
+  var panel = document.getElementById('rp-diagnostic');
+  if (!panel) { panel = document.createElement('div'); panel.id = 'rp-diagnostic'; panel.style.cssText = 'position:fixed;z-index:999999;inset:150px 10px auto;padding:16px;border-radius:14px;background:#fff1f0;color:#641b16;font:13px/1.45 monospace;max-height:70vh;overflow:auto'; document.body.appendChild(panel); }
+  panel.innerHTML = '<b>Erreur précise dans app.js</b><br><pre style="white-space:pre-wrap;overflow-wrap:anywhere"></pre>';
+  panel.querySelector('pre').textContent = detail;
+}

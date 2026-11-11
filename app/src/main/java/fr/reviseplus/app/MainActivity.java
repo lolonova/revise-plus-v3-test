@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.Voice;
 import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
@@ -19,6 +20,8 @@ import androidx.core.content.ContextCompat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import org.json.JSONObject;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
         tts = new TextToSpeech(this, status -> {
             if (status == TextToSpeech.SUCCESS) {
-                tts.setLanguage(new Locale("fr", "FR"));
+                configureFrenchSpeech();
             }
         });
 
@@ -48,6 +51,22 @@ public class MainActivity extends AppCompatActivity {
         webView.addJavascriptInterface(new NativeBridge(), "NativeBridge");
         webView.setWebViewClient(new WebViewClient());
         webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onConsoleMessage(android.webkit.ConsoleMessage message) {
+                final String detail = message.message() + " (ligne " + message.lineNumber()
+                        + ", " + message.sourceId() + ")";
+                runOnUiThread(() -> webView.evaluateJavascript(
+                        "(function(){var d=document.getElementById('rp-native-diagnostic');"
+                        + "if(!d){d=document.createElement('div');d.id='rp-native-diagnostic';"
+                        + "d.style.cssText='position:fixed;z-index:1000000;left:10px;right:10px;bottom:10px;"
+                        + "max-height:42vh;overflow:auto;padding:14px;border-radius:14px;"
+                        + "background:#211b35;color:#fff;font:13px/1.45 sans-serif;white-space:pre-wrap';"
+                        + "document.body.appendChild(d);}"
+                        + "d.textContent='DIAGNOSTIC WEBVIEW\\n'+"
+                        + JSONObject.quote(detail) + ";})()", null));
+                return true;
+            }
+
             @Override
             public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> callback,
                                              FileChooserParams params) {
@@ -63,6 +82,34 @@ public class MainActivity extends AppCompatActivity {
         });
         webView.loadUrl("file:///android_asset/index.html");
         requestMic();
+    }
+
+    private void configureFrenchSpeech() {
+        if (tts == null) return;
+        tts.setLanguage(Locale.FRANCE);
+        try {
+            Set<Voice> voices = tts.getVoices();
+            Voice best = null;
+            int bestScore = Integer.MIN_VALUE;
+            if (voices != null) {
+                for (Voice voice : voices) {
+                    Locale locale = voice.getLocale();
+                    if (locale == null || !"fr".equalsIgnoreCase(locale.getLanguage())) continue;
+                    int score = voice.getQuality() * 100 - voice.getLatency();
+                    if (Locale.FRANCE.equals(locale)) score += 1000;
+                    // Les voix réseau de haute qualité sont souvent nettement plus naturelles.
+                    if (voice.isNetworkConnectionRequired()) score += 350;
+                    else score += 30;
+                    if (score > bestScore) { bestScore = score; best = voice; }
+                }
+            }
+            if (best != null) tts.setVoice(best);
+        } catch (Exception ignored) {
+            tts.setLanguage(Locale.FRANCE);
+        }
+        // Un rythme plus posé, avec une intonation douce pour les explications.
+        tts.setSpeechRate(0.90f);
+        tts.setPitch(1.00f);
     }
 
     private void requestMic() {
@@ -95,8 +142,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (webView.canGoBack()) webView.goBack();
-        else super.onBackPressed();
+        if (webView == null) { super.onBackPressed(); return; }
+        webView.evaluateJavascript(
+                "(function(){return (window.App && App.handleBack) ? App.handleBack() : false;})()",
+                value -> {
+                    if (!"true".equals(value)) {
+                        MainActivity.super.onBackPressed();
+                    }
+                });
     }
 
     @Override
@@ -109,7 +162,18 @@ public class MainActivity extends AppCompatActivity {
         @JavascriptInterface
         public void speak(String text) {
             if (tts != null) {
-                tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "fiche");
+                tts.setSpeechRate(0.90f);
+                tts.setPitch(1.00f);
+                tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "reviseplus-fiche");
+            }
+        }
+
+        @JavascriptInterface
+        public void speakSlow(String text, float rate, float pitch) {
+            if (tts != null) {
+                tts.setSpeechRate(Math.max(0.65f, Math.min(1.05f, rate)));
+                tts.setPitch(Math.max(0.85f, Math.min(1.15f, pitch)));
+                tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "reviseplus-course-complet");
             }
         }
 
