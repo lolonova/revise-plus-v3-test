@@ -52,7 +52,7 @@ body.theme-emma { background: linear-gradient(160deg, #ffe3ef 0%, #fff0f6 55%); 
 .banner { padding: 16px 16px 12px; display: flex; align-items: center; gap: 12px; }
 body.theme-gabriel .banner { background: linear-gradient(135deg, #101a4a 0%, #22348a 100%); border-bottom: 2px solid var(--accent); }
 body.theme-emma .banner { background: linear-gradient(135deg, #ffd3e5 0%, #ffbcd8 100%); border-bottom: 2px solid var(--pink); }
-.logo { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; background: var(--gold); box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
+.logo { width: 46px; height: 46px; flex: 0 0 46px; border-radius: 15px; display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg,#fff7c9 0%,#ffd66d 42%,#9b8cff 100%); border: 1px solid #ffffffa8; box-shadow: 0 5px 14px rgba(0,0,0,.28),inset 0 1px 3px #fff; } .logo svg{width:31px;height:31px;filter:drop-shadow(0 2px 2px #28325b55)} body.theme-emma .logo{background:linear-gradient(145deg,#fff7fb,#ffb6d8 52%,#c7a2ff)}
 .banner h1 { margin: 0; font-size: 1.15rem; letter-spacing: 0.5px; }
 .banner .tagline { font-size: 0.72rem; opacity: 0.85; font-weight: 600; letter-spacing: 0.4px; }
 .banner .back-btn { background: rgba(255,255,255,.16); color: #fff; border: 1px solid rgba(255,255,255,.28); border-radius: 12px; width: 42px; height: 42px; font-size: 1.45rem; cursor: pointer; display:flex; align-items:center; justify-content:center; opacity:.42; transition:opacity .18s, transform .18s; }
@@ -704,7 +704,7 @@ input[type=text],textarea{min-height:48px;line-height:1.45}
 </head>
 <body class="theme-gabriel">
 <div class="banner">
-  <button class="back-btn" id="backBtn" aria-label="Retour" title="Écran précédent">‹</button><div class="logo">🚀</div>
+  <button class="back-btn" id="backBtn" aria-label="Retour" title="Écran précédent">‹</button><div class="logo" aria-label="Symbole Révise+"><svg viewBox="0 0 48 48" role="img" aria-hidden="true"><path d="M7 15.5c6-2.2 11.5-1.6 17 2.1v22c-5.5-3.7-11-4.3-17-2.1z" fill="#fff" stroke="#425b9d" stroke-width="1.8" stroke-linejoin="round"/><path d="M41 15.5c-6-2.2-11.5-1.6-17 2.1v22c5.5-3.7 11-4.3 17-2.1z" fill="#eaf2ff" stroke="#425b9d" stroke-width="1.8" stroke-linejoin="round"/><path d="M24 17.5v21" stroke="#7085c5" stroke-width="1.8"/><path d="M24 3.5l3.2 7.1 7.7.8-5.8 5.1 1.6 7.5-6.7-3.9-6.7 3.9 1.6-7.5-5.8-5.1 7.7-.8z" fill="#fff3a6" stroke="#a16d37" stroke-width="1.2" stroke-linejoin="round"/><circle cx="24" cy="3.5" r="1.7" fill="#fff"/></svg></div>
   <div>
     <h1>Révise+</h1>
     <div class="tagline">Réussir pas à pas</div>
