@@ -309,23 +309,22 @@ var App = (function () {
     if (needProfile()) return;
     if (state.chap) { viewChapitre(state.chap); return; }
     if (state.mat) { viewMatiere(state.mat); return; }
-    var p = load();
-    var html = '<div class="card"><h3><span class="em">🎓</span>Ma classe</h3><div class="grid3">';
-    REVISE_DATA.niveaux.forEach(function (n) {
-      html += '<div class="item' + (state.niveau === n ? ' sel' : '') + '" onclick="setLevel(\'' + n + '\')"><span class="nm" style="font-size:1rem">' + n + '</span></div>';
+    var p=load(), emma=state.profile==='Emma', buddy=emma?'Lumi':'Nova';
+    var accent=emma?'#ff9bc9':'#65d8ff';
+    var html='<style>'
+      +'.study-world{height:calc(100dvh - 118px);min-height:430px;max-height:900px;box-sizing:border-box;overflow:hidden;border-radius:25px;padding:clamp(10px,2.5vw,18px);color:#fff;background:'+(emma?'radial-gradient(circle at 90% 0%,#f5a9d3 0,transparent 38%),linear-gradient(155deg,#513276,#874b9d 60%,#bd719e)':'radial-gradient(circle at 90% 0%,#368bb8 0,transparent 38%),linear-gradient(155deg,#071c3e,#174b7b 62%,#126d83)')+';display:flex;flex-direction:column;gap:clamp(7px,1.3vh,12px)}'
+      +'.study-top{display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:900;letter-spacing:1px}.study-levels{display:flex;gap:6px}.study-levels button{flex:1;min-width:0;border:1px solid #ffffff45;border-radius:12px;padding:8px 3px;background:#ffffff17;color:#fff;font-weight:800;font-size:11px}.study-levels button.active{background:#fff;color:'+(emma?'#704078':'#123c67')+';box-shadow:0 3px 0 '+accent+'}.study-heading{display:flex;align-items:center;gap:8px;min-height:65px}.study-heading img{width:68px;height:68px;object-fit:contain;filter:drop-shadow(0 6px 8px #0004)}.study-heading h2{font-size:clamp(20px,5.5vw,27px);line-height:1.05;margin:0 0 4px}.study-heading p{font-size:11px;margin:0;opacity:.85}.study-subtitle{font-size:11px;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin:2px 0}.study-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(0,1fr);gap:7px;flex:1;min-height:0}.study-subject{position:relative;overflow:hidden;border:1px solid #ffffff42;border-radius:15px;background:linear-gradient(145deg,#ffffff2b,#ffffff12);color:#fff;text-align:left;padding:9px;display:flex;flex-direction:column;justify-content:center;min-height:0}.study-subject:active{transform:scale(.98)}.study-subject .ico{font-size:22px}.study-subject b{font-size:12px;line-height:1.1;margin-top:3px}.study-subject small{font-size:9px;opacity:.8;margin-top:4px}.study-foot{display:flex;justify-content:space-between;align-items:center;font-size:10px;opacity:.8}.study-back{border:0;background:#ffffff20;color:#fff;border-radius:12px;padding:8px 11px;font-weight:800}@media(max-height:690px){.study-world{gap:6px;padding:9px}.study-heading{min-height:52px}.study-heading img{width:55px;height:55px}.study-subject{padding:7px}.study-subject .ico{font-size:19px}}'
+      +'</style><section class="study-world"><div class="study-top"><span>✦ TON CENTRE DE SAVOIR</span><span>'+p.xp+' XP</span></div>'
+      +'<div class="study-heading"><img src="'+(emma?'images/3d/lumi-fairy-3d.png':'images/3d/nova-robot-3d.png')+'" alt="'+buddy+'"><div><h2>'+(emma?'La bibliothèque magique':'Le centre de formation')+'</h2><p>'+(emma?'Lumi t’accompagne dans tes découvertes.':'Nova prépare ta prochaine mission.')+'</p></div></div>'
+      +'<div class="study-subtitle">Choisis ta classe</div><div class="study-levels">';
+    REVISE_DATA.niveaux.forEach(function(n){html+='<button class="'+(state.niveau===n?'active':'')+'" onclick="setLevel(\''+n+'\')">'+n+'</button>';});
+    html+='</div><div class="study-subtitle">Quelle matière veux-tu explorer ?</div><div class="study-grid">';
+    myMatieres().forEach(function(m){
+      var chs=chaptersFor(m.id,state.niveau),done=chs.filter(function(c){return (p.maitrise[c.id]||0)>=50;}).length;
+      html+='<button class="study-subject" onclick="selectSubject(\''+m.id+'\')"><span class="ico">'+m.icon+'</span><b>'+m.nom.split('-')[0]+'</b><small>'+done+' / '+chs.length+' chapitres maîtrisés</small></button>';
     });
-    html += '</div></div>';
-    html += '<div class="card"><h3><span class="em">📚</span>Mes matières — classe de ' + state.niveau + '</h3><div class="grid2">';
-    myMatieres().forEach(function (m) {
-      var chs = chaptersFor(m.id, state.niveau);
-      var done = chs.filter(function (c) { return (p.maitrise[c.id] || 0) >= 50; }).length;
-      html += '<div class="item" onclick="selectSubject(\'' + m.id + '\')">'
-        + '<span class="ic">' + m.icon + '</span><span class="nm">' + m.nom.split('-')[0] + '</span>'
-        + '<div class="sub">' + done + '/' + chs.length + ' validés</div></div>';
-    });
-    html += '</div></div>';
-    render(html);
-    updateChip();
+    html+='</div><div class="study-foot"><span>🌱 Chaque petite étape compte.</span><button class="study-back" onclick="viewAccueil()">← Mon univers</button></div></section>';
+    render(html); updateChip();
   }
 
   function viewMatiere(mat) {
