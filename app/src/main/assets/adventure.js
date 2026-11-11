@@ -48,6 +48,8 @@
   function outfits(){return profile()==='Emma'?outfitsE:outfitsG;}
   function companions(){return profile()==='Emma'?companionsE:companionsG;}
   function avatarSVG(emma,id){
+    // Emma garde toujours le même personnage illustré : les compagnons changent à côté, jamais son visage ou ses proportions.
+    if(emma)return '<img class="hero-3d-image" src="images/3d/lumi-fairy-3d.png" alt="Personnage féerique d’Emma">';
     if(id==='base')return '<img class="hero-3d-image" src="'+(emma?'images/3d/lumi-fairy-3d.png':'images/3d/gabriel-explorer-3d.png')+'" alt="'+(emma?'Personnage féerique d’Emma':'Explorateur spatial de Gabriel')+'">';
     if(emma){
       var colors={base:['#ff8fbd','#a67be8'],princess:['#f6a9d0','#d57be7'],flower:['#8ed9ad','#45b8a1'],unicorn:['#b6a4ff','#f08fc5'],star:['#7bc8f5','#a68bff'],ice:['#a7e7f4','#8aa9ed']};
