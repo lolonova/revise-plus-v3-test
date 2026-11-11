@@ -497,9 +497,29 @@ var App = (function () {
 
   function showQuestion() {
     var q=quiz.qs[quiz.i], pct=Math.round((quiz.i/quiz.qs.length)*100), type=quiz.gameType||'quiz';
-    var title=q._chapter?q._chapter.titre:quiz.c.titre;
-    var html='<div class="quiz-shell"><div class="quiz-progress-top"><span>'+(type==='mega'?'🌟 MÉGA-QUIZ MULTIMATIÈRES':'MISSION · NIVEAU '+(quiz.chapterLevel||1))+'</span><b>Question '+(quiz.i+1)+' / '+quiz.qs.length+'</b></div>'
-      +'<div class="quiz-progress-track"><i style="width:'+pct+'%"></i></div><div class="card"><div class="quiz-guardian"><img src="'+(state.profile==='Emma'?'images/3d/lumi-fairy-3d.png':'images/3d/gabriel-explorer-3d.png')+'" alt=""><div><b>'+(state.profile==='Emma'?'Lumi est avec toi ✨':'Nova est à tes côtés 🤖')+'</b><span>Une question à la fois. Tu peux prendre ton temps !</span></div></div>'
+    var emma=state.profile==='Emma',worldIndex=0;
+    try{var ad=JSON.parse(localStorage.getItem('reviseplus_adventure_'+state.profile)||'{}');worldIndex=Math.max(0,Math.min(5,ad.world||0));}catch(e){}
+    var worlds=emma?[
+      ['🌷','Jardin enchanté','🌸','🦋','✨','Les fleurs attendent tes bonnes réponses !'],
+      ['🧚','Forêt des fées','🍃','🧚','🌟','Aide les fées à retrouver leur poussière magique !'],
+      ['🏰','Château nuage','☁️','👑','💎','Les portes du château brillent à chaque réussite !'],
+      ['🌙','Lac des étoiles','🌊','🦢','⭐','Fais remonter les étoiles à la surface !'],
+      ['🐰','Vallée des animaux','🌿','🐾','🥕','Les petits habitants comptent sur toi !'],
+      ['🌈','Royaume arc-en-ciel','🎠','🦄','💖','Rends toutes ses couleurs au royaume !']
+    ]:[
+      ['🚀','Base orbitale','🪐','🛰️','⭐','Prépare le décollage avec Nova !'],
+      ['🤖','Lune des robots','🌙','⚙️','🔋','Redonne de l’énergie aux robots !'],
+      ['💎','Planète cristal','🔮','🪨','💠','Fais briller les cristaux du savoir !'],
+      ['🌌','Nébuleuse','☄️','🪐','🌠','Traverse la nébuleuse étoile après étoile !'],
+      ['🛰️','Station des étoiles','📡','🌍','✨','Réactive les systèmes de la station !'],
+      ['🌠','Galaxie légendaire','🚀','👾','💫','La grande aventure commence !']
+    ];
+    var w=worlds[worldIndex],title=q._chapter?q._chapter.titre:quiz.c.titre;
+    quiz.treasures=quiz.treasures||0;
+    var html='<style>@keyframes worldFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}@keyframes worldGlow{0%,100%{filter:drop-shadow(0 0 3px #fff8)}50%{filter:drop-shadow(0 0 12px #fff)}}.immersive-stage{position:relative;overflow:hidden;border-radius:24px;padding:16px;margin-bottom:12px;background:'+(emma?'linear-gradient(145deg,#f9dff0,#c9b5f5 55%,#b5e9d7)':'linear-gradient(145deg,#17295f,#466ec2 60%,#86c8ed)')+';color:'+(emma?'#593d72':'#fff')+';box-shadow:0 12px 26px #253b7730}.immersive-stage:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 15% 15%,#fff9 0 2px,transparent 3px),radial-gradient(circle at 80% 25%,#fff8 0 2px,transparent 3px),radial-gradient(circle at 55% 80%,#fff7 0 2px,transparent 3px);background-size:75px 75px;pointer-events:none}.immersive-world-head{position:relative;display:flex;align-items:center;justify-content:space-between;gap:8px}.immersive-world-head b{font-size:12px;letter-spacing:1px}.immersive-scene-icons{position:relative;display:flex;justify-content:space-around;align-items:center;font-size:30px;padding:12px 0 5px}.immersive-scene-icons span{animation:worldFloat 3s ease-in-out infinite}.immersive-scene-icons span:nth-child(2){animation-delay:.5s}.immersive-scene-icons span:nth-child(3){animation-delay:1s}.immersive-story{position:relative;font-size:12px;font-weight:700;background:#ffffff38;border-radius:13px;padding:9px}.treasure-meter{position:relative;margin-top:10px;font-size:12px;font-weight:900;display:flex;justify-content:space-between}.treasure-meter strong{animation:worldGlow 2s infinite}.quiz-shell{padding-bottom:18px}.quiz-shell .card{border-radius:22px;box-shadow:0 10px 25px #192a4a18}.quiz-progress-track{height:9px;border-radius:9px;background:#d8d8e8;overflow:hidden;margin:8px 0 14px}.quiz-progress-track i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,#7ad7b4,#a78bea);transition:width .35s}</style>';
+    html+='<div class="immersive-stage"><div class="immersive-world-head"><b>'+w[0]+' '+w[1].toUpperCase()+'</b><span>MISSION '+(quiz.i+1)+'/'+quiz.qs.length+'</span></div><div class="immersive-scene-icons"><span>'+w[2]+'</span><span>'+w[3]+'</span><span>'+w[4]+'</span></div><div class="immersive-story">'+(emma?'Lumi : ':'Nova : ')+w[5]+'</div><div class="treasure-meter"><span>✨ Trésors récoltés</span><strong>'+quiz.treasures+' / '+quiz.qs.length+'</strong></div></div>';
+    html+='<div class="quiz-shell"><div class="quiz-progress-top"><span>'+(type==='mega'?'🌟 MÉGA-QUIZ MULTIMATIÈRES':'🎮 AVENTURE · '+(quiz.chapterLevel?'NIVEAU '+quiz.chapterLevel:'MISSION'))+'</span><b>'+pct+' %</b></div>'
+      +'<div class="quiz-progress-track"><i style="width:'+pct+'%"></i></div><div class="card"><div class="quiz-guardian"><img src="'+(emma?'images/3d/lumi-fairy-3d.png':'images/3d/nova-robot-3d.png')+'" alt=""><div><b>'+(emma?'Lumi est avec toi ✨':'Nova est à tes côtés 🤖')+'</b><span>Explore à ton rythme. Chaque essai fait avancer ton aventure !</span></div></div>'
       +'<h3>'+title+'</h3><p style="font-weight:700">'+(type==='hangman'?'🔎 Indice : ':'')+q.q+'</p>';
     if(type==='written'){
       html+='<input id="writtenAnswer" type="text" autocomplete="off" placeholder="Écris ta réponse…" onkeydown="if(event.key===\'Enter\')gameAnswerText()">'
@@ -532,7 +552,7 @@ var App = (function () {
     for (var k = 0; k < q.choix.length; k++){var choiceBtn=document.getElementById('ch'+k);if(choiceBtn)choiceBtn.onclick=null;}
     var p = load();
     if (ok) {
-      quiz.score++; quiz.streak++;
+      quiz.score++; quiz.streak++; quiz.treasures=(quiz.treasures||0)+1;
       p.streak = Math.max(p.streak || 0, quiz.streak);
       p.bestStreak = Math.max(p.bestStreak || 0, quiz.streak);
       setMaitrise((q._chapter||quiz.c).id, quiz.mode === 1 ? 8 : 12);
