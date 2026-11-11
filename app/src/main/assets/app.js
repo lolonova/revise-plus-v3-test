@@ -368,7 +368,7 @@ var App = (function () {
       + '<input type="text" id="lessonInput" placeholder="Ex. les fractions, les verbes irréguliers…" style="width:100%;padding:12px;margin:8px 0;border-radius:10px" onkeydown="if(event.key===\'Enter\')askLesson()">'
       + '<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" onclick="askLesson()">✨ Rechercher / créer la fiche</button><button class="btn ghost" onclick="startLessonVoice()">🎙️ Demander à l’oral</button></div>'
       + '<div id="lessonStatus" style="font-size:.85rem;margin-top:10px"></div>'
-      + (Tutor.mode()!=='IA' ? '<div class="control-advice">La génération automatique nécessite le service IA configuré par un parent. Tu peux aussi retrouver les fiches déjà présentes dans la matière.</div>' : '')
+      + (Tutor.mode()!=='IA' ? '<div class="control-advice">Mode local sans IA : une fiche repère peut être créée à partir des connaissances intégrées. Pour les notions absentes, complète-la avec ton cours.</div>' : '')
       + '</div>';
     render(html);
   }
@@ -861,7 +861,7 @@ var App = (function () {
     REVISE_DATA.matieres.forEach(function(m){html+='<option value="'+m.id+'">'+m.nom+'</option>';});
     html += '</select><input type="text" id="lessonInput" placeholder="Ex. les verbes irréguliers anglais" style="width:100%;padding:12px;margin-top:8px;border-radius:10px" onkeydown="if(event.key===\'Enter\')askLesson()">';
     html += '<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" onclick="askLesson()">✨ Créer ma fiche</button><button class="btn ghost" onclick="startLessonVoice()">🎙️ Dicter</button></div><div id="lessonStatus" style="font-size:.82rem;margin:8px 0"></div>';
-    if (Tutor.mode() !== 'IA') html += '<div class="control-advice">📚 Les nouvelles fiches déjà intégrées sont disponibles immédiatement. Pour générer et enregistrer une leçon absente, un parent doit configurer le service IA dans Réglages et mettre à jour son Worker avec la version du projet.</div>';
+    if (Tutor.mode() !== 'IA') html += '<div class="control-advice">📚 Tu peux créer une fiche repère même sans IA ni autorisation parentale. Elle sera enregistrée sur cet appareil ; complète-la avec ton cours si la notion n’est pas dans la base locale.</div>';
     html += '<hr style="opacity:.2;margin:16px 0"><h3>💬 Poser une question</h3><div id="chatlog"></div>'
       + '<input type="text" id="chatInput" placeholder="Pose ta question de cours..." onkeydown="if(event.key===\'Enter\')askTutor()">'
       + '<button class="btn" onclick="askTutor()">Envoyer</button></div>';
@@ -873,8 +873,7 @@ var App = (function () {
     if(!topic)return;
     var subject=document.getElementById('lessonSubject');
     var status=document.getElementById('lessonStatus');
-    if(Tutor.mode()!=='IA'){status.textContent='Cette demande est enregistrée dans l’interface, mais la création automatique nécessite le Worker IA configuré par un parent.';return;}
-    status.textContent='⏳ Préparation de ta fiche…';
+    status.textContent=Tutor.mode()==='IA'?'⏳ Préparation de ta fiche avec le tuteur…':'⏳ Création de ta fiche repère locale…';
     Tutor.requestLesson(topic,state.niveau,subject?subject.value:'',function(lesson,error){
       if(error||!lesson){status.textContent='⚠️ '+(error||'Impossible de créer la fiche.');return;}
       var mat=subject?subject.value:(state.mat||'maths');
