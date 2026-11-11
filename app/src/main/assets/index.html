@@ -764,16 +764,8 @@ window.__rpShowLoadReport = function() {
 <script src="enhancements.js" onload="__rpMark('enhancements.js',true)" onerror="__rpMark('enhancements.js',false)"></script>
 <script src="future.js" onload="__rpMark('future.js',true)" onerror="__rpMark('future.js',false)"></script>
 <script src="new-world.js" onload="__rpMark('new-world.js',true)" onerror="__rpMark('new-world.js',false)"></script>
-<script type="module">
-import * as THREE from "./vendor/three.module.js";
-window.THREE = THREE;
-__rpMark("three.js", true);
-const engine = document.createElement("script");
-engine.src = "world3d.js";
-engine.onload = () => __rpMark("world3d.js", true);
-engine.onerror = () => __rpMark("world3d.js", false);
-document.body.appendChild(engine);
-</script>
+<script src="vendor/three.bundle.js" onload="__rpMark('three.js',true)" onerror="__rpMark('three.js',false)"></script>
+<script src="world3d.js" onload="__rpMark('world3d.js',true)" onerror="__rpMark('world3d.js',false)"></script>
 <script>
 window.addEventListener('DOMContentLoaded',function(){setTimeout(function(){
   if(typeof window.App==='undefined' || !window.App) window.__rpShowLoadReport();
